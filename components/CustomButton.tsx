@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import React from "react";
 import { isLoading } from "expo-font";
+import { Colors } from "@/constants/Colors";
 
 type Props = {
   label: string;
@@ -62,20 +63,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   primaryButtonLabel: {
-    color: "#ffff",
+    color: Colors.white,
   },
   secondaryButtonLabel: {
-    color: "#B15164",
+    color: Colors.light.buttonBackground,
   },
   authButton: {
-    backgroundColor: "#FE758F",
+    backgroundColor: Colors.pink,
   },
   primaryButton: {
-    backgroundColor: "#B15164",
+    backgroundColor: Colors.light.buttonBackground,
   },
   secondaryButton: {
-    backgroundColor: "#ffff",
-    borderColor: "#B15164",
+    backgroundColor: Colors.white,
+    borderColor: Colors.light.buttonBackground,
     borderStyle: "solid",
     borderWidth: 2,
   },

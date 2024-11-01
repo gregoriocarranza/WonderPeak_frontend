@@ -2,6 +2,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Tabs, Redirect } from "expo-router";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Colors } from "@/constants/Colors";
 
 type TabIconProps = {
   icon: keyof typeof MaterialIcons.glyphMap;
@@ -23,10 +24,10 @@ export default function TabsLayout() {
       <Tabs
         screenOptions={{
           tabBarShowLabel: false,
-          tabBarActiveTintColor: "#fff",
-          tabBarInactiveTintColor: "#49454F",
+          tabBarActiveTintColor: Colors.white,
+          tabBarInactiveTintColor: Colors.darkPink,
           tabBarStyle: {
-            backgroundColor: "#F3E8DC",
+            backgroundColor: Colors.light.tabsBackground,
             height: 80,
           },
         }}
@@ -117,7 +118,7 @@ export default function TabsLayout() {
 
 const styles = StyleSheet.create({
   tabContainer: {
-    backgroundColor: "#B15164",
+    backgroundColor: Colors.light.buttonBackground,
     width: 64,
     height: 32,
     alignItems: "center",

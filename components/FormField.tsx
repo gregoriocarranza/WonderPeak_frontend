@@ -9,6 +9,7 @@ import {
 import React, { useState } from "react";
 import { colorScheme } from "nativewind";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Colors } from "@/constants/Colors";
 
 type Props = {
   title?: string;
@@ -37,13 +38,13 @@ export default function FormField({
         {title}
       </Text>
 
-      <View className="w-full h-16  bg-white focus:border-2 rounded-3xl">
+      <View className="w-full h-16  bg-white rounded-3xl">
         <TextInput
           style={styles.customField}
           className="focus:border-2 flex-1 font-pregular text-black rounded-3xl"
           value={value}
           placeholder={placeholder}
-          placeholderTextColor="#7F7F7F"
+          placeholderTextColor={Colors.gray}
           onChangeText={handleChangeText}
           secureTextEntry={type === "password" && !showPassword}
           keyboardType={keyboardType}
@@ -59,7 +60,7 @@ export default function FormField({
             <MaterialIcons
               name={!showPassword ? "visibility" : "visibility-off"}
               size={24}
-              color="#7F7F7F"
+              color={Colors.gray}
             />
           </Pressable>
         )}
@@ -70,9 +71,9 @@ export default function FormField({
 
 const styles = StyleSheet.create({
   customField: {
-    backgroundColor: "#F5F5F5",
+    backgroundColor: Colors.lightGray,
     paddingHorizontal: 30,
-    borderColor: "#FE758F",
+    borderColor: Colors.pink,
   },
   handlePasswordVisibility: {
     position: "absolute",
