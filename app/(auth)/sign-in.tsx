@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Alert } from "react-native";
 import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import AuthModal from "@/components/AuthModal";
@@ -17,20 +17,25 @@ export default function SignIn() {
   });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const submit = () => {};
+  const submit = () => {
+    if (!form.email || form.password) {
+      Alert.alert("Campos incompletos", "Por favor, complete todos los campos");
+    }
+  };
 
   return (
     <AuthModal>
       <FormField
         value={form.email}
-        handleChangeText={(e) => setForm({ ...form, email: e })}
         placeholder="Email"
+        handleChangeText={(e) => setForm({ ...form, email: e })}
         keyboardType="email-address"
       />
       <FormField
         value={form.password}
         placeholder="Password"
         handleChangeText={(e) => setForm({ ...form, password: e })}
+        keyboardType="ascii-capable"
         otherStyles="mb-3"
         type="password"
       />
@@ -40,6 +45,12 @@ export default function SignIn() {
           href="/reset-password"
         >
           Olvidé mi contraseña
+        </Link>
+        <Link
+          className="font-psemibold text-black underline mb-9 text-right"
+          href="/set-password"
+        >
+          Setear nueva contraseña
         </Link>
       </View>
       <CustomButton
