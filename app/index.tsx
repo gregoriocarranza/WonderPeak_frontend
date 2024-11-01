@@ -18,7 +18,7 @@ import CustomButton from "@/components/CustomButton";
 
 export default function Home() {
   return (
-    <SafeAreaView className="bg-white h-full">
+    <View className="bg-white h-full">
       <ScrollView contentContainerStyle={{ height: "100%" }}>
         <View style={styles.modal}>
           <ImageBackground
@@ -33,11 +33,17 @@ export default function Home() {
                 label="Iniciar Sesión"
                 theme="auth"
               />
+
+              <CustomButton
+                onPress={() => router.push("/home")}
+                label="Home"
+                theme="auth"
+              />
             </View>
           </ImageBackground>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -52,5 +58,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    gap: 9,
   },
 });
