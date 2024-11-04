@@ -1,13 +1,27 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { images } from "@/constants";
 import { Colors } from "@/constants/Colors";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import PostCarousel from "./PostCarousel";
 
 type Props = {
   userName: string;
 };
 
+type MediaItem = {
+  id: string;
+  type: "image" | "video";
+  source: any;
+};
+
 export default function Post({ userName }: Props) {
+  const mediaData: MediaItem[] = [
+    { id: "1", type: "image", source: images.post },
+    { id: "2", type: "image", source: images.post2 },
+    { id: "3", type: "image", source: images.post3 },
+  ];
+
   return (
     <View style={styles.postContainer}>
       <View style={styles.headerPost} className="flex-row">
@@ -20,12 +34,7 @@ export default function Post({ userName }: Props) {
         </View>
       </View>
       <View style={styles.main}>
-        <Image
-          source={images.post}
-          resizeMode="cover"
-          style={styles.image}
-          className="w-full"
-        />
+        <PostCarousel mediaData={mediaData} />
       </View>
       <View style={styles.footer}>
         <Text className="font-pregular">24/09/2024</Text>
@@ -36,6 +45,37 @@ export default function Post({ userName }: Props) {
           Perderse en la inmensidad de la naturaleza es la mejor manera de
           encontrarse a uno mismo
         </Text>
+        <View className="mt-3 flex-row justify-between">
+          <View className="flex-row gap-4">
+            <View className="flex-row gap-1">
+              <Ionicons
+                name="heart-outline"
+                size={24}
+                color={Colors.secondary}
+              />
+              <Text className="items-center font-pregular text-lg">23</Text>
+            </View>
+            <View className="flex-row gap-1">
+              <Ionicons
+                name="chatbubble-outline"
+                size={24}
+                color={Colors.secondary}
+              />
+              <Text className="items-center font-pregular text-lg">
+                4 Comentarios
+              </Text>
+            </View>
+          </View>
+          <View>
+            <View>
+              <Ionicons
+                name="bookmark-outline"
+                size={24}
+                color={Colors.secondary}
+              />
+            </View>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -57,9 +97,6 @@ const styles = StyleSheet.create({
   },
   main: {
     height: 300,
-  },
-  image: {
-    height: "100%",
   },
   footer: {
     paddingHorizontal: 12,

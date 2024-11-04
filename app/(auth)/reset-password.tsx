@@ -34,7 +34,7 @@ export default function ResetPassword() {
       {submitted ? (
         <View className="items-center mt-9 h-[40vh] justify-center">
           <Text className="font-pregular text-2xl text-center mb-9">
-            Muchas gracias! Te llegaráa un mail para recuperar tu contraseña
+            Muchas gracias! Te llegará un mail para recuperar tu contraseña
           </Text>
 
           <CustomButton
