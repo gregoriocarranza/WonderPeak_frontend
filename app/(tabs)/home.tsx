@@ -3,10 +3,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import React from "react";
 import HeaderHome from "@/components/HeaderHome";
 import Post from "@/components/Post";
+import { Colors } from "@/constants/Colors";
 
 export default function Home() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
       <HeaderHome />
       <FlatList
         data={[

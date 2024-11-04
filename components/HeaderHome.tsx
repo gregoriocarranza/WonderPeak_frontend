@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Avatar from "@/components/Avatar";
+import { Colors } from "@/constants/Colors";
 
 export default function HeaderHome() {
   return (
@@ -18,6 +19,7 @@ const styles = StyleSheet.create({
   header: {
     height: 90,
     paddingHorizontal: 12,
+    backgroundColor: Colors.white,
     alignItems: "center",
   },
 });

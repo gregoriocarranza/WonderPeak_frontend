@@ -84,6 +84,7 @@ export default function Post({ userName }: Props) {
 const styles = StyleSheet.create({
   postContainer: {
     borderWidth: 1,
+    backgroundColor: Colors.white,
     borderRadius: 12,
     borderColor: Colors.lightPurple,
   },
