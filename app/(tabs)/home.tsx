@@ -1,11 +1,19 @@
+import React, { useState } from "react";
 import { StyleSheet, Text, FlatList, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import React from "react";
 import HeaderHome from "@/components/HeaderHome";
 import Post from "@/components/Post";
 import { Colors } from "@/constants/Colors";
 
 export default function Home() {
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  const handleRefresh = (): void => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
       <HeaderHome />
@@ -24,6 +32,8 @@ export default function Home() {
             <Post userName={item.id} />
           </View>
         )}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
       />
     </SafeAreaView>
   );
