@@ -4,6 +4,7 @@ import CustomButton from "@/components/CustomButton";
 import AuthModal from "@/components/AuthModal";
 import FormField from "@/components/FormField";
 import { Link, router } from "expo-router";
+import i18n from "@/languages";
 
 type FormState = {
   password: string;
@@ -34,17 +35,17 @@ export default function SetPassword() {
   return (
     <AuthModal>
       <FormField
-        title="Nueva contraseña"
+        title={i18n.t("newPassword")}
         value={form.password}
-        placeholder="Password"
+        placeholder={i18n.t("password")}
         handleChangeText={(e) => setForm({ ...form, password: e })}
         otherStyles="mb-9"
         type="password"
       />
       <FormField
-        title="Repita su contraseña"
+        title={i18n.t("repetPassword")}
         value={form.confirmPassword}
-        placeholder="Password"
+        placeholder={i18n.t("repetPassword")}
         handleChangeText={(e) => setForm({ ...form, confirmPassword: e })}
         otherStyles="mb-9"
         type="password"
@@ -52,7 +53,7 @@ export default function SetPassword() {
 
       <CustomButton
         isLoading={isSubmitting}
-        label="Aceptar"
+        label={i18n.t("accept")}
         theme="auth"
         onPress={submit}
       />

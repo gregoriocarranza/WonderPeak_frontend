@@ -4,6 +4,7 @@ import { images } from "@/constants";
 import { Colors } from "@/constants/Colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import PostCarousel from "./PostCarousel";
+import i18n from "@/languages";
 
 type Props = {
   userName: string;
@@ -62,7 +63,7 @@ export default function Post({ userName }: Props) {
                 color={Colors.secondary}
               />
               <Text className="items-center font-pregular text-lg">
-                4 Comentarios
+                4 {i18n.t("comment", { count: 4 })}
               </Text>
             </View>
           </View>

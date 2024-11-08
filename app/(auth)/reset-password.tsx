@@ -4,6 +4,7 @@ import CustomButton from "@/components/CustomButton";
 import AuthModal from "@/components/AuthModal";
 import FormField from "@/components/FormField";
 import { Link, router } from "expo-router";
+import i18n from "@/languages";
 
 type FormState = {
   email: string;
@@ -34,12 +35,12 @@ export default function ResetPassword() {
       {submitted ? (
         <View className="items-center mt-9 h-[40vh] justify-center">
           <Text className="font-pregular text-2xl text-center mb-9">
-            Muchas gracias! Te llegará un mail para recuperar tu contraseña
+            {i18n.t("resetPasswordSent")}
           </Text>
 
           <CustomButton
             isLoading={isSubmitting}
-            label="Ir al inicio"
+            label={i18n.t("goHome")}
             theme="auth"
             onPress={goToHome}
           />
@@ -48,21 +49,21 @@ export default function ResetPassword() {
         <>
           <View className="items-center mt-9">
             <Text className="font-pregular text-2xl text-center">
-              Ingresa tu email para que podamos enviarte un link de recuperación
+              {i18n.t("resetPasswordInstruction")}
             </Text>
           </View>
 
           <FormField
             value={form.email}
             handleChangeText={(e) => setForm({ email: e })}
-            placeholder="Email"
+            placeholder={i18n.t("email")}
             keyboardType="email-address"
             otherStyles="mb-9"
           />
 
           <CustomButton
             isLoading={isSubmitting}
-            label="Aceptar"
+            label={i18n.t("accept")}
             theme="auth"
             onPress={submit}
           />

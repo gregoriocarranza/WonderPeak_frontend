@@ -4,6 +4,7 @@ import CustomButton from "@/components/CustomButton";
 import AuthModal from "@/components/AuthModal";
 import FormField from "@/components/FormField";
 import { Link } from "expo-router";
+import i18n from "@/languages";
 
 type FormState = {
   email: string;
@@ -18,7 +19,7 @@ export default function SignIn() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const submit = () => {
-    if (!form.email || form.password) {
+    if (!form.email || !form.password) {
       Alert.alert("Campos incompletos", "Por favor, complete todos los campos");
     }
   };
@@ -27,13 +28,13 @@ export default function SignIn() {
     <AuthModal>
       <FormField
         value={form.email}
-        placeholder="Email"
+        placeholder={i18n.t("email")}
         handleChangeText={(e) => setForm({ ...form, email: e })}
         keyboardType="email-address"
       />
       <FormField
         value={form.password}
-        placeholder="Password"
+        placeholder={i18n.t("password")}
         handleChangeText={(e) => setForm({ ...form, password: e })}
         keyboardType="ascii-capable"
         otherStyles="mb-3"
@@ -44,28 +45,28 @@ export default function SignIn() {
           className="font-psemibold text-black underline mb-9 text-right"
           href="/reset-password"
         >
-          Olvidé mi contraseña
+          {i18n.t("forgotPassword")}
         </Link>
         <Link
           className="font-psemibold text-black underline mb-9 text-right"
           href="/set-password"
         >
-          Setear nueva contraseña
+          {i18n.t("setNewPassword")}
         </Link>
       </View>
       <CustomButton
         isLoading={isSubmitting}
-        label="Aceptar"
+        label={i18n.t("accept")}
         theme="auth"
         onPress={submit}
       />
       <View className="items-center mt-9">
-        <Text className="font-pregular">No tienes una cuenta?</Text>
+        <Text className="font-pregular">{i18n.t("notHaveAccount")}</Text>
         <Link
           className="font-pbold text-black underline text-lg"
           href="/sign-up"
         >
-          Registrate
+          {i18n.t("signUp")}
         </Link>
       </View>
     </AuthModal>

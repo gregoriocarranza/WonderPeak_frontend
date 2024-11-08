@@ -4,6 +4,7 @@ import CustomButton from "@/components/CustomButton";
 import AuthModal from "@/components/AuthModal";
 import FormField from "@/components/FormField";
 import { Link } from "expo-router";
+import i18n from "@/languages";
 
 type FormState = {
   name: string;
@@ -40,33 +41,33 @@ export default function SignUp() {
         <FormField
           value={form.name}
           handleChangeText={(e) => setForm({ ...form, email: e })}
-          placeholder="Nombre"
+          placeholder={i18n.t("name")}
         />
         <FormField
           value={form.lastName}
           handleChangeText={(e) => setForm({ ...form, email: e })}
-          placeholder="Apellido"
+          placeholder={i18n.t("lastName")}
         />
         <FormField
           value={form.email}
           handleChangeText={(e) => setForm({ ...form, email: e })}
-          placeholder="Email"
+          placeholder={i18n.t("email")}
           keyboardType="email-address"
         />
         <FormField
           value={form.nickname}
           handleChangeText={(e) => setForm({ ...form, email: e })}
-          placeholder="Nickname"
+          placeholder={i18n.t("nickname")}
         />
         <FormField
           value={form.password}
-          placeholder="Contraseña"
+          placeholder={i18n.t("password")}
           handleChangeText={(e) => setForm({ ...form, password: e })}
           type="password"
         />
         <FormField
           value={form.confirmPassword}
-          placeholder="Confirmar contraseña"
+          placeholder={i18n.t("confirmPassword")}
           handleChangeText={(e) => setForm({ ...form, password: e })}
           otherStyles="mb-5"
           type="password"
@@ -75,17 +76,17 @@ export default function SignUp() {
 
       <CustomButton
         isLoading={isSubmitting}
-        label="Registarme"
+        label={i18n.t("register")}
         theme="auth"
         onPress={submit}
       />
       <View className="items-center mt-9">
-        <Text className="font-pregular">Ya tienes una cuenta?</Text>
+        <Text className="font-pregular">{i18n.t("haveAnAccount")}</Text>
         <Link
           className="font-pbold text-black underline text-lg"
           href="/sign-in"
         >
-          Inicia sesión
+          {i18n.t("signIn")}
         </Link>
       </View>
     </AuthModal>

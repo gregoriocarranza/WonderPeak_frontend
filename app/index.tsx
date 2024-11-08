@@ -1,17 +1,13 @@
 import {
   StyleSheet,
-  Text,
   View,
   ScrollView,
-  Image,
-  Modal,
   ImageBackground,
+  Text,
 } from "react-native";
 import React from "react";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { Link, router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import i18n from "@/languages";
 
 import { images } from "@/constants";
 import CustomButton from "@/components/CustomButton";
@@ -30,13 +26,13 @@ export default function Home() {
             <View style={styles.modalContent}>
               <CustomButton
                 onPress={() => router.push("/sign-in")}
-                label="Iniciar Sesión"
+                label={i18n.t("signIn")}
                 theme="auth"
               />
 
               <CustomButton
                 onPress={() => router.push("/home")}
-                label="Home"
+                label={i18n.t("home")}
                 theme="auth"
               />
             </View>

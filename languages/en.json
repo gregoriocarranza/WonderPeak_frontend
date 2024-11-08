@@ -1,0 +1,26 @@
+{
+  "signIn": "Sign in",
+  "home": "Home",
+  "email": "Email",
+  "password": "Password",
+  "forgotPassword": "I forgot my password",
+  "setNewPassword": "Set new password",
+  "accept": "Accept",
+  "notHaveAccount": "Don't have an account?",
+  "signUp": "Sign up",
+  "name": "Name",
+  "lastName": "Lastname",
+  "nickname": "Nickname",
+  "confirmPassword": "Confirm password",
+  "register": "Register",
+  "haveAnAccount": "Do you already have an account?",
+  "resetPasswordInstruction": "Enter your email so we can send you a recovery link",
+  "resetPasswordSent": "Thank you so much! You will receive an email to recover your password",
+  "goHome": "Go to home",
+  "newPassword": "New password",
+  "repetPassword": "Repet your password",
+  "comment": {
+    "one": "Comment",
+    "other": "Comments"
+  }
+}

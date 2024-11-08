@@ -1,0 +1,26 @@
+{
+  "signIn": "Iniciar sesión",
+  "home": "Inicio",
+  "email": "Correo electrónico",
+  "password": "Contraseña",
+  "forgotPassword": "Olvidé mi contraseña",
+  "setNewPassword": "Setear nuestra contraseña",
+  "accept": "Aceptar",
+  "notHaveAccount": "No tienes una cuenta?",
+  "signUp": "Registrate",
+  "name": "Nombre",
+  "lastName": "Apellido",
+  "nickname": "Nombre de usuario",
+  "confirmPassword": "Confirmar contraseña",
+  "register": "Registrarme",
+  "haveAnAccount": "Ya tienes una cuenta?",
+  "resetPasswordInstruction": "Ingresa tu email para que podamos enviarte un link de recuperación",
+  "resetPasswordSent": "Muchas gracias! Te llegará un mail para recuperar tu contraseña",
+  "goHome": "Ir al inicio",
+  "newPassword": "Nueva contraseña",
+  "repetPassword": "Repita su contraseña",
+  "comment": {
+    "one": "Comentario",
+    "other": "Comentarios"
+  }
+}
