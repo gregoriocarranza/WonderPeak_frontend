@@ -38,7 +38,7 @@ export default function FormField({
         {title}
       </Text>
 
-      <View className="w-full h-16  bg-white rounded-3xl">
+      <View className="w-full h-16 bg-white rounded-3xl">
         <TextInput
           style={styles.customField}
           className="focus:border-2 flex-1 font-pregular text-black rounded-3xl"

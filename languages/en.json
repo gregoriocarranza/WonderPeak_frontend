@@ -22,5 +22,10 @@
   "comment": {
     "one": "Comment",
     "other": "Comments"
-  }
+  },
+  "incompleteFields": "Incomplete fields",
+  "compleAllFields": "Please complete all the fields",
+  "incorrectPasswords": "Incorrect passwords",
+  "passwordsNotMatch": "Passwords don't match",
+  "registerSuccesfully": "Successful registration! Sign in to continue"
 }
