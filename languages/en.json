@@ -27,5 +27,6 @@
   "compleAllFields": "Please complete all the fields",
   "incorrectPasswords": "Incorrect passwords",
   "passwordsNotMatch": "Passwords don't match",
-  "registerSuccesfully": "Successful registration! Sign in to continue"
+  "registerSuccesfully": "Successful registration! Sign in to continue",
+  "gender": "Gender"
 }
