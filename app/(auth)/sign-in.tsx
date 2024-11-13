@@ -4,8 +4,8 @@ import CustomButton from "@/components/CustomButton";
 import AuthModal from "@/components/AuthModal";
 import FormField from "@/components/FormField";
 import { Link, router } from "expo-router";
-
 import i18n from "@/languages";
+import { useAuth } from "@/hooks/authContext";
 
 type FormState = {
   email: string;
@@ -13,17 +13,15 @@ type FormState = {
 };
 
 export default function SignIn() {
-  const [form, setForm] = useState<FormState>({
-    email: "",
-    password: "",
-  });
+  const { login } = useAuth(); 
+  const [form, setForm] = useState<FormState>({ email: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const goToDashboard = () => {
     router.replace("/home");
   };
 
-  const singInUser = async (): Promise<void> => {
+  const signInUser = async (): Promise<void> => {
     try {
       const response = await fetch("http://localhost:3030/api/auth/login", {
         method: "POST",
@@ -38,14 +36,18 @@ export default function SignIn() {
       }
 
       const data = await response.json();
-      
-      if (data.success) {
-        goToDashboard();
-      }
+      console.log(data.data.accessToken)
 
-      console.log(data)
+      if (data.success && data.data.accessToken) {
+
+        await login(data.data.accessToken); // Guarda el token en el contexto
+        goToDashboard();
+      } else {
+        Alert.alert("Error", "No se recibió un token de autenticación.");
+      }
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      Alert.alert("Error", "Hubo un problema al iniciar sesión.");
     } finally {
       setIsSubmitting(false);
     }
@@ -55,7 +57,7 @@ export default function SignIn() {
     if (!form.email || !form.password) {
       Alert.alert("Campos incompletos", "Por favor, complete todos los campos");
     }
-    singInUser();
+    signInUser();
   };
 
   return (
