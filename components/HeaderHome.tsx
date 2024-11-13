@@ -6,23 +6,24 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useAuth } from "@/hooks/authContext";
 import { router } from "expo-router";
 import { UserInfo } from "@/types/interfaces";
+import i18n from "@/languages";
 
 export default function HeaderHome() {
-
-
-
   const { token, logout, userMe } = useAuth();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   const fetchUserInfo = async () => {
     try {
-      const response = await fetch("http://localhost:3030/api/users/me", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "https://wonderpeak.uade.susoft.com.ar/api/users/me",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Error al obtener la información del usuario");
@@ -61,15 +62,29 @@ export default function HeaderHome() {
     router.replace("/sign-in");
   };
 
+  const generateHeaderName = () => {
+    if (userInfo) {
+      const { name = "", lastname = "" } = userInfo;
+      return `${name} ${lastname}`;
+    }
+
+    return `${i18n.t("loading")}...`;
+  };
+
   return (
     <View className="flex-row mb-4 justify-between" style={styles.header}>
       <View className="flex-row">
-        <Avatar image={userInfo?.profileImage} gamification={userInfo?.gamificationLevel} />
+        <Avatar
+          image={userInfo?.profileImage}
+          gamification={userInfo?.gamificationLevel}
+        />
         <View className="ml-6 justify-center">
           <Text className="font-psemibold text-lg text-text">
-            {`${userInfo?.name} ${userInfo?.lastname}` || "Cargando..."}
+            {generateHeaderName()}
           </Text>
-          <Text className="font-pregular text-text">@{userInfo?.nickname || "usuario"}</Text>
+          <Text className="font-pregular text-text">
+            @{userInfo?.nickname || "usuario"}
+          </Text>
         </View>
       </View>
       <View className="mr-4">
