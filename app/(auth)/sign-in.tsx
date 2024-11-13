@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import AuthModal from "@/components/AuthModal";
 import FormField from "@/components/FormField";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+
 import i18n from "@/languages";
 
 type FormState = {
@@ -18,10 +19,43 @@ export default function SignIn() {
   });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
+  const goToDashboard = () => {
+    router.replace("/home");
+  };
+
+  const singInUser = async (): Promise<void> => {
+    try {
+      const response = await fetch("http://localhost:3030/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al logear el usuario");
+      }
+
+      const data = await response.json();
+      
+      if (data.success) {
+        goToDashboard();
+      }
+
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const submit = () => {
     if (!form.email || !form.password) {
       Alert.alert("Campos incompletos", "Por favor, complete todos los campos");
     }
+    singInUser();
   };
 
   return (
