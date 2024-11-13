@@ -1,5 +1,5 @@
-import { Image, StyleSheet, View } from "react-native";
-import React from "react";
+import { Image, Pressable, StyleSheet, View } from "react-native";
+import React, { useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 
 import { images } from "@/constants";
@@ -8,6 +8,9 @@ import { Colors } from "@/constants/Colors";
 //!!enm gamification deberiamos cargar los otros assets y hacer algo como asset[gamification] asi nos devuelve el asset del nivel corresp
 //!TODO:revisar porque no cambia la imagen, si es tema de tamaño o source
 export default function Avatar(image: any, gamification: any) {
+  console.log(image);
+
+  const handleIamge = (): void => {};
   return (
     <View style={styles.avatarContent}>
       <LinearGradient
@@ -16,14 +19,19 @@ export default function Avatar(image: any, gamification: any) {
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
       />
-      <Image source={image} />
+      <Pressable style={styles.profileImg} onPress={handleIamge}>
+        <Image
+          source={images.logo}
+          style={styles.profileImg}
+          className="w-full h-100"
+        />
+      </Pressable>
       <View style={styles.gamificationContainer}>
-        <Image source={images.gamification} /> 
+        <Image source={images.gamification} />
       </View>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   avatarContent: {
@@ -44,5 +52,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 30,
     bottom: 30,
+  },
+  profileImg: {
+    borderRadius: 50,
+    flex: 1,
+    position: "absolute",
+    width: 70,
+    height: 70,
   },
 });
