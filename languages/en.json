@@ -28,5 +28,17 @@
   "incorrectPasswords": "Incorrect passwords",
   "passwordsNotMatch": "Passwords don't match",
   "registerSuccesfully": "Successful registration! Sign in to continue",
-  "weAreInMaintenance": "We are in maintenance! It will be ready soon"
+  "weAreInMaintenance": "We are in maintenance! It will be ready soon",
+  "gender": "Gender",
+  "newPost": "New post",
+  "next": "Next",
+  "permissionIsRequired": "Permission is required to access the gallery",
+  "myPhotos": "My photos",
+  "description": "Description",
+  "descriptionLegend": "Write a text that takes you to this place",
+  "addLocation": "Add location",
+  "locationLegend": "Where did this happen?",
+  "addressee": "Addressee",
+  "followers": "Followers",
+  "publish": "Publish"
 }

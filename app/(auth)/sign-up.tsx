@@ -11,6 +11,7 @@ type FormState = {
   lastName: string;
   nickname: string;
   email: string;
+  gender: string;
   password: string;
   confirmPassword: string;
 };
@@ -21,6 +22,7 @@ export default function SignUp() {
     lastName: "",
     nickname: "",
     email: "",
+    gender: "",
     password: "",
     confirmPassword: "",
   });
@@ -102,6 +104,11 @@ export default function SignUp() {
               value={form.nickname}
               handleChangeText={(e) => setForm({ ...form, nickname: e })}
               placeholder={i18n.t("nickname")}
+            />
+            <FormField
+              value={form.gender}
+              handleChangeText={(e) => setForm({ ...form, gender: e })}
+              placeholder={i18n.t("gender")}
             />
             <FormField
               value={form.password}
