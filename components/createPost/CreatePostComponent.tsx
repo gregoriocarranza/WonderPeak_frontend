@@ -12,6 +12,7 @@ import { Colors } from "@/constants/Colors";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
+import { Video } from "expo-av";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import i18n from "@/languages";
 
@@ -39,7 +40,7 @@ export default function CreatePostComponent({ goToSettings }: Props) {
       }
 
       const media = await MediaLibrary.getAssetsAsync({
-        mediaType: MediaLibrary.MediaType.photo,
+        mediaType: [MediaLibrary.MediaType.photo, MediaLibrary.MediaType.video],
         sortBy: [MediaLibrary.SortBy.creationTime],
       });
 
@@ -116,11 +117,21 @@ export default function CreatePostComponent({ goToSettings }: Props) {
             initialScrollIndex={0}
             renderItem={({ item }) => (
               <View style={styles.mediaContainer}>
-                <Image
-                  source={{ uri: item.uri }}
-                  resizeMode="cover"
-                  style={styles.image}
-                />
+                {item.type === "image" && (
+                  <Image
+                    source={{ uri: item.uri }}
+                    resizeMode="cover"
+                    style={styles.image}
+                  />
+                )}
+                {item.type === "video" && (
+                  <Video
+                    source={{ uri: item.uri }}
+                    style={styles.image}
+                    useNativeControls
+                    isLooping
+                  />
+                )}
               </View>
             )}
           />

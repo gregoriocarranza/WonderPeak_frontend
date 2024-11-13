@@ -11,6 +11,7 @@ import {
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Video } from "expo-av";
 import i18n from "@/languages";
 import FormField from "../FormField";
 import CustomButton from "../CustomButton";
@@ -77,11 +78,21 @@ export default function SettingsPostComponent({
             pagingEnabled
             renderItem={({ item }) => (
               <View style={styles.mediaContainer}>
-                <Image
-                  source={{ uri: item.uri }}
-                  resizeMode="cover"
-                  style={styles.image}
-                />
+                {item.type === "image" && (
+                  <Image
+                    source={{ uri: item.uri }}
+                    resizeMode="cover"
+                    style={styles.image}
+                  />
+                )}
+                {item.type === "video" && (
+                  <Video
+                    source={{ uri: item.uri }}
+                    style={styles.image}
+                    useNativeControls
+                    isLooping
+                  />
+                )}
               </View>
             )}
           />
@@ -125,6 +136,7 @@ export default function SettingsPostComponent({
 
 const styles = StyleSheet.create({
   header: {
+    backgroundColor: Colors.lightGray,
     height: 72,
   },
   customField: {
@@ -137,6 +149,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: Colors.lightGray,
   },
   image: {
     width: screenWidth * 0.8,
