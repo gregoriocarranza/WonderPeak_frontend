@@ -71,6 +71,8 @@ export default function CreatePostComponent({ goToSettings }: Props) {
         type: asset.type,
       }));
 
+      console.log(selectedUris);
+
       setSelectedImages(selectedUris);
     }
   };
@@ -117,14 +119,13 @@ export default function CreatePostComponent({ goToSettings }: Props) {
             initialScrollIndex={0}
             renderItem={({ item }) => (
               <View style={styles.mediaContainer}>
-                {item.type === "image" ||
-                  (item.type === "photo" && (
-                    <Image
-                      source={{ uri: item.uri }}
-                      resizeMode="cover"
-                      style={styles.image}
-                    />
-                  ))}
+                {(item.type === "image" || item.type === "photo") && (
+                  <Image
+                    source={{ uri: item.uri }}
+                    resizeMode="cover"
+                    style={styles.image}
+                  />
+                )}
                 {item.type === "video" && (
                   <Video
                     source={{ uri: item.uri }}
