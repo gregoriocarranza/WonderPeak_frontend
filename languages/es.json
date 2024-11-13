@@ -31,5 +31,12 @@
   "newPost": "Nueva publicación",
   "next": "Siguiente",
   "permissionIsRequired": "Se requiere permiso para acceder a la galería",
-  "myPhotos": "Mis fotos"
+  "myPhotos": "Mis fotos",
+  "description": "Descripción",
+  "descriptionLegend": "Escribe un texto que te lleve a este lugar",
+  "addLocation": "Agregar ubicación",
+  "locationLegend": "¿Donde paso esto?",
+  "addressee": "Destinatarios",
+  "followers": "Seguidores",
+  "publish": "Publicar"
 }
