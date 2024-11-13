@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import AuthModal from "@/components/AuthModal";
 import FormField from "@/components/FormField";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import i18n from "@/languages";
 
 type FormState = {
@@ -19,11 +19,35 @@ export default function ResetPassword() {
 
   const submit = () => {
     setIsSubmitting(true);
+    resetPassword();
+  };
 
-    setTimeout(() => {
+  const resetPassword = async (): Promise<void> => {
+    try {
+      const response = await fetch("http://localhost:3030/api/auth/forgot_password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al resetear el usuario");
+      }
+      const data = await response.json();
+      console.log(data)
+
+      if (data.success) {
+        setSubmitted(true);
+      }
+
+    } catch (error) {
+      console.log(error);
+    } finally {
       setIsSubmitting(false);
       setSubmitted(true);
-    }, 2000);
+    }
   };
 
   const goToHome = () => {
