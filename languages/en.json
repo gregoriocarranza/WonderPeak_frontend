@@ -28,6 +28,7 @@
   "incorrectPasswords": "Incorrect passwords",
   "passwordsNotMatch": "Passwords don't match",
   "registerSuccesfully": "Successful registration! Sign in to continue",
+  "gender": "Gender",
   "newPost": "New post",
   "next": "Next",
   "permissionIsRequired": "Permission is required to access the gallery",
