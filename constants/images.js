@@ -6,7 +6,6 @@ import userProfile from "@/assets/images/user-profile.png";
 import post from "@/assets/images/post.png";
 import post2 from "@/assets/images/post2.png";
 import post3 from "@/assets/images/post3.png";
-import defaultProfile from "@/assets/images/default-profile.jpg";
 
 export default {
   logo,
@@ -17,5 +16,4 @@ export default {
   post,
   post2,
   post3,
-  defaultProfile,
 };
