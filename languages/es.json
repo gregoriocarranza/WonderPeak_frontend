@@ -11,6 +11,7 @@
   "name": "Nombre",
   "lastName": "Apellido",
   "nickname": "Nombre de usuario",
+  "gender": "Genero",
   "confirmPassword": "Confirmar contraseña",
   "register": "Registrarme",
   "haveAnAccount": "Ya tienes una cuenta?",
@@ -27,5 +28,6 @@
   "compleAllFields": "Por favor complete todos los campos",
   "incorrectPasswords": "Contraseñas incorrectas",
   "passwordsNotMatch": "Las contraseñas no coinciden",
-  "registerSuccesfully": "Registro exitoso! Inicia sesión para continuar"
+  "registerSuccesfully": "Registro exitoso! Inicia sesión para continuar",
+  "errorRegistering": "Registrase fallo , por favor reintentalo !"
 }
