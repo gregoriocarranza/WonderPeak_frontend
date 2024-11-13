@@ -14,10 +14,8 @@ import CustomButton from "@/components/CustomButton";
 import { AuthProvider } from "@/hooks/authContext";
 
 export default function Home() {
-  return (
  
-
-
+  return (
       <View className="bg-white h-full">
         <ScrollView contentContainerStyle={{ height: "100%" }}>
           <View style={styles.modal}>
