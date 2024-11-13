@@ -27,5 +27,6 @@
   "compleAllFields": "Por favor complete todos los campos",
   "incorrectPasswords": "Contraseñas incorrectas",
   "passwordsNotMatch": "Las contraseñas no coinciden",
-  "registerSuccesfully": "Registro exitoso! Inicia sesión para continuar"
+  "registerSuccesfully": "Registro exitoso! Inicia sesión para continuar",
+  "weAreInMaintenance": "Estamos en mantenimiento! Pronto estará listo"
 }
