@@ -5,7 +5,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { images } from "@/constants";
 import { Colors } from "@/constants/Colors";
 
-export default function Avatar() {
+//!!enm gamification deberiamos cargar los otros assets y hacer algo como asset[gamification] asi nos devuelve el asset del nivel corresp
+//!TODO:revisar porque no cambia la imagen, si es tema de tamaño o source
+export default function Avatar(image: any, gamification: any) {
   return (
     <View style={styles.avatarContent}>
       <LinearGradient
@@ -14,13 +16,14 @@ export default function Avatar() {
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
       />
-      <Image source={images.profile} />
+      <Image source={image} />
       <View style={styles.gamificationContainer}>
-        <Image source={images.gamification} />
+        <Image source={images.gamification} /> 
       </View>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   avatarContent: {
