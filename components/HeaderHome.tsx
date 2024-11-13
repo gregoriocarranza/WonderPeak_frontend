@@ -9,11 +9,8 @@ import { UserInfo } from "@/types/interfaces";
 
 export default function HeaderHome() {
 
-
-
   const { token, logout, userMe } = useAuth();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-
   const fetchUserInfo = async () => {
     try {
       const response = await fetch("http://localhost:3030/api/users/me", {
