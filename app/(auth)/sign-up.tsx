@@ -8,24 +8,29 @@ import i18n from "@/languages";
 
 type FormState = {
   name: string;
-  lastName: string;
+  lastname: string;
   nickname: string;
   email: string;
   gender: string;
   password: string;
+  gender: string;
+};
+type ValidateState = {
   confirmPassword: string;
 };
+
 
 export default function SignUp() {
   const [form, setForm] = useState<FormState>({
     name: "",
-    lastName: "",
+    lastname: "",
     nickname: "",
     email: "",
     gender: "",
     password: "",
-    confirmPassword: "",
+    gender: "",
   });
+  const [confirmPassword, setconfirmPassword] = useState<ValidateState>({ confirmPassword: "" });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
 
@@ -35,9 +40,13 @@ export default function SignUp() {
 
     Alert.alert(title, body);
   };
+
   const validatePasswords = (): boolean => {
-    return form.password === form.confirmPassword;
+    console.log(form.password)
+    console.log(confirmPassword.confirmPassword)
+    return form.password === confirmPassword.confirmPassword;
   };
+
   const validateFormField = (): boolean => {
     if (!Object.values(form).every(Boolean)) {
       showAlert("incompleteFields", "compleAllFields");
@@ -51,21 +60,49 @@ export default function SignUp() {
 
     return true;
   };
+
+  // Función para hacer la llamada a la API
+  const registerUser = async (): Promise<void> => {
+    try {
+      const response = await fetch(
+        "https://wonderpeak.uade.susoft.com.ar/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al registrar el usuario");
+      }
+
+      const data = await response.json();
+      setSuccess(true);
+      showAlert("success", "registerSuccesfully");
+    } catch (error) {
+      showAlert("error", "errorRegistering");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Modificar submit para usar registerUser
   const submit = (): void => {
     setIsSubmitting(true);
     if (!validateFormField()) {
       setIsSubmitting(false);
       return;
     }
-
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSuccess(true);
-    }, 2000);
+    registerUser();
   };
+
   const goToLogin = () => {
     router.replace("/sign-in");
   };
+
   return (
     <AuthModal>
       {success ? (
@@ -90,8 +127,8 @@ export default function SignUp() {
               placeholder={i18n.t("name")}
             />
             <FormField
-              value={form.lastName}
-              handleChangeText={(e) => setForm({ ...form, lastName: e })}
+              value={form.lastname}
+              handleChangeText={(e) => setForm({ ...form, lastname: e })}
               placeholder={i18n.t("lastName")}
             />
             <FormField
@@ -99,6 +136,11 @@ export default function SignUp() {
               handleChangeText={(e) => setForm({ ...form, email: e })}
               placeholder={i18n.t("email")}
               keyboardType="email-address"
+            />
+            <FormField
+              value={form.gender}
+              handleChangeText={(e) => setForm({ ...form, gender: e })}
+              placeholder={i18n.t("gender")}
             />
             <FormField
               value={form.nickname}
@@ -117,9 +159,9 @@ export default function SignUp() {
               type="password"
             />
             <FormField
-              value={form.confirmPassword}
+              value={confirmPassword.confirmPassword}
               placeholder={i18n.t("confirmPassword")}
-              handleChangeText={(e) => setForm({ ...form, confirmPassword: e })}
+              handleChangeText={(e) => setconfirmPassword({ ...confirmPassword, confirmPassword: e })}
               otherStyles="mb-5"
               type="password"
             />
@@ -147,3 +189,4 @@ export default function SignUp() {
 }
 
 const styles = StyleSheet.create({});
+

@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import AuthModal from "@/components/AuthModal";
 import FormField from "@/components/FormField";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import i18n from "@/languages";
+import { useAuth } from "@/hooks/authContext";
 
 type FormState = {
   email: string;
@@ -12,16 +13,54 @@ type FormState = {
 };
 
 export default function SignIn() {
-  const [form, setForm] = useState<FormState>({
-    email: "",
-    password: "",
-  });
+  const { login } = useAuth(); 
+  const [form, setForm] = useState<FormState>({ email: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const goToDashboard = () => {
+    router.replace("/home");
+  };
+
+  const signInUser = async (): Promise<void> => {
+    try {
+      const response = await fetch(
+        "https://wonderpeak.uade.susoft.com.ar/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al logear el usuario");
+      }
+
+      const data = await response.json();
+      console.log(data.data.accessToken)
+
+      if (data.success && data.data.accessToken) {
+
+        await login(data.data.accessToken); // Guarda el token en el contexto
+        goToDashboard();
+      } else {
+        Alert.alert("Error", "No se recibió un token de autenticación.");
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "Hubo un problema al iniciar sesión.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const submit = () => {
     if (!form.email || !form.password) {
       Alert.alert("Campos incompletos", "Por favor, complete todos los campos");
     }
+    signInUser();
   };
 
   return (

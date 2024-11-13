@@ -6,13 +6,14 @@ import {
   Text,
 } from "react-native";
 import React from "react";
-import { router } from "expo-router";
-import i18n from "@/languages";
+import { Redirect } from "expo-router";
 
 import { images } from "@/constants";
-import CustomButton from "@/components/CustomButton";
+import { useAuth } from "@/hooks/authContext";
 
 export default function Home() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <View className="bg-white h-full">
       <ScrollView contentContainerStyle={{ height: "100%" }}>
@@ -24,17 +25,11 @@ export default function Home() {
             className="h-full w-full"
           >
             <View style={styles.modalContent}>
-              <CustomButton
-                onPress={() => router.push("/sign-in")}
-                label={i18n.t("signIn")}
-                theme="auth"
-              />
-
-              <CustomButton
-                onPress={() => router.push("/home")}
-                label={i18n.t("home")}
-                theme="auth"
-              />
+              {!isAuthenticated ? (
+                <Redirect href="/sign-in" />
+              ) : (
+                <Redirect href="/home" />
+              )}
             </View>
           </ImageBackground>
         </View>

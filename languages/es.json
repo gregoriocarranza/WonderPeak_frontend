@@ -40,5 +40,8 @@
   "locationLegend": "¿Donde paso esto?",
   "addressee": "Destinatarios",
   "followers": "Seguidores",
-  "publish": "Publicar"
+  "publish": "Publicar",
+  "errorRegistering": "Fallo al registrarse, por favor reintentalo !",
+  "error": "Error",
+  "loading": "Cargando"
 }

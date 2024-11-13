@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Stack } from "expo-router";
+import { AuthProvider } from "@/hooks/authContext";
 
 export default function AuthLayout() {
   return (
-    <>
+    <AuthProvider>
       <Stack>
         <Stack.Screen
           name="sign-in"
@@ -31,7 +32,7 @@ export default function AuthLayout() {
           }}
         />
       </Stack>
-    </>
+    </AuthProvider>
   );
 }
 

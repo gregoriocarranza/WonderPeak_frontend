@@ -40,5 +40,8 @@
   "locationLegend": "Where did this happen?",
   "addressee": "Addressee",
   "followers": "Followers",
-  "publish": "Publish"
+  "publish": "Publish",
+  "errorRegistering":"Error registration, try again",
+  "error": "Error",
+  "loading": "Loading"
 }
