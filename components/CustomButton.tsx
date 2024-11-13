@@ -8,6 +8,7 @@ import {
 import React from "react";
 import { isLoading } from "expo-font";
 import { Colors } from "@/constants/Colors";
+import i18n from "@/languages";
 
 type Props = {
   label: string;
@@ -44,7 +45,7 @@ export default function CustomButton({
               : styles.secondaryButtonLabel,
           ]}
         >
-          {isLoading ? "Cargando..." : label}
+          {isLoading ? `${i18n.t("loading")}...` : label}
         </Text>
       </TouchableOpacity>
     </View>

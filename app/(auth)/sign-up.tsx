@@ -62,13 +62,16 @@ export default function SignUp() {
   // Función para hacer la llamada a la API
   const registerUser = async (): Promise<void> => {
     try {
-      const response = await fetch("http://localhost:3030/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
+      const response = await fetch(
+        "https://wonderpeak.uade.susoft.com.ar/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Error al registrar el usuario");

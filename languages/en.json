@@ -29,6 +29,7 @@
   "incorrectPasswords": "Incorrect passwords",
   "passwordsNotMatch": "Passwords don't match",
   "registerSuccesfully": "Successful registration! Sign in to continue",
-  "errorRegistering":"Error registration, try again"
-
+  "errorRegistering":"Error registration, try again",
+  "error": "Error",
+  "loading": "Loading"
 }

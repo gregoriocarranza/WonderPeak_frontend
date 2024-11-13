@@ -1,6 +1,14 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserInfo } from "@/types/interfaces";
+import { View, Text } from "react-native";
+import i18n from "@/languages";
 
 type AuthContextType = {
   token: string | null;
@@ -15,11 +23,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const loadToken = async () => {
       const savedToken = await AsyncStorage.getItem("token");
       if (savedToken) setToken(savedToken);
+
+      setLoading(false);
     };
 
     const loadUserMe = async () => {
@@ -29,7 +40,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     loadToken();
     loadUserMe();
-
   }, [userInfo, token]);
 
   const login = async (newToken: string) => {
@@ -41,7 +51,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(null);
     await AsyncStorage.removeItem("token");
     await AsyncStorage.removeItem("user");
-
   };
 
   const userMe = async (user: any) => {
@@ -57,6 +66,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     logout,
   };
 
+  if (loading) {
+    return (
+      <View>
+        <Text>{`${i18n.t("loading")}...`}</Text>
+      </View>
+    );
+  }
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
