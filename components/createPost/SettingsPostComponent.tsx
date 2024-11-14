@@ -16,17 +16,23 @@ import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Video } from "expo-av";
 import i18n from "@/languages";
+import { useAuth } from "@/hooks/authContext";
 import FormField from "../FormField";
 import CustomButton from "../CustomButton";
 
 const { width: screenWidth } = Dimensions.get("window");
 
 type FormState = {
-  title: string,
-  text: string,
-  location: { latitude: any, longitude: any, mapsUrl: string },
-  multimediaFiletype: string,
-  multimediaFile: string
+  title: string;
+  text: string;
+  location: {
+    placeHolder: string;
+    latitude: any;
+    longitude: any;
+    mapsUrl: string;
+  };
+  multimediaFiletype: string;
+  multimediaFile: string;
 };
 
 type SelectedImage = {
@@ -45,11 +51,17 @@ export default function SettingsPostComponent({
   data,
   publish,
 }: Props) {
+  const { token } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const [form, setForm] = useState<FormState>({
     title: "",
     text: "",
-    location: { latitude: 17.562, longitude: -3.625, mapsUrl: "" },
+    location: {
+      placeHolder: "",
+      latitude: 17.562,
+      longitude: -3.625,
+      mapsUrl: "",
+    },
     multimediaFiletype: "BASE64",
     multimediaFile: "", // Se asignará luego de la codificación
   });
@@ -75,18 +87,21 @@ export default function SettingsPostComponent({
 
   const uploadPost = async (): Promise<void> => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await fetch(
         "https://wonderpeak.uade.susoft.com.ar/api/posts",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify(form),
         }
       );
 
       if (!response.ok) {
-        throw new Error("Error al subir imagen el usuario");
+        throw new Error("Error al subir imagen de usuario");
       }
 
       const responseData = await response.json();
@@ -96,7 +111,7 @@ export default function SettingsPostComponent({
       console.log(error);
       Alert.alert("Error", "Hubo un problema al subir la imagen.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -159,17 +174,32 @@ export default function SettingsPostComponent({
 
         <View style={styles.settingsForm}>
           <FormField
-            title={i18n.t("description")}
+            title={i18n.t("title")}
             value={form.title}
-            placeholder={i18n.t("descriptionLegend")}
+            placeholder={i18n.t("chooseTitle")}
             handleChangeText={(e) => setForm({ ...form, title: e })}
             otherStyles="mb-4"
           />
           <FormField
-            title={i18n.t("addressee")}
+            title={i18n.t("description")}
             value={form.text}
-            placeholder={i18n.t("followers")}
+            placeholder={i18n.t("descriptionLegend")}
             handleChangeText={(e) => setForm({ ...form, text: e })}
+            otherStyles="mb-4"
+          />
+          <FormField
+            title={i18n.t("addLocation")}
+            value={form.location.placeHolder}
+            placeholder={i18n.t("locationLegend")}
+            handleChangeText={(e) =>
+              setForm({
+                ...form,
+                location: {
+                  ...form.location,
+                  placeHolder: e,
+                },
+              })
+            }
             otherStyles="mb-4"
           />
         </View>
@@ -222,7 +252,6 @@ const styles = StyleSheet.create({
     margin: "auto",
   },
   activityIndicatorContainer: {
-    borderWidth: 2,
     position: "absolute",
     top: 0,
     left: 0,

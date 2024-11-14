@@ -44,5 +44,7 @@
   "errorRegistering":"Error registration, try again",
   "error": "Error",
   "loading": "Loading",
-  "goBack": "Go back"
+  "goBack": "Go back",
+  "title": "Title",
+  "chooseTitle": "Choose the perfect title for this moment"
 }

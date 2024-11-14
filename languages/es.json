@@ -44,5 +44,7 @@
   "errorRegistering": "Fallo al registrarse, por favor reintentalo !",
   "error": "Error",
   "loading": "Cargando",
-  "goBack": "Volver"
+  "goBack": "Volver",
+  "title": "Título",
+  "chooseTitle": "Elige un nombre para este momento"
 }

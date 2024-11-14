@@ -194,7 +194,6 @@ const styles = StyleSheet.create({
   p3: { padding: 12 },
   fontPsemibold: { fontWeight: "600" },
   activityIndicatorContainer: {
-    borderWidth: 2,
     position: "absolute",
     top: 0,
     left: 0,

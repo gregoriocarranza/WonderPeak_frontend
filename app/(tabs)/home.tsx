@@ -89,7 +89,6 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   activityIndicatorContainer: {
-    borderWidth: 2,
     position: "absolute",
     top: 0,
     left: 0,
