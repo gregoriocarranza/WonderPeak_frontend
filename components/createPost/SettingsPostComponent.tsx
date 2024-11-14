@@ -188,11 +188,11 @@ export default function SettingsPostComponent({
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.white,
     height: 72,
   },
   customField: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.white,
     justifyContent: "center",
     flex: 1,
   },
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.white,
   },
   image: {
     width: screenWidth * 0.8,
