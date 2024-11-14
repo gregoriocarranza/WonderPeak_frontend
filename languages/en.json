@@ -43,5 +43,6 @@
   "publish": "Publish",
   "errorRegistering":"Error registration, try again",
   "error": "Error",
-  "loading": "Loading"
+  "loading": "Loading",
+  "goBack": "Go back"
 }
