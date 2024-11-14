@@ -86,12 +86,12 @@ export default function SignIn() {
         >
           {i18n.t("forgotPassword")}
         </Link>
-        <Link
-          className="font-psemibold text-black underline mb-9 text-right"
+        {/* <Link
+          className="font-psemibold text-black underline mb-9 text-right self-end"
           href="/set-password"
         >
           {i18n.t("setNewPassword")}
-        </Link>
+        </Link> */}
       </View>
       <CustomButton
         isLoading={isSubmitting}

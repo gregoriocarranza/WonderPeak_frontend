@@ -7,6 +7,7 @@ import {
   Pressable,
   FlatList,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import * as MediaLibrary from "expo-media-library";
@@ -30,8 +31,10 @@ type Props = {
 export default function CreatePostComponent({ goToSettings }: Props) {
   const [galleryImages, setGalleryImages] = useState<SelectedImage[]>([]);
   const [selectedImages, setSelectedImages] = useState<SelectedImage[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    setLoading(true)
     const loadGalleryImages = async () => {
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (status !== "granted") {
@@ -51,6 +54,7 @@ export default function CreatePostComponent({ goToSettings }: Props) {
 
       setGalleryImages(uris);
       setSelectedImages([uris[0]]);
+    setLoading(false)
     };
 
     loadGalleryImages();
@@ -59,6 +63,7 @@ export default function CreatePostComponent({ goToSettings }: Props) {
   const openFullGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
       quality: 1,
       aspect: [4, 3],
     });
@@ -89,18 +94,24 @@ export default function CreatePostComponent({ goToSettings }: Props) {
 
   return (
     <>
-      <View style={[styles.flexRow, styles.header]}>
+      {loading && (
+        <View style={styles.activityIndicatorContainer}>
+          <ActivityIndicator size={"large"} color={Colors.white} />
+        </View>
+      )}
+
+      <View className="justify-between items-center" style={[styles.flexRow, styles.header]}>
         <View style={[styles.flexRow, styles.centerItems]}>
           <Pressable onPress={cancelPost} style={styles.p2}>
             <MaterialIcons name="close" size={24} color={Colors.secondary} />
           </Pressable>
-          <Text style={[styles.text, styles.fontPsemibold]}>
+          <Text className="font-psemibold" style={[styles.text, styles.fontPsemibold]}>
             {i18n.t("newPost")}
           </Text>
         </View>
         <View style={[styles.centerItems, styles.p3]}>
           <Pressable onPress={nextStep}>
-            <Text style={[styles.link, styles.fontPsemibold]}>
+            <Text className="font-psemibold" style={[styles.link, styles.fontPsemibold]}>
               {i18n.t("next")}
             </Text>
           </Pressable>
@@ -182,4 +193,16 @@ const styles = StyleSheet.create({
   p2: { padding: 8 },
   p3: { padding: 12 },
   fontPsemibold: { fontWeight: "600" },
+  activityIndicatorContainer: {
+    borderWidth: 2,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#00000033",
+    zIndex: 1,
+  },
 });

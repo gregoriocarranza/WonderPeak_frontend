@@ -8,6 +8,7 @@ import {
   FlatList,
   Dimensions,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import * as FileSystem from 'expo-file-system'; // Importa FileSystem
 import { Colors } from "@/constants/Colors";
@@ -44,6 +45,7 @@ export default function SettingsPostComponent({
   data,
   publish,
 }: Props) {
+  const [loading, setLoading] = useState<boolean>(false);
   const [form, setForm] = useState<FormState>({
     title: "",
     text: "",
@@ -73,6 +75,7 @@ export default function SettingsPostComponent({
 
   const uploadPost = async (): Promise<void> => {
     try {
+      setLoading(true)
       const response = await fetch(
         "https://wonderpeak.uade.susoft.com.ar/api/posts",
         {
@@ -88,12 +91,12 @@ export default function SettingsPostComponent({
 
       const responseData = await response.json();
       console.log(responseData);
-
+      finalAction();
     } catch (error) {
       console.log(error);
       Alert.alert("Error", "Hubo un problema al subir la imagen.");
     } finally {
-      finalAction();
+      setLoading(false)
     }
   };
 
@@ -104,6 +107,11 @@ export default function SettingsPostComponent({
 
   return (
     <>
+      {loading && (
+        <View style={styles.activityIndicatorContainer}>
+          <ActivityIndicator size={"large"} color={Colors.white} />
+        </View>
+      )}
       <View className="flex-row justify-between" style={styles.header}>
         <View className="flex-row items-center justify-center">
           <Pressable onPress={goBack} className="p-2">
@@ -129,7 +137,7 @@ export default function SettingsPostComponent({
             pagingEnabled
             renderItem={({ item }) => (
               <View style={styles.mediaContainer}>
-                {item.type === "image" && (
+                {(item.type === "image" || item.type === "photo") && (
                   <Image
                     source={{ uri: item.uri }}
                     resizeMode="cover"
@@ -171,7 +179,7 @@ export default function SettingsPostComponent({
         <CustomButton
           label={i18n.t("publish")}
           theme="primary"
-          onPress={finalAction}
+          onPress={uploadPost}
         />
       </View>
     </>
@@ -212,5 +220,17 @@ const styles = StyleSheet.create({
   },
   list: {
     margin: "auto",
+  },
+  activityIndicatorContainer: {
+    borderWidth: 2,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#00000033",
+    zIndex: 1,
   },
 });
