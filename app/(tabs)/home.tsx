@@ -14,6 +14,7 @@ export default function Home() {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
+      fetchUserFeed()
     }, 2000);
   };
 
@@ -21,7 +22,6 @@ export default function Home() {
 
   const fetchUserFeed = async () => {
     try {
-    
       const response = await fetch("https://wonderpeak.uade.susoft.com.ar/api/posts/feed?page=0&limit=20", {
         method: "GET",
         headers: {
@@ -55,7 +55,7 @@ export default function Home() {
         data={userFeed?.data}
         keyExtractor={(item) => item.postUuid}
         renderItem={({ item }) => (
-          <View className="mb-4">
+          <View className="mb-4" key={item.postUuid}>
             <PostItem {...item} />
           </View>
         )}

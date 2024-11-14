@@ -28,11 +28,9 @@ export default function PostItem({
   updatedAt,
 }: Post) {
   const mediaData: MediaItem[] = [
-    { id: postUuid, type: "image", source: multimediaUrl},
-    { id: "2", type: "image", source: images.post2 },
-    { id: "3", type: "image", source: images.post3 },
+    { id: postUuid, type: "image", source: multimediaUrl },
   ];
-//TODO: ver manejo de imagenes en carrousel!
+  //TODO: ver manejo de imagenes en carrousel!
   return (
     <View style={styles.postContainer}>
       <View style={styles.headerPost} className="flex-row">
