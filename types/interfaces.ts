@@ -37,7 +37,7 @@ export type Post = {
     multimediaUrl: string;
     commentsCount: number | null;
     likesCount: number | null;
-    creationDate: string;
+    createdAt: string;
     updatedAt: string | null;
 };
 
