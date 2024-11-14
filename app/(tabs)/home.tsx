@@ -5,6 +5,7 @@ import HeaderHome from "@/components/HeaderHome";
 import { Colors } from "@/constants/Colors";
 import { useAuth } from "@/hooks/authContext";
 import PostItem from "@/components/Post";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home() {
   const { token } =  useAuth();
@@ -22,11 +23,21 @@ export default function Home() {
 
   const fetchUserFeed = async () => {
     try {
+      let savedToken = token;
+      if (!savedToken) {
+        savedToken = await AsyncStorage.getItem("token");
+      }
+
+      if (!savedToken) {
+        console.warn("No token found. User is not authenticated.");
+        return;
+      }
+
       const response = await fetch("https://wonderpeak.uade.susoft.com.ar/api/posts/feed?page=0&limit=20", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${savedToken}`,
         },
       });
 
