@@ -146,11 +146,6 @@ export default function SignUp() {
               placeholder={i18n.t("nickname")}
             />
             <FormField
-              value={form.gender}
-              handleChangeText={(e) => setForm({ ...form, gender: e })}
-              placeholder={i18n.t("gender")}
-            />
-            <FormField
               value={form.password}
               placeholder={i18n.t("password")}
               handleChangeText={(e) => setForm({ ...form, password: e })}
