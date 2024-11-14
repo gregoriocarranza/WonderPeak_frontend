@@ -92,12 +92,14 @@ export default function Home() {
           onRefresh={handleRefresh}
         />
       ) : (
-        <View style={styles.modalContent}>
-          <Image source={images.emptyState} style={styles.image} />
-          <Text className="font-pbold" style={styles.text}>
-            {i18n.t("emptyState")}
-          </Text>
-        </View>
+        !loading && (
+          <View style={styles.modalContent}>
+            <Image source={images.emptyState} style={styles.image} />
+            <Text className="font-pbold" style={styles.text}>
+              {i18n.t("emptyState")}
+            </Text>
+          </View>
+        )
       )}
     </SafeAreaView>
   );
