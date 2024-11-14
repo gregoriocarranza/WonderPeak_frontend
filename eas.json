@@ -1,0 +1,29 @@
+{
+  "cli": {
+    "version": ">= 10.2.1"
+  },
+  "build": {
+    "development": {
+      "developmentClient": false,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_NODE_ENV": "development",
+        "EXPO_PUBLIC_API_URL": "https://wonderpeak.uade.susoft.com.ar",
+        "EXPO_PUBLIC_PUSH_NOTIFICATION_PROVIDER": "FCM"
+      }
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_NODE_ENV": "production",
+        "EXPO_PUBLIC_API_URL": "https://wonderpeak.uade.susoft.com.ar",
+        "EXPO_PUBLIC_PUSH_NOTIFICATION_PROVIDER": "FCM"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

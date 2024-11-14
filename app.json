@@ -20,7 +20,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.uade.wonderpeak"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +37,14 @@
     },
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "a2176234-c81a-4d28-810b-17d6431bca09"
+      }
     }
   }
 }
