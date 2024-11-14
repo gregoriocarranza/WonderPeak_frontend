@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
+    "build:dev": "eas build --profile development --platform android --clear-cache",
+    "build:prod": "eas build --platform android",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
