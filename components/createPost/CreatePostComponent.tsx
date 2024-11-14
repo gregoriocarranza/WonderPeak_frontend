@@ -58,10 +58,10 @@ export default function CreatePostComponent({ goToSettings }: Props) {
 
   const openFullGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsMultipleSelection: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      // allowsMultipleSelection: true,
       quality: 1,
-      selectionLimit: 10,
+      // selectionLimit: 10,
       aspect: [4, 3],
     });
 

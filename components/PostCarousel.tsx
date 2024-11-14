@@ -32,6 +32,12 @@ export default function PostCarousel({ mediaData }: Props) {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
+  const isValidImage = (source: string): boolean => {
+    const regex =
+      /^(https?:\/\/)?([\w.-]+)\.([a-z.]{2,6})(\/[\w.-]+)*\/?([\w-]+\.(jpg|jpeg|png|gif|bmp|webp|svg))$/i;
+    return regex.test(source);
+  };
+
   const renderItem = ({ item, index }: { item: MediaItem; index: number }) => (
     <GestureHandlerRootView>
       <TapGestureHandler
@@ -40,12 +46,16 @@ export default function PostCarousel({ mediaData }: Props) {
       >
         <View style={styles.carouselItem}>
           {item.type === "image" ? (
-            <Image
-              source={item.source}
-              resizeMode="cover"
-              style={styles.image}
-              className="w-full"
-            />
+            <>
+              {isValidImage(item.source) && (
+                <Image
+                  source={{ uri: item.source }}
+                  resizeMode="cover"
+                  style={styles.image}
+                  className="w-full"
+                />
+              )}
+            </>
           ) : (
             <Video
               source={item.source}
