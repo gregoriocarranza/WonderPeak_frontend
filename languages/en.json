@@ -46,5 +46,6 @@
   "loading": "Loading",
   "goBack": "Go back",
   "title": "Title",
-  "chooseTitle": "Choose the perfect title for this moment"
+  "chooseTitle": "Choose the perfect title for this moment",
+  "emptyState": "You have nothing pending at this moment"
 }
