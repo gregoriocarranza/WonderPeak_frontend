@@ -59,9 +59,7 @@ export default function CreatePostComponent({ goToSettings }: Props) {
   const openFullGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      // allowsMultipleSelection: true,
       quality: 1,
-      // selectionLimit: 10,
       aspect: [4, 3],
     });
 
@@ -71,38 +69,38 @@ export default function CreatePostComponent({ goToSettings }: Props) {
         type: asset.type,
       }));
 
-      console.log(selectedUris);
-
       setSelectedImages(selectedUris);
     }
   };
+
   const renderFooterImage = ({ item }: { item: SelectedImage }) => (
     <Pressable onPress={() => setSelectedImages([item])}>
       <Image source={{ uri: item.uri }} style={styles.footerImage} />
     </Pressable>
   );
+
   const cancelPost = (): void => {
     router.replace("/home");
   };
+
   const nextStep = () => {
     goToSettings(selectedImages);
   };
 
   return (
     <>
-      <View className="flex-row justify-between" style={styles.header}>
-        <View className="flex-row items-center justify-center">
-          <Pressable onPress={cancelPost} className="p-2">
+      <View style={[styles.flexRow, styles.header]}>
+        <View style={[styles.flexRow, styles.centerItems]}>
+          <Pressable onPress={cancelPost} style={styles.p2}>
             <MaterialIcons name="close" size={24} color={Colors.secondary} />
           </Pressable>
-          <Text className="font-psemibold" style={styles.text}>
+          <Text style={[styles.text, styles.fontPsemibold]}>
             {i18n.t("newPost")}
           </Text>
         </View>
-
-        <View className="items-center justify-center p-3">
+        <View style={[styles.centerItems, styles.p3]}>
           <Pressable onPress={nextStep}>
-            <Text className="font-psemibold" style={styles.link}>
+            <Text style={[styles.link, styles.fontPsemibold]}>
               {i18n.t("next")}
             </Text>
           </Pressable>
@@ -113,22 +111,22 @@ export default function CreatePostComponent({ goToSettings }: Props) {
         {selectedImages && selectedImages.length > 0 && (
           <FlatList
             data={selectedImages}
-            keyExtractor={(item) => item.uri}
+            keyExtractor={(item) => item?.uri}
             horizontal
             pagingEnabled
             initialScrollIndex={0}
             renderItem={({ item }) => (
               <View style={styles.mediaContainer}>
-                {(item.type === "image" || item.type === "photo") && (
+                {(item?.type === "image" || item?.type === "photo") && (
                   <Image
-                    source={{ uri: item.uri }}
+                    source={{ uri: item?.uri }}
                     resizeMode="cover"
                     style={styles.image}
                   />
                 )}
-                {item.type === "video" && (
+                {item?.type === "video" && (
                   <Video
-                    source={{ uri: item.uri }}
+                    source={{ uri: item?.uri }}
                     style={styles.image}
                     useNativeControls
                     isLooping
@@ -141,12 +139,9 @@ export default function CreatePostComponent({ goToSettings }: Props) {
       </View>
 
       <View style={styles.footer}>
-        <View className="mb-3" style={styles.openGalleryBtn}>
-          <Pressable
-            onPress={openFullGallery}
-            className="flex-row items-center"
-          >
-            <Text className="font-psemibold mr-3" style={styles.text}>
+        <View style={styles.openGalleryBtn}>
+          <Pressable onPress={openFullGallery} style={styles.flexRow}>
+            <Text style={[styles.text, styles.fontPsemibold]}>
               {i18n.t("myPhotos")}
             </Text>
             <Ionicons name="chevron-down" size={24} color={Colors.light.text} />
@@ -156,7 +151,7 @@ export default function CreatePostComponent({ goToSettings }: Props) {
         <FlatList
           data={galleryImages}
           renderItem={renderFooterImage}
-          keyExtractor={(item, index) => item.uri + index}
+          keyExtractor={(item, index) => item?.uri + index}
           horizontal
         />
       </View>
@@ -165,37 +160,26 @@ export default function CreatePostComponent({ goToSettings }: Props) {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    height: 72,
-  },
+  header: { height: 72 },
   customField: {
     backgroundColor: Colors.paleGray,
     flex: 1,
     justifyContent: "center",
   },
-  footer: {
-    padding: 10,
-  },
+  footer: { padding: 10 },
   footerImage: {
     width: 150,
     height: 100,
     marginHorizontal: 4,
   },
-  link: {
-    color: Colors.light.buttonBackground,
-  },
-  image: {
-    width: screenWidth,
-    height: "100%",
-  },
-  openGalleryBtn: {
-    height: 30,
-  },
-  text: {
-    color: Colors.light.text,
-    fontSize: 16,
-  },
-  mediaContainer: {
-    width: screenWidth,
-  },
+  link: { color: Colors.light.buttonBackground },
+  image: { width: screenWidth, height: "100%" },
+  openGalleryBtn: { height: 30 },
+  text: { color: Colors.light.text, fontSize: 16 },
+  mediaContainer: { width: screenWidth },
+  flexRow: { flexDirection: "row" },
+  centerItems: { alignItems: "center", justifyContent: "center" },
+  p2: { padding: 8 },
+  p3: { padding: 12 },
+  fontPsemibold: { fontWeight: "600" },
 });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,7 +7,9 @@ import {
   Pressable,
   FlatList,
   Dimensions,
+  Alert,
 } from "react-native";
+import * as FileSystem from 'expo-file-system'; // Importa FileSystem
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -19,9 +21,11 @@ import CustomButton from "../CustomButton";
 const { width: screenWidth } = Dimensions.get("window");
 
 type FormState = {
-  description: string;
-  location: string;
-  followers: string;
+  title: string,
+  text: string,
+  location: { latitude: any, longitude: any, mapsUrl: string },
+  multimediaFiletype: string,
+  multimediaFile: string
 };
 
 type SelectedImage = {
@@ -41,10 +45,57 @@ export default function SettingsPostComponent({
   publish,
 }: Props) {
   const [form, setForm] = useState<FormState>({
-    description: "",
-    location: "",
-    followers: "",
+    title: "",
+    text: "",
+    location: { latitude: 17.562, longitude: -3.625, mapsUrl: "" },
+    multimediaFiletype: "BASE64",
+    multimediaFile: "", // Se asignará luego de la codificación
   });
+
+  // Función para convertir la imagen a base64
+  const encode = async (data: SelectedImage[]) => {
+    if (data && data.length > 0) {
+      try {
+        const base64 = await FileSystem.readAsStringAsync(data[0].uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        setForm((prevForm) => ({ ...prevForm, multimediaFile: base64 }));
+      } catch (error) {
+        console.log("Error al convertir la imagen a base64:", error);
+        Alert.alert("Error", "No se pudo procesar la imagen.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    encode(data); // Codifica la imagen al montar el componente
+  }, [data]);
+
+  const uploadPost = async (): Promise<void> => {
+    try {
+      const response = await fetch(
+        "https://wonderpeak.uade.susoft.com.ar/api/posts",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al subir imagen el usuario");
+      }
+
+      const responseData = await response.json();
+      console.log(responseData);
+
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "Hubo un problema al subir la imagen.");
+    } finally {
+      finalAction();
+    }
+  };
 
   const finalAction = (): void => {
     router.replace("/home");
@@ -101,23 +152,16 @@ export default function SettingsPostComponent({
         <View style={styles.settingsForm}>
           <FormField
             title={i18n.t("description")}
-            value={form.description}
+            value={form.title}
             placeholder={i18n.t("descriptionLegend")}
-            handleChangeText={(e) => setForm({ ...form, description: e })}
-            otherStyles="mb-4"
-          />
-          <FormField
-            title={i18n.t("addLocation")}
-            value={form.location}
-            placeholder={i18n.t("locationLegend")}
-            handleChangeText={(e) => setForm({ ...form, location: e })}
+            handleChangeText={(e) => setForm({ ...form, title: e })}
             otherStyles="mb-4"
           />
           <FormField
             title={i18n.t("addressee")}
-            value={form.followers}
+            value={form.text}
             placeholder={i18n.t("followers")}
-            handleChangeText={(e) => setForm({ ...form, followers: e })}
+            handleChangeText={(e) => setForm({ ...form, text: e })}
             otherStyles="mb-4"
           />
         </View>
