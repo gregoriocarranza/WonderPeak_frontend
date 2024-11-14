@@ -11,7 +11,6 @@ type FormState = {
   lastname: string;
   nickname: string;
   email: string;
-  gender: string;
   password: string;
   gender: string;
 };
@@ -28,7 +27,6 @@ export default function SignUp() {
     email: "",
     gender: "",
     password: "",
-    gender: "",
   });
   const [confirmPassword, setconfirmPassword] = useState<ValidateState>({ confirmPassword: "" });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
