@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, FlatList, View } from "react-native";
+import { StyleSheet, Text, FlatList, View, ActivityIndicator} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderHome from "@/components/HeaderHome";
 import { Colors } from "@/constants/Colors";
@@ -10,12 +10,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Home() {
   const { token } =  useAuth();
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleRefresh = (): void => {
     setRefreshing(true);
+    fetchUserFeed()
     setTimeout(() => {
       setRefreshing(false);
-      fetchUserFeed()
     }, 2000);
   };
 
@@ -23,6 +24,7 @@ export default function Home() {
 
   const fetchUserFeed = async () => {
     try {
+      setLoading(true);
       let savedToken = token;
       if (!savedToken) {
         savedToken = await AsyncStorage.getItem("token");
@@ -51,6 +53,8 @@ export default function Home() {
 
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,6 +65,12 @@ export default function Home() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
+      {loading && (
+        <View style={styles.activityIndicatorContainer}>
+          <ActivityIndicator size={"large"} color={Colors.white} />
+        </View>
+      )}
+
       <HeaderHome />
       <FlatList
         data={userFeed?.data}
@@ -77,4 +87,17 @@ export default function Home() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  activityIndicatorContainer: {
+    borderWidth: 2,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#00000033",
+    zIndex: 1,
+  },
+});

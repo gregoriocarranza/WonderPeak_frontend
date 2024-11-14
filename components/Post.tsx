@@ -42,7 +42,7 @@ export default function PostItem({
   return (
     <View style={styles.postContainer}>
       <View style={styles.headerPost} className="flex-row">
-        <Image source={images.userProfile} />
+        <Image source={images.defaultProfile} style={styles.profileImage} />
         <View className="ml-4">
           <Text className="font-psemibold text-lg">{user?.name} {user?.lastname} </Text>
           <Text style={styles.location} className="font-pregular">
@@ -119,5 +119,10 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: 12,
     paddingVertical: 16,
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
   },
 });
