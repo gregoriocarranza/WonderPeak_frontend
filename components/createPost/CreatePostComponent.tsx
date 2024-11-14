@@ -54,7 +54,7 @@ export default function CreatePostComponent({ goToSettings }: Props) {
 
       setGalleryImages(uris);
       setSelectedImages([uris[0]]);
-    setLoading(false)
+      setLoading(false)
     };
 
     loadGalleryImages();

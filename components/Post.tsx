@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { images } from "@/constants";
 import { Colors } from "@/constants/Colors";
@@ -35,11 +35,12 @@ export default function PostItem({
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-
+  //TODO: cada posteo del feed tiene que tener un atributo que sea liked /isLiked que sea la busqueda del userId en la base del Feed
+  const [likeState, setLikeState] = useState(false);
+  const [bookmarkState, setbookmarkState] = useState(false);
   const mediaData: MediaItem[] = [
     { id: postUuid, type: "image", source: multimediaUrl },
   ];
-  //TODO: ver manejo de imagenes en carrousel!
   return (
     <View style={styles.postContainer}>
       <View style={styles.headerPost} className="flex-row">
@@ -66,11 +67,13 @@ export default function PostItem({
         <View className="mt-3 flex-row justify-between">
           <View className="flex-row gap-4">
             <View className="flex-row gap-1">
-              <Ionicons
-                name="heart-outline"
-                size={24}
-                color={Colors.secondary}
-              />
+              <Pressable onPress={() => setLikeState(!likeState)} >
+                <Ionicons
+                  name={likeState ? "heart" : "heart-outline"}
+                  size={24}
+                  color={likeState ? Colors.rosePink : Colors.secondary}
+                />
+              </Pressable>
               <Text className="items-center font-pregular text-lg">{likesCount}</Text>
             </View>
             <View className="flex-row gap-1">
@@ -86,11 +89,12 @@ export default function PostItem({
           </View>
           <View>
             <View>
-              <Ionicons
-                name="bookmark-outline"
-                size={24}
-                color={Colors.secondary}
-              />
+              <Pressable onPress={() => setbookmarkState(!bookmarkState)} >
+                <Ionicons
+                  name={bookmarkState ? "bookmark" : "bookmark-outline"}
+                  size={24}
+                  color={bookmarkState ? Colors.gray : Colors.secondary}                />
+              </Pressable>
             </View>
           </View>
         </View>
