@@ -132,7 +132,7 @@ export default function SettingsPostComponent({
           <FlatList
             style={styles.list}
             data={data}
-            keyExtractor={(item, index) => item.uri + index}          
+            keyExtractor={(item, index) => item?.uri + index}          
             horizontal
             pagingEnabled
             renderItem={({ item }) => (
