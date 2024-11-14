@@ -7,7 +7,6 @@ import PostCarousel from "./PostCarousel";
 import i18n from "@/languages";
 import { Post } from "@/types/interfaces";
 
-
 type MediaItem = {
   id: string;
   type: "image" | "video";
@@ -24,9 +23,18 @@ export default function PostItem({
   multimediaUrl,
   commentsCount,
   likesCount,
-  creationDate,
+  createdAt,
   updatedAt,
 }: Post) {
+  const formatDate = (isoString: string): string => {
+    if (!isoString) return "";
+    const date = new Date(isoString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() returns 0-11
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const mediaData: MediaItem[] = [
     { id: postUuid, type: "image", source: multimediaUrl },
   ];
@@ -47,7 +55,7 @@ export default function PostItem({
         <PostCarousel mediaData={mediaData} />
       </View>
       <View style={styles.footer}>
-        <Text className="font-pregular">{creationDate}</Text>
+        <Text className="font-pregular">{formatDate(createdAt)}</Text>
         <Text className="font-psemibold">
           {title}
         </Text>
