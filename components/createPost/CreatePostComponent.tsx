@@ -122,7 +122,7 @@ export default function CreatePostComponent({ goToSettings }: Props) {
         {selectedImages && selectedImages.length > 0 && (
           <FlatList
             data={selectedImages}
-            keyExtractor={(item, index) => `${item.uri}-${index}`}
+            keyExtractor={(item, index) => `${item?.uri}-${index}`}
             horizontal
             pagingEnabled
             initialScrollIndex={0}

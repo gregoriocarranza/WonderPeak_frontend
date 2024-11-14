@@ -7,6 +7,7 @@ import post from "@/assets/images/post.png";
 import post2 from "@/assets/images/post2.png";
 import post3 from "@/assets/images/post3.png";
 import maintenance from "@/assets/images/maintenance.png";
+import defaultProfile from "@/assets/images/logo.png";
 
 export default {
   logo,
@@ -18,4 +19,5 @@ export default {
   post2,
   post3,
   maintenance,
+  defaultProfile,
 };

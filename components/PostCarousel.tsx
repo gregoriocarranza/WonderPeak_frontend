@@ -15,6 +15,7 @@ import {
   TapGestureHandler,
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
+import { isValidImage } from "@/utils";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -31,12 +32,6 @@ type Props = {
 export default function PostCarousel({ mediaData }: Props) {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  const isValidImage = (source: string): boolean => {
-    const regex =
-      /^(https?:\/\/)?([\w.-]+)\.([a-z.]{2,6})(\/[\w.-]+)*\/?([\w-]+\.(jpg|jpeg|png|gif|bmp|webp|svg))$/i;
-    return regex.test(source);
-  };
 
   const renderItem = ({ item, index }: { item: MediaItem; index: number }) => (
     <GestureHandlerRootView>
