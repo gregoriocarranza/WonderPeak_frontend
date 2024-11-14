@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserInfo } from "@/types/interfaces";
 import { View, Text } from "react-native";
 import i18n from "@/languages";
+import { Colors } from "@/constants/Colors";
 
 type AuthContextType = {
   token: string | null;
@@ -68,8 +69,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   if (loading) {
     return (
-      <View>
-        <Text>{`${i18n.t("loading")}...`}</Text>
+      <View className="items-center justify-center" style={{ height: "100%" }}>
+        <Text
+          className="font-pbold"
+          style={{
+            fontSize: 32,
+            color: Colors.gray,
+          }}
+        >{`${i18n.t("loading")}...`}</Text>
       </View>
     );
   }

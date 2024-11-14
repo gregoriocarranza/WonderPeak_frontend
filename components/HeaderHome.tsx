@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Avatar from "@/components/Avatar";
 import { Colors } from "@/constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -11,15 +12,30 @@ import i18n from "@/languages";
 export default function HeaderHome() {
   const { token, logout, userMe } = useAuth();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+
   const fetchUserInfo = async () => {
     try {
+      if (userInfo) {
+        return;
+      }
+
+      let savedToken = token;
+      if (!savedToken) {
+        savedToken = await AsyncStorage.getItem("token");
+      }
+
+      if (!savedToken) {
+        console.warn("No token found. User is not authenticated.");
+        return;
+      }
+
       const response = await fetch(
         "https://wonderpeak.uade.susoft.com.ar/api/users/me",
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${savedToken}`,
           },
         }
       );
