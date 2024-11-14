@@ -23,6 +23,7 @@ export default function SignIn() {
 
   const signInUser = async (): Promise<void> => {
     try {
+      setIsSubmitting(true);
       const response = await fetch(
         "https://wonderpeak.uade.susoft.com.ar/api/auth/login",
         {
@@ -42,7 +43,6 @@ export default function SignIn() {
       console.log(data.data.accessToken)
 
       if (data.success && data.data.accessToken) {
-
         await login(data.data.accessToken); // Guarda el token en el contexto
         goToDashboard();
       } else {
@@ -81,7 +81,7 @@ export default function SignIn() {
       />
       <View className="w-full">
         <Link
-          className="font-psemibold text-black underline mb-9 text-right"
+          className="font-psemibold text-black underline mb-9 text-right self-end"
           href="/reset-password"
         >
           {i18n.t("forgotPassword")}
