@@ -64,9 +64,9 @@ export default function Home() {
       <HeaderHome />
       <FlatList
         data={userFeed?.data}
-        keyExtractor={(item) => item.postUuid}
+        keyExtractor={(item, index) => `${item.postUuid}-${index}`}
         renderItem={({ item }) => (
-          <View className="mb-4" key={item.postUuid}>
+          <View className="mb-4">
             <PostItem {...item} />
           </View>
         )}

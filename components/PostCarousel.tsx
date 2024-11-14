@@ -91,7 +91,7 @@ export default function PostCarousel({ mediaData }: Props) {
         data={mediaData}
         pagingEnabled
         showsHorizontalScrollIndicator
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
         horizontal
         renderItem={({ item, index }) => renderItem({ item, index })}
       />
@@ -110,7 +110,7 @@ export default function PostCarousel({ mediaData }: Props) {
             pagingEnabled
             initialScrollIndex={selectedIndex}
             showsHorizontalScrollIndicator
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item, index) => `${item.id}-${index}`}
             horizontal
             getItemLayout={getItemLayout}
             renderItem={renderItem}
