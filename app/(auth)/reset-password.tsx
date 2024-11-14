@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Pressable } from "react-native";
 import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import AuthModal from "@/components/AuthModal";
@@ -52,6 +52,9 @@ export default function ResetPassword() {
     }
   };
 
+  const goBack = () => {
+    router.replace("/sign-in");
+  };
   const goToHome = () => {
     router.replace("/");
   };
@@ -93,6 +96,14 @@ export default function ResetPassword() {
             theme="auth"
             onPress={submit}
           />
+
+          <View className="mt-4">
+            <Pressable onPress={goBack}>
+              <Text className="font-pregular text-xl underline">
+                {i18n.t("goBack")}
+              </Text>
+            </Pressable>
+          </View>
         </>
       )}
     </AuthModal>
