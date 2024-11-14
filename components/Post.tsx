@@ -5,10 +5,8 @@ import { Colors } from "@/constants/Colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import PostCarousel from "./PostCarousel";
 import i18n from "@/languages";
+import { Post } from "@/types/interfaces";
 
-type Props = {
-  userName: string;
-};
 
 type MediaItem = {
   id: string;
@@ -16,21 +14,34 @@ type MediaItem = {
   source: any;
 };
 
-export default function Post({ userName }: Props) {
+export default function PostItem({
+  postUuid,
+  userUuid,
+  title,
+  text,
+  user,
+  location,
+  multimediaUrl,
+  commentsCount,
+  likesCount,
+  creationDate,
+  updatedAt,
+}: Post) {
   const mediaData: MediaItem[] = [
-    { id: "1", type: "image", source: images.post },
+    { id: postUuid, type: "image", source: multimediaUrl},
     { id: "2", type: "image", source: images.post2 },
     { id: "3", type: "image", source: images.post3 },
   ];
-
+//TODO: ver manejo de imagenes en carrousel!
   return (
     <View style={styles.postContainer}>
       <View style={styles.headerPost} className="flex-row">
         <Image source={images.userProfile} />
         <View className="ml-4">
-          <Text className="font-psemibold text-lg">Camila Estrada</Text>
+          <Text className="font-psemibold text-lg">{user?.name} {user?.lastname} </Text>
           <Text style={styles.location} className="font-pregular">
-            📍 Patagonia Argentina
+          📍 {location?.mapsUrl || "Ubicación no disponible"}
+
           </Text>
         </View>
       </View>
@@ -38,13 +49,12 @@ export default function Post({ userName }: Props) {
         <PostCarousel mediaData={mediaData} />
       </View>
       <View style={styles.footer}>
-        <Text className="font-pregular">24/09/2024</Text>
+        <Text className="font-pregular">{creationDate}</Text>
         <Text className="font-psemibold">
-          Enfrentando la naturaleza, forjando el camino 🌲🏔️
+          {title}
         </Text>
         <Text className="font-pregular">
-          Perderse en la inmensidad de la naturaleza es la mejor manera de
-          encontrarse a uno mismo
+          {text}
         </Text>
         <View className="mt-3 flex-row justify-between">
           <View className="flex-row gap-4">
@@ -54,7 +64,7 @@ export default function Post({ userName }: Props) {
                 size={24}
                 color={Colors.secondary}
               />
-              <Text className="items-center font-pregular text-lg">23</Text>
+              <Text className="items-center font-pregular text-lg">{likesCount}</Text>
             </View>
             <View className="flex-row gap-1">
               <Ionicons
@@ -63,7 +73,7 @@ export default function Post({ userName }: Props) {
                 color={Colors.secondary}
               />
               <Text className="items-center font-pregular text-lg">
-                4 {i18n.t("comment", { count: 4 })}
+                {commentsCount} {i18n.t("comment", { count: 4 })}
               </Text>
             </View>
           </View>

@@ -18,11 +18,21 @@ type Location = {
     mapsUrl: string;
 };
 
+type UserData = {
+    useruuid: string;
+    name: string;
+    lastname: string;
+    nickname: string;
+    profileuserimage: string;
+    level: string;
+}
+
 export type Post = {
     postUuid: string;
     userUuid: string;
     title: string;
     text: string;
+    user: UserData;
     location: Location;
     multimediaUrl: string;
     commentsCount: number | null;
