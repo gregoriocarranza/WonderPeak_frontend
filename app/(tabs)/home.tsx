@@ -35,7 +35,7 @@ export default function Home() {
         return;
       }
 
-      const response = await fetch("https://wonderpeak.uade.susoft.com.ar/api/posts/feed?page=0&limit=20", {
+      const response = await fetch("https://wonderpeak.uade.susoft.com.ar/api/posts/feed?page=0&limit=20&mine=true", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

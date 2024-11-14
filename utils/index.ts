@@ -3,3 +3,11 @@ export const isValidImage = (source: string): boolean => {
   const base64ImageRegex = /^data:image\/(png|jpeg|jpg|gif|svg\+xml);base64,[A-Za-z0-9+/=]+$/;
   return urlRegex.test(source) || base64ImageRegex.test(source);
 };
+
+export const capitalizeWords = (str: string): string => {
+  if (!str) return "";
+  return str
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};

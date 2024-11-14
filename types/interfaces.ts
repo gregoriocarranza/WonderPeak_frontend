@@ -16,6 +16,7 @@ type Location = {
     latitude: number;
     longitude: number;
     mapsUrl: string;
+    placeHolder:string;
 };
 
 type UserData = {

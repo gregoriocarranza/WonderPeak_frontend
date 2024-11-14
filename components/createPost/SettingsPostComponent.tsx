@@ -66,26 +66,47 @@ export default function SettingsPostComponent({
     multimediaFile: "", // Se asignará luego de la codificación
   });
 
-  // Función para convertir la imagen a base64
+
   const encode = async (data: SelectedImage[]) => {
+
     if (data && data.length > 0) {
       try {
+        // Leer el archivo como base64
         const base64 = await FileSystem.readAsStringAsync(data[0].uri, {
           encoding: FileSystem.EncodingType.Base64,
         });
-        setForm((prevForm) => ({ ...prevForm, multimediaFile: base64 }));
+
+        // Inicializar el tipo de contenido predeterminado
+        let contentType = "image/jpeg"; // Valor predeterminado
+        if (data[0].uri.includes(".png")) {
+          contentType = "image/png";
+        } else if (data[0].uri.includes(".jpg") || data[0].uri.includes(".jpeg")) {
+          contentType = "image/jpeg";
+        }
+
+        // Construir la Data URI
+        const dataUri = `data:${contentType};base64,${base64}`;
+
+        // Actualizar el formulario con la Data URI
+        setForm((prevForm) => ({ ...prevForm, multimediaFile: dataUri }));
       } catch (error) {
-        console.log("Error al convertir la imagen a base64:", error);
+        console.error("Error al convertir la imagen a base64:", error);
         Alert.alert("Error", "No se pudo procesar la imagen.");
       }
     }
   };
+
 
   useEffect(() => {
     encode(data); // Codifica la imagen al montar el componente
   }, [data]);
 
   const uploadPost = async (): Promise<void> => {
+  
+    const formToSend = {
+        ...form,
+        location: JSON.stringify(form.location), // Stringificar location
+      };
     try {
       setLoading(true);
       const response = await fetch(
@@ -96,11 +117,14 @@ export default function SettingsPostComponent({
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(form),
+          body: JSON.stringify(formToSend),
         }
       );
+      console.log(response, "response")
 
       if (!response.ok) {
+        const dataresponse = await response.json();
+        console.log(dataresponse);
         throw new Error("Error al subir imagen de usuario");
       }
 
@@ -147,7 +171,7 @@ export default function SettingsPostComponent({
           <FlatList
             style={styles.list}
             data={data}
-            keyExtractor={(item, index) => item?.uri + index}          
+            keyExtractor={(item, index) => item?.uri + index}
             horizontal
             pagingEnabled
             renderItem={({ item }) => (

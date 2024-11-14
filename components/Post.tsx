@@ -6,6 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import PostCarousel from "./PostCarousel";
 import i18n from "@/languages";
 import { Post } from "@/types/interfaces";
+import { capitalizeWords } from "@/utils";
 
 type MediaItem = {
   id: string;
@@ -46,7 +47,7 @@ export default function PostItem({
         <View className="ml-4">
           <Text className="font-psemibold text-lg">{user?.name} {user?.lastname} </Text>
           <Text style={styles.location} className="font-pregular">
-          📍 {location?.mapsUrl || "Ubicación no disponible"}
+            📍{capitalizeWords(location?.placeHolder) || "Ubicación no disponible"}
 
           </Text>
         </View>
