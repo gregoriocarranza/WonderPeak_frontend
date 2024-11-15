@@ -79,8 +79,9 @@ export default function HeaderHome() {
 
   const generateHeaderName = () => {
     if (userInfo) {
-      const { name = "", lastname = "" } = userInfo;
-      return `${name} ${lastname}`;
+      const { name, lastname } = userInfo;
+
+      return `${name || ""} ${lastname || ""}`;
     }
 
     return `${i18n.t("loading")}...`;

@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     flex: 1,
     position: "absolute",
-    width: 70,
-    height: 70,
+    width: 68,
+    height: 68,
   },
 });

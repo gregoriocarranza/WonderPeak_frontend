@@ -47,5 +47,6 @@
   "goBack": "Volver",
   "title": "Título",
   "chooseTitle": "Elige un nombre para este momento",
-  "emptyState": "No tienes nada pendiente en este momento"
+  "emptyState": "No tienes nada pendiente en este momento",
+  "success": "Registro exitoso"
 }
