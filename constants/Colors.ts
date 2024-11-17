@@ -16,6 +16,7 @@ export const Colors = {
   pink: "#FE758F",
   darkPink: "#49454F",
   secondary: "#625B71",
+  link: "#007AFF",
   light: {
     text: '#11181C',
     background: '#fff',

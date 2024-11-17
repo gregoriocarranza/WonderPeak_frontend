@@ -8,12 +8,13 @@ import {
   Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import HeaderHome from "@/components/HeaderHome";
-import { Colors } from "@/constants/Colors";
-import { useAuth } from "@/hooks/authContext";
-import PostItem from "@/components/Post";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "@/hooks/authContext";
+import PostItem from "@/components/Post/Post";
+import HeaderHome from "@/components/HeaderHome";
+import AdvertisingPost from "@/components/Post/AdvertisingPost";
 import { images } from "@/constants";
+import { Colors } from "@/constants/Colors";
 import i18n from "@/languages";
 
 export default function Home() {
@@ -33,7 +34,6 @@ export default function Home() {
 
   const fetchUserFeed = async () => {
     try {
-      setLoading(true);
       let savedToken = token;
       if (!savedToken) {
         savedToken = await AsyncStorage.getItem("token");
@@ -61,13 +61,13 @@ export default function Home() {
       setUserFeed(data);
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchUserFeed();
+    setLoading(false);
   }, []);
 
   return (
@@ -83,9 +83,13 @@ export default function Home() {
         <FlatList
           data={userFeed?.data}
           keyExtractor={(item, index) => `${item.postUuid}-${index}`}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <View className="mb-4">
-              <PostItem {...item} />
+              {item.commerceImage ? (
+                <AdvertisingPost {...item} id={index}/>
+              ) : (
+                <PostItem {...item} />
+              )}
             </View>
           )}
           refreshing={refreshing}

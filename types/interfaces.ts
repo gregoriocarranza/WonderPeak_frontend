@@ -45,3 +45,13 @@ export type Post = {
 export type PostData = {
     data: Post[];
 };
+
+export type Advertising = {
+    id: string,
+    multimediaUrl: string,
+    commerceImage: string, 
+    commerceName: string,
+    commerceUrl: string,
+    title: string | null;
+    text: string | null;
+}

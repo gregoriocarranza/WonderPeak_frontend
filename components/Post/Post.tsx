@@ -46,10 +46,13 @@ export default function PostItem({
       <View style={styles.headerPost} className="flex-row">
         <Image source={images.defaultProfile} style={styles.profileImage} />
         <View className="ml-4">
-          <Text className="font-psemibold text-lg">{user?.name} {user?.lastname} </Text>
+          <Text className="font-psemibold text-lg">
+            {user?.name} {user?.lastname}{" "}
+          </Text>
           <Text style={styles.location} className="font-pregular">
-            📍{capitalizeWords(location?.placeHolder) || "Ubicación no disponible"}
-
+            📍
+            {capitalizeWords(location?.placeHolder) ||
+              "Ubicación no disponible"}
           </Text>
         </View>
       </View>
@@ -58,23 +61,21 @@ export default function PostItem({
       </View>
       <View style={styles.footer}>
         <Text className="font-pregular">{formatDate(createdAt)}</Text>
-        <Text className="font-psemibold">
-          {title}
-        </Text>
-        <Text className="font-pregular">
-          {text}
-        </Text>
+        {title && <Text className="font-psemibold">{title}</Text>}
+        {text && <Text className="font-pregular">{text}</Text>}
         <View className="mt-3 flex-row justify-between">
           <View className="flex-row gap-4">
             <View className="flex-row gap-1">
-              <Pressable onPress={() => setLikeState(!likeState)} >
+              <Pressable onPress={() => setLikeState(!likeState)}>
                 <Ionicons
                   name={likeState ? "heart" : "heart-outline"}
                   size={24}
                   color={likeState ? Colors.rosePink : Colors.secondary}
                 />
               </Pressable>
-              <Text className="items-center font-pregular text-lg">{likesCount}</Text>
+              <Text className="items-center font-pregular text-lg">
+                {likesCount}
+              </Text>
             </View>
             <View className="flex-row gap-1">
               <Ionicons
@@ -89,11 +90,12 @@ export default function PostItem({
           </View>
           <View>
             <View>
-              <Pressable onPress={() => setbookmarkState(!bookmarkState)} >
+              <Pressable onPress={() => setbookmarkState(!bookmarkState)}>
                 <Ionicons
                   name={bookmarkState ? "bookmark" : "bookmark-outline"}
                   size={24}
-                  color={bookmarkState ? Colors.gray : Colors.secondary}                />
+                  color={bookmarkState ? Colors.gray : Colors.secondary}
+                />
               </Pressable>
             </View>
           </View>
