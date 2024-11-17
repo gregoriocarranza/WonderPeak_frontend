@@ -6,6 +6,8 @@ import {
   View,
   ActivityIndicator,
   Image,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -44,13 +46,16 @@ export default function Home() {
         return;
       }
 
-      const response = await fetch("https://wonderpeak.uade.susoft.com.ar/api/posts/feed?page=0&limit=20&mine=true", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${savedToken}`,
-        },
-      });
+      const response = await fetch(
+        "https://wonderpeak.uade.susoft.com.ar/api/posts/feed?page=0&limit=20&mine=true",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${savedToken}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Error al obtener la información del usuario");
@@ -86,7 +91,7 @@ export default function Home() {
           renderItem={({ item, index }) => (
             <View className="mb-4">
               {item.commerceImage ? (
-                <AdvertisingPost {...item} id={index}/>
+                <AdvertisingPost {...item} id={index} />
               ) : (
                 <PostItem {...item} />
               )}
@@ -97,12 +102,20 @@ export default function Home() {
         />
       ) : (
         !loading && (
-          <View style={styles.modalContent}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+              />
+            }
+            contentContainerStyle={styles.modalContent}
+          >
             <Image source={images.emptyState} style={styles.image} />
             <Text className="font-pbold" style={styles.text}>
               {i18n.t("emptyState")}
             </Text>
-          </View>
+          </ScrollView>
         )
       )}
     </SafeAreaView>
