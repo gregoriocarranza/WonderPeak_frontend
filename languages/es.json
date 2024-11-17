@@ -49,5 +49,7 @@
   "chooseTitle": "Elige un nombre para este momento",
   "emptyState": "No tienes nada pendiente en este momento",
   "success": "Registro exitoso",
-  "emailNotValid": "El email ingresado no es válido"
+  "emailNotValid": "El email ingresado no es válido",
+  "search": "Buscar",
+  "noRecentSearches": "No hay búsquedas recientes"
 }

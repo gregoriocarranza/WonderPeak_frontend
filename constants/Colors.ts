@@ -18,6 +18,8 @@ export const Colors = {
   secondary: "#625B71",
   disabledBackground: "#B3B3B3",
   link: "#007AFF",
+  darkBlack: "#1D1B20",
+  lavenderGray: "#DED8E1",
   light: {
     text: '#11181C',
     background: '#fff',

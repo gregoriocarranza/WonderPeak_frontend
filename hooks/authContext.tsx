@@ -14,6 +14,7 @@ import { Colors } from "@/constants/Colors";
 type AuthContextType = {
   token: string | null;
   isAuthenticated: boolean;
+  userInfo: string | null;
   userMe: (user: string) => void;
   login: (token: string) => void;
   logout: () => void;
@@ -65,6 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     userMe,
     login,
     logout,
+    userInfo,
   };
 
   if (loading) {

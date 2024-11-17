@@ -49,5 +49,7 @@
   "chooseTitle": "Choose the perfect title for this moment",
   "emptyState": "You have nothing pending at this moment",
   "success": "Succesfully register",
-  "emailNotValid": "The email entered is not valid"
+  "emailNotValid": "The email entered is not valid",
+  "search": "Search",
+  "noRecentSearches": "No recent searches"
 }
