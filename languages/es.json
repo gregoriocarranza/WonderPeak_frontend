@@ -48,5 +48,6 @@
   "title": "Título",
   "chooseTitle": "Elige un nombre para este momento",
   "emptyState": "No tienes nada pendiente en este momento",
-  "success": "Registro exitoso"
+  "success": "Registro exitoso",
+  "emailNotValid": "El email ingresado no es válido"
 }

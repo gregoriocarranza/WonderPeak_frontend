@@ -11,3 +11,9 @@ export const capitalizeWords = (str: string): string => {
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
 };
+
+export const isValidEmail = (email: string): boolean => {
+  const REGEX_EMAIL = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+
+  return REGEX_EMAIL.test(email)
+}
