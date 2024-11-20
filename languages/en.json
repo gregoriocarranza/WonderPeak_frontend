@@ -51,5 +51,6 @@
   "success": "Succesfully register",
   "emailNotValid": "The email entered is not valid",
   "search": "Search",
-  "noRecentSearches": "No recent searches"
+  "noRecentSearches": "No recent searches",
+  "deleteHistory": "Delete history"
 }

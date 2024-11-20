@@ -70,9 +70,13 @@ export default function Home() {
   };
 
   useEffect(() => {
-    setLoading(true);
-    fetchUserFeed();
-    setLoading(false);
+    const loadData = async () => {
+      setLoading(true);
+      await fetchUserFeed();
+      setLoading(false);
+    };
+
+    loadData();
   }, []);
 
   return (

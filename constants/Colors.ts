@@ -20,6 +20,8 @@ export const Colors = {
   link: "#007AFF",
   darkBlack: "#1D1B20",
   lavenderGray: "#DED8E1",
+  border: "#D9D9D9",
+  darkGray: "#BDBDBD",
   light: {
     text: '#11181C',
     background: '#fff',

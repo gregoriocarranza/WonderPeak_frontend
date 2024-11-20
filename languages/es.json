@@ -51,5 +51,6 @@
   "success": "Registro exitoso",
   "emailNotValid": "El email ingresado no es válido",
   "search": "Buscar",
-  "noRecentSearches": "No hay búsquedas recientes"
+  "noRecentSearches": "No hay búsquedas recientes",
+  "deleteHistory": "Eliminar historial"
 }
