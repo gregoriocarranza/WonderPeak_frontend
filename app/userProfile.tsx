@@ -1,14 +1,19 @@
 import { StyleSheet } from "react-native";
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
+import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderUser from "@/components/HeaderUser";
 import PostsLayout from "@/components/PostsLayout";
+import { router } from "expo-router";
 
-export default function Favourites() {
+export default function userProfile() {
+  const goToSearch = () => {
+    router.back();
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
-      <HeaderUser isOwer />
+      <HeaderUser showGoBack={true} goBackAction={goToSearch} />
       <PostsLayout />
     </SafeAreaView>
   );

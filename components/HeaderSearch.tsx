@@ -72,7 +72,7 @@ export default function HeaderSearch({
 
 const styles = StyleSheet.create({
   header: {
-    height: 115,
+    height: 90,
     paddingHorizontal: 12,
     backgroundColor: Colors.white,
     alignItems: "center",

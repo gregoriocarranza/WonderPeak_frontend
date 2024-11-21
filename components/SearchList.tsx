@@ -2,11 +2,15 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { images } from "@/constants";
 import { Colors } from "@/constants/Colors";
+import { router } from "expo-router";
 
 export default function SearchList() {
+  const goToProfile = () => {
+    router.push("/userProfile");
+  };
   return (
     <View>
-      <Pressable>
+      <Pressable onPress={goToProfile}>
         <View className="flex-row" style={styles.itemGlobalContainer}>
           <Image source={images.userProfile} style={styles.itemImage} />
           <View style={styles.userData}>

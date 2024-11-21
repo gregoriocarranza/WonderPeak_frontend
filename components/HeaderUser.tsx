@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import Avatar from "./Avatar";
 import { useAuth } from "@/hooks/authContext";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 
 type UserData = {
@@ -10,7 +10,17 @@ type UserData = {
   gamificationLevel: string;
 };
 
-export default function HeaderUser() {
+type Props = {
+  isOwer?: boolean;
+  showGoBack?: boolean;
+  goBackAction?: () => void;
+};
+
+export default function HeaderUser({
+  isOwer = false,
+  showGoBack,
+  goBackAction,
+}: Props) {
   const { userInfo } = useAuth();
   const [userData, setUserData] = useState<UserData>();
 
@@ -28,11 +38,25 @@ export default function HeaderUser() {
       className="border-2 justify-center items-center"
       style={styles.globalContainer}
     >
-      <View style={styles.settingsContainer}>
-        <Pressable onPress={goToSettings}>
-          <Ionicons name="settings" size={24} color={Colors.darkPink} />
-        </Pressable>
-      </View>
+      {showGoBack && (
+        <View style={styles.goBackContainer}>
+          <Pressable onPress={goBackAction}>
+            <MaterialIcons
+              name="arrow-back"
+              size={24}
+              color={Colors.secondary}
+            />
+          </Pressable>
+        </View>
+      )}
+
+      {isOwer && (
+        <View style={styles.settingsContainer}>
+          <Pressable onPress={goToSettings}>
+            <Ionicons name="settings" size={24} color={Colors.darkPink} />
+          </Pressable>
+        </View>
+      )}
 
       <View className="items-center">
         <Avatar
@@ -62,6 +86,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 25,
     right: 30,
+  },
+  goBackContainer: {
+    position: "absolute",
+    top: 25,
+    left: 20,
   },
   smallText: {
     fontSize: 13,
