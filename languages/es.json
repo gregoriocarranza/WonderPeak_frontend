@@ -60,5 +60,8 @@
   "currentPassword": "Contraseña actual",
   "areYouSureToExit": "¿Estás seguro que quieres salir?",
   "youWillLoseYourChanges": "Perderás todos tus cambios",
-  "cancel": "Cancelar"
+  "cancel": "Cancelar",
+  "female": "Femenino",
+  "male": "Masculino",
+  "other": "Otro"
 }

@@ -59,5 +59,8 @@
   "deleteAccount": "Delete account",
   "areYouSureToExit": "Are you sure you want to go out?",
   "youWillLoseYourChanges": "You will lose all your changes",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "female": "Female",
+  "male": "Male",
+  "other": "Other"
 }
