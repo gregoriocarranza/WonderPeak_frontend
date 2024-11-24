@@ -4,6 +4,7 @@ import Avatar from "./Avatar";
 import { useAuth } from "@/hooks/authContext";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
+import { router } from "expo-router";
 
 type UserData = {
   profileImage: string;
@@ -11,20 +12,24 @@ type UserData = {
 };
 
 type Props = {
-  isOwer?: boolean;
+  isOwner?: boolean;
   showGoBack?: boolean;
+  showDetails?: boolean;
   goBackAction?: () => void;
 };
 
 export default function HeaderUser({
-  isOwer = false,
+  isOwner = false,
   showGoBack,
   goBackAction,
+  showDetails,
 }: Props) {
   const { userInfo } = useAuth();
   const [userData, setUserData] = useState<UserData>();
 
-  const goToSettings = () => {};
+  const goToSettings = () => {
+    router.push("/settings");
+  };
 
   useEffect(() => {
     if (userInfo) {
@@ -35,7 +40,7 @@ export default function HeaderUser({
   }, []);
   return (
     <View
-      className="border-2 justify-center items-center"
+      className="justify-center items-center"
       style={styles.globalContainer}
     >
       {showGoBack && (
@@ -50,7 +55,7 @@ export default function HeaderUser({
         </View>
       )}
 
-      {isOwer && (
+      {isOwner && (
         <View style={styles.settingsContainer}>
           <Pressable onPress={goToSettings}>
             <Ionicons name="settings" size={24} color={Colors.darkPink} />
@@ -67,12 +72,14 @@ export default function HeaderUser({
         <Text className="font-pregular" style={styles.smallText}>
           @valeria_montes
         </Text>
-        <Text
-          className="font-pregular text-center mt-3"
-          style={[styles.smallText, styles.description]}
-        >
-          Creando recuerdos y buscando inspiración en cada rincón del mundo ✈️
-        </Text>
+        {showDetails && (
+          <Text
+            className="font-pregular text-center mt-3"
+            style={[styles.smallText, styles.description]}
+          >
+            Creando recuerdos y buscando inspiración en cada rincón del mundo ✈️
+          </Text>
+        )}
       </View>
     </View>
   );

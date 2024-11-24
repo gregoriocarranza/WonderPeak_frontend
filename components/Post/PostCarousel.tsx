@@ -16,6 +16,7 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import { isValidImage } from "@/utils";
+import { StatusBar } from "expo-status-bar";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -111,6 +112,8 @@ export default function PostCarousel({ mediaData }: Props) {
             renderItem={renderItem}
           />
         </View>
+
+        <StatusBar backgroundColor="black" />
       </Modal>
     </>
   );

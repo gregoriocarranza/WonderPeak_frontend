@@ -52,5 +52,7 @@
   "emailNotValid": "The email entered is not valid",
   "search": "Search",
   "noRecentSearches": "No recent searches",
-  "deleteHistory": "Delete history"
+  "deleteHistory": "Delete history",
+  "save": "Save",
+  "editPassword": "Edit password"
 }

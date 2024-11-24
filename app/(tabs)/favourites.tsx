@@ -8,7 +8,7 @@ import PostsLayout from "@/components/PostsLayout";
 export default function Favourites() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
-      <HeaderUser isOwer />
+      <HeaderUser isOwner showDetails={true} />
       <PostsLayout />
     </SafeAreaView>
   );

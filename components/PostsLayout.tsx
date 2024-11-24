@@ -9,14 +9,19 @@ import {
 } from "react-native";
 import React from "react";
 import { images } from "@/constants";
+import { router } from "expo-router";
 
 type RenderImageProps = {
   columnWidth: number;
 };
 
 const RenderImage = ({ columnWidth }: RenderImageProps) => {
+  const goToPostDetail = () => {
+    router.push("/postDetail");
+  };
+
   return (
-    <Pressable>
+    <Pressable onPress={goToPostDetail}>
       <Image
         style={{ height: 130, width: columnWidth }}
         source={images.post3}

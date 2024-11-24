@@ -13,7 +13,11 @@ export default function userProfile() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
-      <HeaderUser showGoBack={true} goBackAction={goToSearch} />
+      <HeaderUser
+        showGoBack={true}
+        goBackAction={goToSearch}
+        showDetails={true}
+      />
       <PostsLayout />
     </SafeAreaView>
   );
