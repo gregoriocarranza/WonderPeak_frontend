@@ -4,22 +4,37 @@ import { Dropdown } from "react-native-element-dropdown";
 import i18n from "@/languages";
 import { Colors } from "@/constants/Colors";
 
-const data = [
+type itemType = {
+  label: string;
+  value: string;
+};
+
+const data: itemType[] = [
   { label: i18n.t("female"), value: "female" },
   { label: i18n.t("male"), value: "male" },
   { label: i18n.t("other"), value: "other" },
 ];
 
-export default function FormSelect() {
-  const [value, setValue] = useState(null);
+type Props = {
+  handleChange: (text: string) => void;
+};
+
+export default function FormSelect({ handleChange }: Props) {
+  const [value, setValue] = useState<string>("");
   const [isFocus, setIsFocus] = useState<boolean>(false);
 
-  const renderItem = (item: any) => {
+  const renderItem = (item: itemType) => {
     return (
       <View style={styles.item}>
         <Text style={styles.textItem}>{item.label}</Text>
       </View>
     );
+  };
+
+  const handleChangeState = (value: string) => {
+    setValue(value);
+    handleChange(value);
+    setIsFocus(false);
   };
 
   return (
@@ -39,10 +54,7 @@ export default function FormSelect() {
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
-        onChange={(item: any) => {
-          setValue(item.value);
-          setIsFocus(false);
-        }}
+        onChange={(item: itemType) => handleChangeState(item.value)}
         renderItem={renderItem}
       />
     </View>

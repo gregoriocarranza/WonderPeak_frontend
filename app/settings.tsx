@@ -16,6 +16,7 @@ import i18n from "@/languages";
 import CustomButton from "@/components/CustomButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import ConfirmationModal from "@/components/ConfirmationModal";
+import FormSelect from "@/components/FormSelect";
 
 type FormState = {
   name: string;
@@ -121,14 +122,10 @@ export default function Settings() {
                   placeholder={i18n.t("email")}
                   otherStyles="mb-4"
                 />
-                <FormField
-                  title={i18n.t("gender")}
-                  value={generalForm.gender}
-                  handleChangeText={(e) =>
-                    setGeneralForm({ ...generalForm, gender: e })
+                <FormSelect
+                  handleChange={(e) =>
+                    setGeneralForm({ ...generalForm, email: e })
                   }
-                  placeholder={i18n.t("gender")}
-                  otherStyles="mb-4"
                 />
               </View>
 

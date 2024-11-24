@@ -13,7 +13,7 @@ type FormState = {
   nickname: string;
   email: string;
   password: string;
-  gender: "" | "male" | "female" | "other";
+  gender: string;
 };
 type ValidateState = {
   confirmPassword: string;
@@ -136,7 +136,9 @@ export default function SignUp() {
               placeholder={i18n.t("email")}
               keyboardType="email-address"
             />
-            <FormSelect />
+            <FormSelect
+              handleChange={(e: string) => setForm({ ...form, gender: e })}
+            />
             <FormField
               value={form.nickname}
               handleChangeText={(e) => setForm({ ...form, nickname: e })}
