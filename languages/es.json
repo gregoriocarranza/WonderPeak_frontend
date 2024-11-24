@@ -63,5 +63,7 @@
   "cancel": "Cancelar",
   "female": "Femenino",
   "male": "Masculino",
-  "other": "Otro"
+  "other": "Otro",
+  "follow": "Seguir",
+  "unfollow": "Dejar de seguir"
 }

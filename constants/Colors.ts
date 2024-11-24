@@ -23,6 +23,7 @@ export const Colors = {
   border: "#D9D9D9",
   darkGray: "#BDBDBD",
   red: "#E61818",
+  darkPurple: "#45414A",
   light: {
     text: '#11181C',
     background: '#fff',

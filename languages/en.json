@@ -41,7 +41,7 @@
   "addressee": "Addressee",
   "followers": "Followers",
   "publish": "Publish",
-  "errorRegistering":"Error registration, try again",
+  "errorRegistering": "Error registration, try again",
   "error": "Error",
   "loading": "Loading",
   "goBack": "Go back",
@@ -62,5 +62,7 @@
   "cancel": "Cancel",
   "female": "Female",
   "male": "Male",
-  "other": "Other"
+  "other": "Other",
+  "follow": "Follow",
+  "unfollow": "Unfollow"
 }
