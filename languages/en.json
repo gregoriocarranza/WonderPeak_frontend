@@ -54,5 +54,10 @@
   "noRecentSearches": "No recent searches",
   "deleteHistory": "Delete history",
   "save": "Save",
-  "editPassword": "Edit password"
+  "editPassword": "Edit password",
+  "logout": "Log out",
+  "deleteAccount": "Delete account",
+  "areYouSureToExit": "Are you sure you want to go out?",
+  "youWillLoseYourChanges": "You will lose all your changes",
+  "cancel": "Cancel"
 }

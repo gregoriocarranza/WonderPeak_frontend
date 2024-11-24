@@ -15,6 +15,7 @@ import FormField from "@/components/FormField";
 import i18n from "@/languages";
 import CustomButton from "@/components/CustomButton";
 import { MaterialIcons } from "@expo/vector-icons";
+import ConfirmationModal from "@/components/ConfirmationModal";
 
 type FormState = {
   name: string;
@@ -25,8 +26,21 @@ type FormState = {
   description: string;
 };
 
+type PasswordFormState = {
+  currentPassword: string;
+  newPassword: string;
+  newPasswordConfirm: string;
+};
+
+const FORM_TYPES = {
+  general: "general",
+  password: "password",
+} as const;
+
+type FormTypes = (typeof FORM_TYPES)[keyof typeof FORM_TYPES];
+
 export default function Settings() {
-  const [form, setForm] = useState<FormState>({
+  const [generalForm, setGeneralForm] = useState<FormState>({
     name: "",
     lastname: "",
     nickname: "",
@@ -34,83 +48,173 @@ export default function Settings() {
     gender: "",
     description: "",
   });
+  const [passwordForm, setPasswordForm] = useState<PasswordFormState>({
+    currentPassword: "",
+    newPassword: "",
+    newPasswordConfirm: "",
+  });
+  const [formType, setFormType] = useState<FormTypes>(FORM_TYPES.general);
+  const [isOpenConfirmationModal, setIsOpenConfirmationModal] =
+    useState<boolean>(false);
 
   const goBack = () => {
-    router.back();
+    if (formType === FORM_TYPES.password) {
+      setIsOpenConfirmationModal(true);
+    } else {
+      router.back();
+    }
+  };
+
+  const confirmAction = () => {
+    setFormType(FORM_TYPES.general);
+    setIsOpenConfirmationModal(false);
   };
 
   const handleForm = () => {};
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
-      <HeaderUser
-        isOwner={false}
-        showGoBack={true}
-        showDetails={false}
-        goBackAction={goBack}
-      />
-      <ScrollView className="border-2" style={styles.formContainer}>
-        <View className="px-6">
-          <FormField
-            title={i18n.t("name")}
-            value={form.name}
-            handleChangeText={(e) => setForm({ ...form, name: e })}
-            placeholder={i18n.t("name")}
-            otherStyles="mb-4"
-          />
-          <FormField
-            title={i18n.t("lastName")}
-            value={form.lastname}
-            handleChangeText={(e) => setForm({ ...form, lastname: e })}
-            placeholder={i18n.t("lastName")}
-            otherStyles="mb-4"
-          />
-          <FormField
-            title={i18n.t("nickname")}
-            value={form.nickname}
-            handleChangeText={(e) => setForm({ ...form, nickname: e })}
-            placeholder={i18n.t("nickname")}
-            otherStyles="mb-4"
-          />
-          <FormField
-            title={i18n.t("email")}
-            value={form.email}
-            handleChangeText={(e) => setForm({ ...form, email: e })}
-            placeholder={i18n.t("email")}
-            otherStyles="mb-4"
-          />
-          <FormField
-            title={i18n.t("gender")}
-            value={form.gender}
-            handleChangeText={(e) => setForm({ ...form, gender: e })}
-            placeholder={i18n.t("gender")}
-            otherStyles="mb-4"
+    <>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
+        <HeaderUser
+          isOwner={false}
+          showGoBack={true}
+          showDetails={false}
+          goBackAction={goBack}
+        />
+        <ScrollView style={styles.formContainer}>
+          {formType === FORM_TYPES.general ? (
+            <>
+              <View className="px-6">
+                <FormField
+                  title={i18n.t("name")}
+                  value={generalForm.name}
+                  handleChangeText={(e) =>
+                    setGeneralForm({ ...generalForm, name: e })
+                  }
+                  placeholder={i18n.t("name")}
+                  otherStyles="mb-4"
+                />
+                <FormField
+                  title={i18n.t("lastName")}
+                  value={generalForm.lastname}
+                  handleChangeText={(e) =>
+                    setGeneralForm({ ...generalForm, lastname: e })
+                  }
+                  placeholder={i18n.t("lastName")}
+                  otherStyles="mb-4"
+                />
+                <FormField
+                  title={i18n.t("nickname")}
+                  value={generalForm.nickname}
+                  handleChangeText={(e) =>
+                    setGeneralForm({ ...generalForm, nickname: e })
+                  }
+                  placeholder={i18n.t("nickname")}
+                  otherStyles="mb-4"
+                />
+                <FormField
+                  title={i18n.t("email")}
+                  value={generalForm.email}
+                  handleChangeText={(e) =>
+                    setGeneralForm({ ...generalForm, email: e })
+                  }
+                  placeholder={i18n.t("email")}
+                  otherStyles="mb-4"
+                />
+                <FormField
+                  title={i18n.t("gender")}
+                  value={generalForm.gender}
+                  handleChangeText={(e) =>
+                    setGeneralForm({ ...generalForm, gender: e })
+                  }
+                  placeholder={i18n.t("gender")}
+                  otherStyles="mb-4"
+                />
+              </View>
+
+              <View className="pt-4 pl-4">
+                <Pressable
+                  onPress={() => setFormType(FORM_TYPES.password)}
+                  style={styles.actionButton}
+                  className="mb-3"
+                >
+                  <MaterialIcons name="password" size={24} color="black" />
+                  <Text
+                    style={styles.actionText}
+                    className="ml-4 font-pregular"
+                  >
+                    {i18n.t("editPassword")}
+                  </Text>
+                </Pressable>
+                <Pressable style={styles.actionButton} className="mb-4">
+                  <MaterialIcons name="logout" size={24} color="black" />
+                  <Text
+                    style={styles.actionText}
+                    className="ml-4 font-pregular"
+                  >
+                    {i18n.t("logout")}
+                  </Text>
+                </Pressable>
+                <Pressable style={[styles.actionButton, styles.dangerAction]}>
+                  <MaterialIcons name="close" size={24} color={Colors.red} />
+                  <Text
+                    style={styles.dangerText}
+                    className="ml-4 font-pregular"
+                  >
+                    {i18n.t("deleteAccount")}
+                  </Text>
+                </Pressable>
+              </View>
+            </>
+          ) : (
+            <View className="px-6">
+              <FormField
+                title={i18n.t("currentPassword")}
+                value={generalForm.name}
+                handleChangeText={(e) =>
+                  setPasswordForm({ ...passwordForm, currentPassword: e })
+                }
+                placeholder="********"
+                otherStyles="mb-4"
+              />
+              <FormField
+                title={i18n.t("newPassword")}
+                value={generalForm.name}
+                handleChangeText={(e) =>
+                  setPasswordForm({ ...passwordForm, newPassword: e })
+                }
+                placeholder="********"
+                otherStyles="mb-4"
+              />
+              <FormField
+                title={i18n.t("repetPassword")}
+                value={generalForm.lastname}
+                handleChangeText={(e) =>
+                  setPasswordForm({ ...passwordForm, newPasswordConfirm: e })
+                }
+                placeholder="********"
+                otherStyles="mb-4"
+              />
+            </View>
+          )}
+        </ScrollView>
+
+        <View style={styles.footer}>
+          <CustomButton
+            label={i18n.t("save")}
+            theme="primary"
+            onPress={handleForm}
           />
         </View>
-      </ScrollView>
-      <View className="pt-4 pl-4">
-        <Pressable style={styles.actionButton}>
-          <MaterialIcons name="password" size={24} color="black" />
-          <Text className="ml-4 font-pregular">{i18n.t("editPassword")}</Text>
-        </Pressable>
-        <Pressable style={styles.actionButton}>
-          <MaterialIcons name="password" size={24} color="black" />
-          <Text className="ml-4 font-pregular">{i18n.t("editPassword")}</Text>
-        </Pressable>
-        <Pressable style={styles.actionButton}>
-          <MaterialIcons name="password" size={24} color="black" />
-          <Text className="ml-4 font-pregular">{i18n.t("editPassword")}</Text>
-        </Pressable>
-      </View>
+      </SafeAreaView>
 
-      <View style={styles.footer}>
-        <CustomButton
-          label={i18n.t("save")}
-          theme="primary"
-          onPress={handleForm}
+      {isOpenConfirmationModal && (
+        <ConfirmationModal
+          cancelAction={() => setIsOpenConfirmationModal(false)}
+          confirmAction={confirmAction}
         />
-      </View>
-    </SafeAreaView>
+      )}
+    </>
   );
 }
 
@@ -123,12 +227,22 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
     padding: 4,
     paddingHorizontal: 12,
     width: 200,
+    borderColor: Colors.gray,
     borderRadius: 24,
+  },
+  actionText: {
+    color: Colors.gray,
+  },
+  formContainer: {},
+  dangerAction: {
+    borderColor: Colors.red,
+  },
+  dangerText: {
+    color: Colors.red,
   },
 });

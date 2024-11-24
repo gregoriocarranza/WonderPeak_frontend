@@ -22,6 +22,7 @@ export const Colors = {
   lavenderGray: "#DED8E1",
   border: "#D9D9D9",
   darkGray: "#BDBDBD",
+  red: "#E61818",
   light: {
     text: '#11181C',
     background: '#fff',

@@ -16,6 +16,7 @@ type Props = {
   onPress?: () => void;
   isLoading?: boolean;
   disabled?: boolean;
+  customSize?: boolean;
 };
 
 export default function CustomButton({
@@ -24,6 +25,7 @@ export default function CustomButton({
   onPress,
   isLoading,
   disabled = false,
+  customSize = false,
 }: Props) {
   const themeStyles = {
     primary: styles.primaryButton,
@@ -39,6 +41,7 @@ export default function CustomButton({
           disabled
             ? styles.disabled
             : themeStyles[theme] || styles.secondaryButton,
+          customSize && styles.customSize,
         ]}
         onPress={onPress}
         disabled={disabled}
@@ -67,6 +70,10 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: "center",
     width: 270,
+  },
+  customSize: {
+    width: "100%",
+    height: "100%",
   },
   buttonLabel: {
     fontSize: 16,
