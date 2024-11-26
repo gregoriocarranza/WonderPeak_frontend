@@ -1,48 +1,65 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { Link } from "expo-router";
 import { images } from "@/constants";
 import { Colors } from "@/constants/Colors";
-import { router } from "expo-router";
 
-export default function SearchList() {
-  const goToProfile = () => {
-    router.push("/userProfile");
-  };
+interface DataUser {
+  userUuid: string;
+  name: string;
+  lastname: string | null;
+  nickname: string;
+  profileImage: string;
+}
+
+interface Props {
+  data: DataUser[];
+}
+
+const RenderElement = ({ user }: { user: DataUser }) => {
   return (
     <View>
-      <Pressable onPress={goToProfile}>
+      <Link
+        href={{
+          pathname: "/search/userProfile/[id]",
+          params: { id: user.userUuid },
+        }}
+        style={styles.borderTop}
+      >
         <View className="flex-row" style={styles.itemGlobalContainer}>
           <Image source={images.userProfile} style={styles.itemImage} />
           <View style={styles.userData}>
-            <Text className="font-psemibold">Sofía Delgado</Text>
+            <Text className="font-psemibold">{`${user.name || ""} ${
+              user.lastname || ""
+            }`}</Text>
             <Text style={styles.userNickname} className="font-pregular">
-              @SofiDel
+              {`@${user.nickname}`}
             </Text>
           </View>
         </View>
-      </Pressable>
-
-      <Pressable>
-        <View className="flex-row" style={styles.itemGlobalContainer}>
-          <Image source={images.post} style={styles.itemImage} />
-          <View style={styles.userData}>
-            <Text className="font-psemibold">Diego Hernández</Text>
-            <Text style={styles.userNickname} className="font-pregular">
-              @DiegoxH
-            </Text>
-          </View>
-        </View>
-      </Pressable>
+      </Link>
     </View>
+  );
+};
+
+export default function SearchList({ data }: Props) {
+  return (
+    <FlatList
+      data={data}
+      keyExtractor={(item) => item.userUuid}
+      renderItem={({ item }) => <RenderElement user={item} />}
+    />
   );
 }
 
 const styles = StyleSheet.create({
+  borderTop: {
+    borderTopWidth: 1,
+    borderTopColor: Colors.border,
+  },
   itemGlobalContainer: {
     paddingVertical: 10,
     paddingHorizontal: 12,
-    borderTopWidth: 1,
-    borderTopColor: Colors.border,
   },
   itemImage: {
     height: 48,
