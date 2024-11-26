@@ -17,6 +17,7 @@ import CustomButton from "@/components/CustomButton";
 import { MaterialIcons } from "@expo/vector-icons";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import FormSelect from "@/components/FormSelect";
+import { useAuth } from "@/hooks/authContext";
 
 type FormState = {
   name: string;
@@ -41,13 +42,16 @@ const FORM_TYPES = {
 type FormTypes = (typeof FORM_TYPES)[keyof typeof FORM_TYPES];
 
 export default function Settings() {
+  const { userInfo } = useAuth();
+  const userData = userInfo ? JSON.parse(userInfo) : null;
+
   const [generalForm, setGeneralForm] = useState<FormState>({
-    name: "",
-    lastname: "",
-    nickname: "",
-    email: "",
-    gender: "",
-    description: "",
+    name: userData?.name || "",
+    lastname: userData?.lastname || "",
+    nickname: userData?.nickname || "",
+    email: userData?.email || "",
+    gender: userData?.gender || "",
+    description: userData?.description || "",
   });
   const [passwordForm, setPasswordForm] = useState<PasswordFormState>({
     currentPassword: "",
@@ -81,6 +85,7 @@ export default function Settings() {
           showGoBack={true}
           showDetails={false}
           goBackAction={goBack}
+          userData={userData}
         />
         <ScrollView style={styles.formContainer}>
           {formType === FORM_TYPES.general ? (

@@ -16,6 +16,19 @@ type Props = {
   showGoBack?: boolean;
   showDetails?: boolean;
   goBackAction?: () => void;
+  userData?: {
+    name: string;
+    nickname: string;
+    description: string;
+    profileImage: string;
+    coverImage: string;
+    gamificationLevel: number;
+    email: string;
+    gender: string;
+    lastname: string | null;
+    userUuid: string;
+    active: number;
+  };
 };
 
 export default function HeaderUser({
@@ -23,21 +36,12 @@ export default function HeaderUser({
   showGoBack,
   goBackAction,
   showDetails,
+  userData,
 }: Props) {
-  const { userInfo } = useAuth();
-  const [userData, setUserData] = useState<UserData>();
-
   const goToSettings = () => {
     router.push("/settings");
   };
 
-  useEffect(() => {
-    if (userInfo) {
-      const parsedData = JSON.parse(userInfo);
-      const { profileImage, gamificationLevel } = parsedData;
-      setUserData({ profileImage, gamificationLevel });
-    }
-  }, []);
   return (
     <View
       className="justify-center items-center"
@@ -68,16 +72,18 @@ export default function HeaderUser({
           image={userData?.profileImage}
           gamification={userData?.gamificationLevel}
         />
-        <Text className="font-psemibold mt-4">Valeria Montes</Text>
-        <Text className="font-pregular" style={styles.smallText}>
-          @valeria_montes
+        <Text className="font-psemibold mt-4">
+          {userData?.name} {userData?.lastname || ""}
         </Text>
-        {showDetails && (
+        <Text className="font-pregular" style={styles.smallText}>
+          @{userData?.nickname}
+        </Text>
+        {showDetails && userData?.description && (
           <Text
             className="font-pregular text-center mt-3"
             style={[styles.smallText, styles.description]}
           >
-            Creando recuerdos y buscando inspiración en cada rincón del mundo ✈️
+            {userData?.description}
           </Text>
         )}
       </View>
