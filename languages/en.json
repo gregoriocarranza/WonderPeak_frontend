@@ -64,5 +64,8 @@
   "male": "Male",
   "other": "Other",
   "follow": "Follow",
-  "unfollow": "Unfollow"
+  "unfollow": "Unfollow",
+  "following": "Following",
+  "bestFriends": "Best friends",
+  "posts": "Posts"
 }

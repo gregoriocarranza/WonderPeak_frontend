@@ -4,7 +4,6 @@ import {
   Text,
   FlatList,
   View,
-  ActivityIndicator,
   Image,
   ScrollView,
   RefreshControl,
@@ -18,6 +17,7 @@ import AdvertisingPost from "@/components/Post/AdvertisingPost";
 import { images } from "@/constants";
 import { Colors } from "@/constants/Colors";
 import i18n from "@/languages";
+import GlobalLoading from "@/components/GlobalLoading";
 
 export default function Home() {
   const { token } = useAuth();
@@ -81,11 +81,7 @@ export default function Home() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
-      {loading && (
-        <View style={styles.activityIndicatorContainer}>
-          <ActivityIndicator size={"large"} color={Colors.white} />
-        </View>
-      )}
+      {loading && <GlobalLoading />}
 
       <HeaderHome />
       {userFeed?.data && userFeed.data.length ? (
@@ -127,17 +123,6 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  activityIndicatorContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#00000033",
-    zIndex: 1,
-  },
   image: {
     width: 300,
     height: 300,

@@ -8,14 +8,15 @@ import {
   Dimensions,
 } from "react-native";
 import React from "react";
-import { images } from "@/constants";
 import { router } from "expo-router";
+import { Post, PostData } from "@/types/interfaces";
 
 type RenderImageProps = {
   columnWidth: number;
+  item: Post;
 };
 
-const RenderImage = ({ columnWidth }: RenderImageProps) => {
+const RenderImage = ({ columnWidth, item }: RenderImageProps) => {
   const goToPostDetail = () => {
     router.push("/postDetail");
   };
@@ -24,13 +25,13 @@ const RenderImage = ({ columnWidth }: RenderImageProps) => {
     <Pressable onPress={goToPostDetail}>
       <Image
         style={{ height: 130, width: columnWidth }}
-        source={images.post3}
+        source={{ uri: item.multimediaUrl }}
       />
     </Pressable>
   );
 };
 
-export default function PostsLayout() {
+export default function PostsLayout({ data }: PostData) {
   const screenWidth = Dimensions.get("window").width;
   const numColumns = 3;
   const columnWidth = screenWidth / numColumns;
@@ -38,8 +39,10 @@ export default function PostsLayout() {
   return (
     <View style={{ flex: 1 }}>
       <FlatList
-        data={Array.from(Array(15).keys())}
-        renderItem={(item) => <RenderImage columnWidth={columnWidth} />}
+        data={data}
+        renderItem={({ item }) => (
+          <RenderImage columnWidth={columnWidth} item={item} />
+        )}
         numColumns={3}
       />
     </View>

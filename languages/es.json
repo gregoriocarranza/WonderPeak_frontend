@@ -65,5 +65,8 @@
   "male": "Masculino",
   "other": "Otro",
   "follow": "Seguir",
-  "unfollow": "Dejar de seguir"
+  "unfollow": "Dejar de seguir",
+  "following": "Siguiendo",
+  "bestFriends": "Mejores amigos",
+  "posts": "Publicaciones"
 }

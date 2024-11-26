@@ -8,9 +8,8 @@ import {
   FlatList,
   Dimensions,
   Alert,
-  ActivityIndicator,
 } from "react-native";
-import * as FileSystem from 'expo-file-system'; // Importa FileSystem
+import * as FileSystem from "expo-file-system"; // Importa FileSystem
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -19,6 +18,7 @@ import i18n from "@/languages";
 import { useAuth } from "@/hooks/authContext";
 import FormField from "../FormField";
 import CustomButton from "../CustomButton";
+import GlobalLoading from "../GlobalLoading";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -66,9 +66,7 @@ export default function SettingsPostComponent({
     multimediaFile: "", // Se asignará luego de la codificación
   });
 
-
   const encode = async (data: SelectedImage[]) => {
-
     if (data && data.length > 0) {
       try {
         // Leer el archivo como base64
@@ -80,7 +78,10 @@ export default function SettingsPostComponent({
         let contentType = "image/jpeg"; // Valor predeterminado
         if (data[0].uri.includes(".png")) {
           contentType = "image/png";
-        } else if (data[0].uri.includes(".jpg") || data[0].uri.includes(".jpeg")) {
+        } else if (
+          data[0].uri.includes(".jpg") ||
+          data[0].uri.includes(".jpeg")
+        ) {
           contentType = "image/jpeg";
         }
 
@@ -96,17 +97,15 @@ export default function SettingsPostComponent({
     }
   };
 
-
   useEffect(() => {
     encode(data); // Codifica la imagen al montar el componente
   }, [data]);
 
   const uploadPost = async (): Promise<void> => {
-  
     const formToSend = {
-        ...form,
-        location: JSON.stringify(form.location), // Stringificar location
-      };
+      ...form,
+      location: JSON.stringify(form.location), // Stringificar location
+    };
     try {
       setLoading(true);
       const response = await fetch(
@@ -120,7 +119,7 @@ export default function SettingsPostComponent({
           body: JSON.stringify(formToSend),
         }
       );
-      console.log(response, "response")
+      console.log(response, "response");
 
       if (!response.ok) {
         const dataresponse = await response.json();
@@ -146,11 +145,7 @@ export default function SettingsPostComponent({
 
   return (
     <>
-      {loading && (
-        <View style={styles.activityIndicatorContainer}>
-          <ActivityIndicator size={"large"} color={Colors.white} />
-        </View>
-      )}
+      {loading && <GlobalLoading />}
       <View className="flex-row justify-between" style={styles.header}>
         <View className="flex-row items-center justify-center">
           <Pressable onPress={goBack} className="p-2">
@@ -274,16 +269,5 @@ const styles = StyleSheet.create({
   },
   list: {
     margin: "auto",
-  },
-  activityIndicatorContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#00000033",
-    zIndex: 1,
   },
 });

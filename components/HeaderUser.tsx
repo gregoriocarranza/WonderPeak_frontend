@@ -1,10 +1,17 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import Avatar from "./Avatar";
 import { useAuth } from "@/hooks/authContext";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
+import { images } from "@/constants";
 
 type UserData = {
   profileImage: string;
@@ -43,9 +50,12 @@ export default function HeaderUser({
   };
 
   return (
-    <View
+    <ImageBackground
+      source={{ uri: userData?.coverImage }}
+      resizeMode="cover"
       className="justify-center items-center"
-      style={styles.globalContainer}
+      style={[styles.globalContainer]}
+      imageStyle={{ opacity: 0.7 }}
     >
       {showGoBack && (
         <View style={styles.goBackContainer}>
@@ -87,13 +97,14 @@ export default function HeaderUser({
           </Text>
         )}
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   globalContainer: {
     padding: 20,
+    height: 220,
   },
   settingsContainer: {
     position: "absolute",
@@ -111,5 +122,9 @@ const styles = StyleSheet.create({
   },
   description: {
     maxWidth: 390,
+  },
+  imageBackground: {
+    flex: 1,
+    width: "100%",
   },
 });
