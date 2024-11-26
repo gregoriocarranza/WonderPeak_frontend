@@ -14,7 +14,7 @@ export default function Search() {
     null
   );
   const [isEmptyState, setIsEmptyState] = useState<boolean>(false);
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
 
   const clearSearch = (): void => {
     setSearchQuery("");
@@ -57,7 +57,7 @@ export default function Search() {
         handleSeach={(e) => handleSearch(e)}
         clearSearch={clearSearch}
       />
-      {isEmptyState ? (
+      {isEmptyState || !data?.length ? (
         <View className="items-center">
           <Text className="font-pbold" style={styles.text}>
             {i18n.t("noRecentSearches")}
