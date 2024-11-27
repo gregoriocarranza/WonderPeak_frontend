@@ -19,12 +19,12 @@ type Location = {
     placeHolder:string;
 };
 
-type UserData = {
-    useruuid: string;
+export type UserData = {
+    userUuid: string;
     name: string;
     lastname: string;
     nickname: string;
-    profileuserimage: string;
+    profileImage: string;
     level: string;
 }
 

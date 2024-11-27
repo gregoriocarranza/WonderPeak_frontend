@@ -8,100 +8,77 @@ import { router, useLocalSearchParams } from "expo-router";
 import i18n from "@/languages";
 import { MaterialIcons } from "@expo/vector-icons";
 import Tabs from "@/components/Tabs";
-import { getUserById, getUserPosts } from "@/services/api.service";
+import {
+  getUserById,
+  getUserFollowers,
+  getUserFollowing,
+  getUserPosts,
+} from "@/services/api.service";
 import GlobalLoading from "@/components/GlobalLoading";
-
-interface UserData {
-  active: number;
-  coverImage: string;
-  description: string;
-  email: string;
-  gamificationLevel: number;
-  gender: string;
-  lastname: string | null;
-  name: string;
-  nickname: string;
-  profileImage: string;
-  userUuid: string;
-}
+import UsersList from "@/components/UsersList";
+import { Post, UserData, UserInfo } from "@/types/interfaces";
 
 export default function userProfile() {
   const { id } = useLocalSearchParams();
   const validId = Array.isArray(id) ? id[0] : id;
 
-  const [data, setData] = useState<UserData | undefined>();
+  const [data, setData] = useState<UserInfo | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState(0);
-  const [userPosts, setUserPosts] = useState([]);
+  const [userPosts, setUserPosts] = useState<Post[]>([]);
+  const [userFollower, setUserFollower] = useState<UserData[]>([]);
+  const [userFollowing, setUserFollowing] = useState<UserData[]>([]);
 
   const userProfileTabs = [
-    { id: 0, title: i18n.t("posts") },
-    { id: 1, title: i18n.t("followers"), count: 5 },
-    { id: 2, title: i18n.t("following"), count: 16 },
+    { id: 0, title: i18n.t("posts"), count: userPosts.length },
+    { id: 1, title: i18n.t("followers"), count: userFollower.length },
+    { id: 2, title: i18n.t("following"), count: userFollowing.length },
   ];
 
   const goToSearch = () => {
     router.back();
-  };
-  const fetchUserData = async () => {
-    try {
-      setIsLoading(true);
-      if (!id) {
-        console.warn("No ID found");
-        return;
-      }
-
-      const response = await getUserById(validId);
-      setData(response.data);
-      console.log(response.data, "USER DATA");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  const fetchUserPosts = async () => {
-    try {
-      setIsLoading(true);
-      if (!id) {
-        console.warn("No ID found");
-        return;
-      }
-
-      const response = await getUserPosts(validId);
-      setUserPosts(response.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
   };
   const renderContent = () => {
     switch (activeTab) {
       case 0:
         return <PostsLayout data={userPosts} />;
       case 1:
-        return (
-          <View style={styles.placeholder}>{/* Componente Followers */}</View>
-        );
+        return <UsersList data={userFollower} />;
       case 2:
-        return (
-          <View style={styles.placeholder}>{/* Componente Following */}</View>
-        );
+        return <UsersList data={userFollowing} />;
       default:
         return "";
     }
   };
 
   useEffect(() => {
-    fetchUserData();
-  }, [id]);
+    const fetchInitialData = async () => {
+      try {
+        setIsLoading(true);
+        if (!id) {
+          console.warn("No ID found");
+          return;
+        }
 
-  useEffect(() => {
-    if (activeTab === 0) {
-      fetchUserPosts();
-    }
-  }, [activeTab]);
+        const [userData, postsData, userFollower] = await Promise.all([
+          getUserById(validId),
+          getUserPosts(validId),
+          getUserFollowers(validId),
+          getUserFollowing(validId),
+        ]);
+
+        setData(userData.data);
+        setUserPosts(postsData.data);
+        setUserFollower(userFollower.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchInitialData();
+  }, [id]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>

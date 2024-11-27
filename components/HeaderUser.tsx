@@ -5,37 +5,19 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Avatar from "./Avatar";
-import { useAuth } from "@/hooks/authContext";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
-import { images } from "@/constants";
-
-type UserData = {
-  profileImage: string;
-  gamificationLevel: string;
-};
+import { UserInfo } from "@/types/interfaces";
 
 type Props = {
   isOwner?: boolean;
   showGoBack?: boolean;
   showDetails?: boolean;
   goBackAction?: () => void;
-  userData?: {
-    name: string;
-    nickname: string;
-    description: string;
-    profileImage: string;
-    coverImage: string;
-    gamificationLevel: number;
-    email: string;
-    gender: string;
-    lastname: string | null;
-    userUuid: string;
-    active: number;
-  };
+  userData?: UserInfo;
 };
 
 export default function HeaderUser({

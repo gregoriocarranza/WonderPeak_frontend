@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import React from "react";
 import { Colors } from "@/constants/Colors";
-import i18n from "@/languages";
 
 interface Tab {
   id: number;
@@ -40,7 +39,7 @@ export default function Tabs({ tabs, activeTab, onTabPress }: TabsProps) {
         className="font-pregular"
         style={[styles.tabText, activeTab === tab.id && styles.activeTabText]}
       >
-        {`${tab.count || ""} ${tab.title}`}
+        {`${tab.count || 0} ${tab.title}`}
       </Text>
     </Pressable>
   );
