@@ -23,7 +23,7 @@ interface TabsProps {
 
 export default function Tabs({ tabs, activeTab, onTabPress }: TabsProps) {
   const screenWidth = Dimensions.get("window").width;
-  const minTabWidth = screenWidth / tabs.length;
+  const minTabWidth = screenWidth / tabs?.length;
 
   const renderTab = ({ item: tab }: { item: Tab }) => (
     <Pressable

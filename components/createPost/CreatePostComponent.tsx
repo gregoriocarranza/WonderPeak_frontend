@@ -62,7 +62,7 @@ export default function CreatePostComponent({ goToSettings }: Props) {
 
   const openFullGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       quality: 1,
       aspect: [4, 3],

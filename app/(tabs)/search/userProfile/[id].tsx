@@ -30,9 +30,9 @@ export default function userProfile() {
   const [userFollowing, setUserFollowing] = useState<UserData[]>([]);
 
   const userProfileTabs = [
-    { id: 0, title: i18n.t("posts"), count: userPosts.length },
-    { id: 1, title: i18n.t("followers"), count: userFollower.length },
-    { id: 2, title: i18n.t("following"), count: userFollowing.length },
+    { id: 0, title: i18n.t("posts"), count: userPosts?.length },
+    { id: 1, title: i18n.t("followers"), count: userFollower?.length },
+    { id: 2, title: i18n.t("following"), count: userFollowing?.length },
   ];
 
   const goToSearch = () => {

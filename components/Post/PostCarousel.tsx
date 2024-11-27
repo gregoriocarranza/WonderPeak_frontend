@@ -7,9 +7,9 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Colors } from "@/constants/Colors";
-import { Video } from "expo-av";
+import { ResizeMode, Video } from "expo-av";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   TapGestureHandler,
@@ -22,7 +22,7 @@ const { width: screenWidth } = Dimensions.get("window");
 
 type MediaItem = {
   id: string;
-  type: "image" | "video";
+  type: string | "image" | "video";
   source: any;
 };
 
@@ -31,6 +31,7 @@ type Props = {
 };
 
 export default function PostCarousel({ mediaData }: Props) {
+  const video = useRef(null);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
@@ -54,10 +55,12 @@ export default function PostCarousel({ mediaData }: Props) {
             </>
           ) : (
             <Video
-              source={item.source}
+              ref={video}
+              source={{ uri: item.source }}
               style={styles.image}
               useNativeControls
               isLooping
+              resizeMode={ResizeMode.CONTAIN}
             />
           )}
         </View>

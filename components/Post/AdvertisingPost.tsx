@@ -13,7 +13,7 @@ import PostCarousel from "./PostCarousel";
 import { Advertising } from "@/types/interfaces";
 type MediaItem = {
   id: string;
-  type: "image" | "video";
+  type: string | "image" | "video";
   source: any;
 };
 
