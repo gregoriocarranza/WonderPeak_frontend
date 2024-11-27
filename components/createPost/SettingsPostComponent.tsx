@@ -103,13 +103,43 @@ export default function SettingsPostComponent({
   //   encode(data); // Codifica la imagen al montar el componente
   // }, [data]);
 
+  const getMediaType = (uri: string): string => {
+    const extension = uri.split(".").pop()?.toLowerCase();
+
+    const mimeTypes: { [key: string]: string } = {
+      // Imágenes
+      jpg: "image/jpeg",
+      jpeg: "image/jpeg",
+      png: "image/png",
+      gif: "image/gif",
+      bmp: "image/bmp",
+      webp: "image/webp",
+      tiff: "image/tiff",
+      // Videos
+      mp4: "video/mp4",
+      mov: "video/quicktime",
+      avi: "video/x-msvideo",
+      mkv: "video/x-matroska",
+      webm: "video/webm",
+      ogg: "video/ogg",
+    };
+
+    if (!extension) {
+      throw new Error("No se pudo determinar la extensión del archivo.");
+    }
+
+    return (
+      mimeTypes[extension] || `${uri.startsWith("image") ? "image" : "video"}/*`
+    );
+  };
+
   const uploadPost = async (): Promise<void> => {
     const formData = new FormData();
 
     // Adjuntar el archivo multimedia
     if (data && data.length > 0) {
       const fileUri = data[0].uri;
-      const fileType = data[0].type || "image/jpeg"; // Tipo predeterminado si no está definido
+      const fileType = getMediaType(fileUri);
       const fileName = fileUri.split("/").pop() || "upload";
 
       formData.append("multimediaFile", {
@@ -133,7 +163,6 @@ export default function SettingsPostComponent({
         {
           method: "POST",
           headers: {
-            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
           body: formData,
@@ -149,7 +178,7 @@ export default function SettingsPostComponent({
       console.log("Post creado con éxito:", responseData);
       finalAction();
     } catch (err: any) {
-      console.error("Error:", err.message);
+      console.error("Error:", err);
       Alert.alert("Error", "Hubo un problema al subir el post.");
     } finally {
       setLoading(false);
