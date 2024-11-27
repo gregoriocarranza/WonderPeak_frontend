@@ -24,7 +24,8 @@ export type UserData = {
     name: string;
     lastname: string;
     nickname: string;
-    profileImage: string;
+    profileImage?: string;
+    profileUserImage?: string;
     level: string;
 }
 

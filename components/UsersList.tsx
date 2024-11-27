@@ -13,8 +13,6 @@ type Props = {
 };
 
 const RenderItem = ({ item }: RenderItemProp) => {
-  console.log(item);
-
   return (
     <View className="w-full" style={styles.userContainer}>
       <Link

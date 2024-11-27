@@ -71,7 +71,7 @@ export default function userProfile() {
         setUserPosts(postsData.data);
         setUserFollower(userFollower.data);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       } finally {
         setIsLoading(false);
       }

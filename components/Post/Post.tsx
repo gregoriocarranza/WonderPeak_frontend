@@ -7,6 +7,7 @@ import PostCarousel from "./PostCarousel";
 import i18n from "@/languages";
 import { Post } from "@/types/interfaces";
 import { capitalizeWords } from "@/utils";
+import { Link } from "expo-router";
 
 type MediaItem = {
   id: string;
@@ -43,19 +44,31 @@ export default function PostItem({
   ];
   return (
     <View style={styles.postContainer}>
-      <View style={styles.headerPost} className="flex-row">
-        <Image source={images.defaultProfile} style={styles.profileImage} />
-        <View className="ml-4">
-          <Text className="font-psemibold text-lg">
-            {user?.name} {user?.lastname}{" "}
-          </Text>
-          <Text style={styles.location} className="font-pregular">
-            📍
-            {capitalizeWords(location?.placeHolder) ||
-              "Ubicación no disponible"}
-          </Text>
+      <Link
+        href={{
+          pathname: "/search/userProfile/[id]",
+          params: { id: userUuid },
+        }}
+      >
+        <View style={styles.headerPost} className="flex-row">
+          <Image
+            className="border-2"
+            source={{ uri: user.profileUserImage }}
+            style={styles.profileImage}
+          />
+          <View className="ml-4">
+            <Text className="font-psemibold text-lg">
+              {user?.name} {user?.lastname}{" "}
+            </Text>
+            <Text style={styles.location} className="font-pregular">
+              📍
+              {capitalizeWords(location?.placeHolder) ||
+                "Ubicación no disponible"}
+            </Text>
+          </View>
         </View>
-      </View>
+      </Link>
+
       <View style={styles.main}>
         <PostCarousel mediaData={mediaData} />
       </View>
