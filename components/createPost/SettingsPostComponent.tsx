@@ -19,6 +19,7 @@ import { useAuth } from "@/hooks/authContext";
 import FormField from "../FormField";
 import CustomButton from "../CustomButton";
 import GlobalLoading from "../GlobalLoading";
+import { getMediaType } from "@/utils/getMediaType";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -103,36 +104,6 @@ export default function SettingsPostComponent({
   //   encode(data); // Codifica la imagen al montar el componente
   // }, [data]);
 
-  const getMediaType = (uri: string): string => {
-    const extension = uri.split(".").pop()?.toLowerCase();
-
-    const mimeTypes: { [key: string]: string } = {
-      // Imágenes
-      jpg: "image/jpeg",
-      jpeg: "image/jpeg",
-      png: "image/png",
-      gif: "image/gif",
-      bmp: "image/bmp",
-      webp: "image/webp",
-      tiff: "image/tiff",
-      // Videos
-      mp4: "video/mp4",
-      mov: "video/quicktime",
-      avi: "video/x-msvideo",
-      mkv: "video/x-matroska",
-      webm: "video/webm",
-      ogg: "video/ogg",
-    };
-
-    if (!extension) {
-      throw new Error("No se pudo determinar la extensión del archivo.");
-    }
-
-    return (
-      mimeTypes[extension] || `${uri.startsWith("image") ? "image" : "video"}/*`
-    );
-  };
-
   const uploadPost = async (): Promise<void> => {
     const formData = new FormData();
 
@@ -147,6 +118,8 @@ export default function SettingsPostComponent({
         type: fileType,
         name: fileName,
       } as any);
+      formData.append("multimediaFileType", fileType);
+
       console.log("File URI:", { fileUri, fileType, fileName });
     }
 
@@ -154,6 +127,7 @@ export default function SettingsPostComponent({
     formData.append("title", form.title);
     formData.append("text", form.text);
     formData.append("location", JSON.stringify(form.location));
+    console.log("formData", formData);
 
     try {
       setLoading(true);
@@ -161,13 +135,12 @@ export default function SettingsPostComponent({
       const response = await fetch(
         "https://wonderpeak.uade.susoft.com.ar/api/posts",
         {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
       if (!response.ok) {
         const errorResponse = await response.json();
         console.error("Error al subir el post:", errorResponse);

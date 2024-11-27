@@ -8,10 +8,11 @@ import i18n from "@/languages";
 import { Post } from "@/types/interfaces";
 import { capitalizeWords } from "@/utils";
 import { Link } from "expo-router";
+import { getMediaType } from "@/utils/getMediaType";
 
 type MediaItem = {
   id: string;
-  type: "image" | "video";
+  type: string | "image" | "video";
   source: any;
 };
 
@@ -39,8 +40,10 @@ export default function PostItem({
   //TODO: cada posteo del feed tiene que tener un atributo que sea liked /isLiked que sea la busqueda del userId en la base del Feed
   const [likeState, setLikeState] = useState(false);
   const [bookmarkState, setbookmarkState] = useState(false);
+  const mediaType = getMediaType(multimediaUrl).split("/")[0];
+  const multimediaUrlFix = getMediaType(multimediaUrl).split("/")[0];
   const mediaData: MediaItem[] = [
-    { id: postUuid, type: "image", source: multimediaUrl },
+    { id: postUuid, type: mediaType, source: multimediaUrl },
   ];
   return (
     <View style={styles.postContainer}>

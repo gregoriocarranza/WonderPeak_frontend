@@ -62,7 +62,7 @@ export default function Home() {
       }
       //!! aca hay que trabajar un poco mas esto para que se pueda recuperar del Context si la info ya esta
       const data = await response.json();
-      console.log(data, "USER FEED");
+      // console.log(data, "USER FEED");
       setUserFeed(data);
     } catch (error) {
       console.log(error);
