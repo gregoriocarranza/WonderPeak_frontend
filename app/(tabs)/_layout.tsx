@@ -81,14 +81,14 @@ export default function TabsLayout() {
         />
 
         <Tabs.Screen
-          name="favourites"
+          name="favorites"
           options={{
-            title: "Favourites",
+            title: "Favorites",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon="bookmark-outline"
-                name="favourites"
+                name="favorites"
                 color={color}
                 focused={focused}
               />

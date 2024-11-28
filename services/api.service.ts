@@ -102,3 +102,19 @@ export const getUserFollowing = async (userId: string) => {
     throw error;
   }
 }
+
+export const getUserFavorites = async (userId: string) => {
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(`${BASE_URL}/users/${userId}/favorites`, {
+      method: "GET",
+      headers,
+    });
+
+    if (!response.ok) throw new Error("Error obteniendo posts de usuario");
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching user followers:", error);
+    throw error;
+  }
+}

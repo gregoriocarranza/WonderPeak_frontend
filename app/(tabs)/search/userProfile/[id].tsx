@@ -1,22 +1,15 @@
 import { Pressable, StyleSheet, View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Colors } from "@/constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
-import HeaderUser from "@/components/HeaderUser";
-import PostsLayout from "@/components/PostsLayout";
 import { router, useLocalSearchParams } from "expo-router";
-import i18n from "@/languages";
 import { MaterialIcons } from "@expo/vector-icons";
-import Tabs from "@/components/Tabs";
-import {
-  getUserById,
-  getUserFollowers,
-  getUserFollowing,
-  getUserPosts,
-} from "@/services/api.service";
+import { Colors } from "@/constants/Colors";
+import i18n from "@/languages";
+import { getUserById } from "@/services/api.service";
+import { UserInfo } from "@/types/interfaces";
+import HeaderUser from "@/components/HeaderUser";
 import GlobalLoading from "@/components/GlobalLoading";
-import UsersList from "@/components/UsersList";
-import { Post, UserData, UserInfo } from "@/types/interfaces";
+import UserTabsData from "@/components/UserTabsData";
 
 export default function userProfile() {
   const { id } = useLocalSearchParams();
@@ -24,31 +17,9 @@ export default function userProfile() {
 
   const [data, setData] = useState<UserInfo | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [activeTab, setActiveTab] = useState(0);
-  const [userPosts, setUserPosts] = useState<Post[]>([]);
-  const [userFollower, setUserFollower] = useState<UserData[]>([]);
-  const [userFollowing, setUserFollowing] = useState<UserData[]>([]);
-
-  const userProfileTabs = [
-    { id: 0, title: i18n.t("posts"), count: userPosts?.length },
-    { id: 1, title: i18n.t("followers"), count: userFollower?.length },
-    { id: 2, title: i18n.t("following"), count: userFollowing?.length },
-  ];
 
   const goToSearch = () => {
     router.back();
-  };
-  const renderContent = () => {
-    switch (activeTab) {
-      case 0:
-        return <PostsLayout data={userPosts} />;
-      case 1:
-        return <UsersList data={userFollower} />;
-      case 2:
-        return <UsersList data={userFollowing} />;
-      default:
-        return "";
-    }
   };
 
   useEffect(() => {
@@ -60,16 +31,9 @@ export default function userProfile() {
           return;
         }
 
-        const [userData, postsData, userFollower] = await Promise.all([
-          getUserById(validId),
-          getUserPosts(validId),
-          getUserFollowers(validId),
-          getUserFollowing(validId),
-        ]);
+        const userData = await getUserById(validId);
 
         setData(userData.data);
-        setUserPosts(postsData.data);
-        setUserFollower(userFollower.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -102,12 +66,7 @@ export default function userProfile() {
               <MaterialIcons name="stars" size={24} color={Colors.darkPurple} />
             </Pressable>
           </View>
-          <Tabs
-            tabs={userProfileTabs}
-            activeTab={activeTab}
-            onTabPress={setActiveTab}
-          />
-          {renderContent()}
+          <UserTabsData id={validId} type="basic" />
         </>
       )}
     </SafeAreaView>

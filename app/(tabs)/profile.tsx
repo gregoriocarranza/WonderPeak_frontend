@@ -3,19 +3,18 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
 import HeaderUser from "@/components/HeaderUser";
-import PostsLayout from "@/components/PostsLayout";
-import Tabs from "@/components/Tabs";
 import { useAuth } from "@/hooks/authContext";
+import UserTabsData from "@/components/UserTabsData";
 
 export default function Profile() {
   const { userInfo } = useAuth();
   const userData = userInfo ? JSON.parse(userInfo) : null;
+  const { userUuid: id } = userData || {};
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
       <HeaderUser isOwner showDetails={true} userData={userData} />
-      <Tabs />
-      {/* <PostsLayout /> */}
+      <UserTabsData id={id} type="profile" />
     </SafeAreaView>
   );
 }
