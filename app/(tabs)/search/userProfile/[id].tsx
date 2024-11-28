@@ -5,7 +5,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import i18n from "@/languages";
-import { getUserById } from "@/services/api.service";
+import { getUserById } from "@/services/userServices";
 import { UserInfo } from "@/types/interfaces";
 import HeaderUser from "@/components/HeaderUser";
 import GlobalLoading from "@/components/GlobalLoading";

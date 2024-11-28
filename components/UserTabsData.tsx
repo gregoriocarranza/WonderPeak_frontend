@@ -3,12 +3,12 @@ import React, { useEffect, useState, useMemo } from "react";
 import PostsLayout from "@/components/PostsLayout";
 import i18n from "@/languages";
 import Tabs from "@/components/Tabs";
+import { getUserPosts } from "@/services/postServices";
 import {
   getUserFavorites,
   getUserFollowers,
   getUserFollowing,
-  getUserPosts,
-} from "@/services/api.service";
+} from "@/services/userServices";
 import GlobalLoading from "@/components/GlobalLoading";
 import UsersList from "@/components/UsersList";
 import { Post, UserData } from "@/types/interfaces";

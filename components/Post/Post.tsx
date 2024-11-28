@@ -9,6 +9,7 @@ import { Post } from "@/types/interfaces";
 import { capitalizeWords } from "@/utils";
 import { Link } from "expo-router";
 import { getMediaType } from "@/utils/getMediaType";
+import { handlePostFavorite, handlePostLike } from "@/services/postServices";
 
 type MediaItem = {
   id: string;
@@ -45,6 +46,25 @@ export default function PostItem({
   const mediaData: MediaItem[] = [
     { id: postUuid, type: mediaType, source: multimediaUrl },
   ];
+
+  const handleLike = async () => {
+    try {
+      setLikeState(!likeState);
+      await handlePostLike(postUuid);
+    } catch (error) {
+      console.error("Error actualizando post like", error);
+    }
+  };
+
+  const handleBookmarkState = async () => {
+    try {
+      setbookmarkState(!bookmarkState);
+      await handlePostFavorite(postUuid);
+    } catch (error) {
+      console.error("Error actualizando post like", error);
+    }
+  };
+
   return (
     <View style={styles.postContainer}>
       <Link
@@ -82,7 +102,7 @@ export default function PostItem({
         <View className="mt-3 flex-row justify-between">
           <View className="flex-row gap-4">
             <View className="flex-row gap-1">
-              <Pressable onPress={() => setLikeState(!likeState)}>
+              <Pressable onPress={handleLike}>
                 <Ionicons
                   name={likeState ? "heart" : "heart-outline"}
                   size={24}
@@ -106,7 +126,7 @@ export default function PostItem({
           </View>
           <View>
             <View>
-              <Pressable onPress={() => setbookmarkState(!bookmarkState)}>
+              <Pressable onPress={handleBookmarkState}>
                 <Ionicons
                   name={bookmarkState ? "bookmark" : "bookmark-outline"}
                   size={24}

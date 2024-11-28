@@ -6,7 +6,7 @@ import { Colors } from "@/constants/Colors";
 import i18n from "@/languages";
 import HeaderSearch from "@/components/HeaderSearch";
 import SearchList from "@/components/SearchList";
-import { getUsers } from "@/services/api.service";
+import { getUsers } from "@/services/userServices";
 
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState<string>("");
