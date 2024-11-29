@@ -39,7 +39,10 @@
   "addLocation": "Agregar ubicación",
   "locationLegend": "¿Donde paso esto?",
   "addressee": "Destinatarios",
-  "followers": "Seguidores",
+  "followers": {
+    "one": "Seguidor",
+    "other": "Seguidores"
+  },
   "publish": "Publicar",
   "errorRegistering": "Fallo al registrarse, por favor reintentalo !",
   "error": "Error",
@@ -68,7 +71,10 @@
   "unfollow": "Dejar de seguir",
   "following": "Siguiendo",
   "bestFriends": "Mejores amigos",
-  "posts": "Publicaciones",
+  "posts": {
+    "one": "Publicación",
+    "other": "Publicaciones"
+  },
   "saved": "Guardados",
   "locationNotAvailable": "Ubicación no disponible"
 }

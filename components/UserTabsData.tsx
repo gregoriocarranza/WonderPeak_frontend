@@ -37,9 +37,21 @@ export default function UserTabsData({ id, type }: Props) {
 
   const commonTabs = useMemo(
     () => [
-      { id: 0, title: i18n.t("posts"), count: data.posts.length },
-      { id: 1, title: i18n.t("followers"), count: data.followers.length },
-      { id: 2, title: i18n.t("following"), count: data.following.length },
+      {
+        id: 0,
+        title: i18n.t("posts", { count: data.posts.length }),
+        count: data.posts.length,
+      },
+      {
+        id: 1,
+        title: i18n.t("followers", { count: data.followers.length }),
+        count: data.followers.length,
+      },
+      {
+        id: 2,
+        title: i18n.t("following", { count: data.following.length }),
+        count: data.following.length,
+      },
     ],
     [data.posts.length, data.followers.length, data.following.length]
   );

@@ -39,7 +39,10 @@
   "addLocation": "Add location",
   "locationLegend": "Where did this happen?",
   "addressee": "Addressee",
-  "followers": "Followers",
+  "followers": {
+    "one": "Follower",
+    "other": "Followers"
+  },
   "publish": "Publish",
   "errorRegistering": "Error registration, try again",
   "error": "Error",
@@ -67,7 +70,10 @@
   "unfollow": "Unfollow",
   "following": "Following",
   "bestFriends": "Best friends",
-  "posts": "Posts",
+  "posts": {
+    "one": "Post",
+    "other": "Posts"
+  },
   "saved": "Saved",
   "locationNotAvailable": "Location not available"
 }
