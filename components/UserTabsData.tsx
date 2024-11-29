@@ -3,7 +3,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import PostsLayout from "@/components/PostsLayout";
 import i18n from "@/languages";
 import Tabs from "@/components/Tabs";
-import { getUserPosts } from "@/services/postServices";
+import { getFavoritesPosts, getUserPosts } from "@/services/postServices";
 import {
   getUserFavorites,
   getUserFollowers,
@@ -89,6 +89,53 @@ export default function UserTabsData({ id, type }: Props) {
     }
   };
 
+  const getCommonData = async () => {
+    try {
+      console.log("common data");
+
+      const requests = [
+        getUserPosts(id),
+        getUserFollowers(id),
+        getUserFollowing(id),
+      ];
+
+      if (type === "profile") {
+        requests.push(getUserFavorites(id));
+      }
+
+      const responses = await Promise.all(requests);
+      console.log(responses, "common data");
+
+      setData({
+        posts: responses[0].data,
+        followers: responses[1].data,
+        following: responses[2].data,
+        bestFriends: responses[3]?.data || [],
+      });
+    } catch (error) {
+      throw new Error("Error getting common data", { cause: error });
+    }
+  };
+
+  const getFavoritesData = async () => {
+    try {
+      console.log("getFavoritesData");
+
+      const response = await getFavoritesPosts();
+      console.log(response, "RESPONsE");
+      console.log(response.data, "RESPONsE.DATA");
+
+      setData({
+        posts: response.data,
+        followers: [],
+        following: [],
+        bestFriends: [],
+      });
+    } catch (error) {
+      throw new Error("Error getting favorites posts", { cause: error });
+    }
+  };
+
   useEffect(() => {
     const fetchInitialData = async () => {
       if (!id) {
@@ -98,24 +145,7 @@ export default function UserTabsData({ id, type }: Props) {
 
       try {
         setIsLoading(true);
-        const requests = [
-          getUserPosts(id),
-          getUserFollowers(id),
-          getUserFollowing(id),
-        ];
-
-        if (type === "profile") {
-          requests.push(getUserFavorites(id));
-        }
-
-        const responses = await Promise.all(requests);
-
-        setData({
-          posts: responses[0].data,
-          followers: responses[1].data,
-          following: responses[2].data,
-          bestFriends: responses[3]?.data || [],
-        });
+        type === "favorites" ? await getFavoritesData() : await getCommonData();
       } catch (error) {
         console.error("Error fetching user data:", error);
       } finally {
