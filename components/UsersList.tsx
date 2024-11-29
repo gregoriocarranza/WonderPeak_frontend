@@ -39,7 +39,6 @@ export default function UsersList({ data }: Props) {
       <FlatList
         data={data}
         renderItem={({ item }) => <RenderItem item={item} />}
-        numColumns={3}
       />
     </View>
   );

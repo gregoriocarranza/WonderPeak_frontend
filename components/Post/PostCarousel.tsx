@@ -17,14 +17,9 @@ import {
 } from "react-native-gesture-handler";
 import { isValidImage } from "@/utils";
 import { StatusBar } from "expo-status-bar";
+import { MediaItem } from "@/types/interfaces";
 
 const { width: screenWidth } = Dimensions.get("window");
-
-type MediaItem = {
-  id: string;
-  type: string | "image" | "video";
-  source: any;
-};
 
 type Props = {
   mediaData: MediaItem[];
@@ -42,7 +37,7 @@ export default function PostCarousel({ mediaData }: Props) {
         onActivated={() => handleDoubleTap(index)}
       >
         <View style={styles.carouselItem}>
-          {item.type === "image" ? (
+          {item.type.includes("image") ? (
             <>
               {isValidImage(item.source) && (
                 <Image

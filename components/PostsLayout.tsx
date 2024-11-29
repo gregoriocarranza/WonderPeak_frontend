@@ -7,9 +7,11 @@ import {
   View,
   Dimensions,
 } from "react-native";
-import React from "react";
-import { router } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import { Link } from "expo-router";
+import { ResizeMode, Video } from "expo-av";
 import { Post, PostData } from "@/types/interfaces";
+import { getMediaType } from "@/utils/getMediaType";
 
 type RenderImageProps = {
   columnWidth: number;
@@ -17,17 +19,38 @@ type RenderImageProps = {
 };
 
 const RenderImage = ({ columnWidth, item }: RenderImageProps) => {
-  const goToPostDetail = () => {
-    router.push("/postDetail");
-  };
+  const [isVideo, setIsVideo] = useState(false);
+  const video = useRef(null);
+
+  useEffect(() => {
+    const mediaType = getMediaType(item.multimediaUrl);
+    setIsVideo(mediaType.includes("video"));
+  }, [item]);
 
   return (
-    <Pressable onPress={goToPostDetail}>
-      <Image
-        style={{ height: 130, width: columnWidth }}
-        source={{ uri: item.multimediaUrl }}
-      />
-    </Pressable>
+    <Link
+      href={{
+        pathname: "/home/post/[id]",
+        params: { id: item.postUuid },
+      }}
+    >
+      <View>
+        {isVideo ? (
+          <Video
+            ref={video}
+            source={{ uri: item.multimediaUrl }}
+            style={{ height: 130, width: columnWidth, flex: 1 }}
+            resizeMode={ResizeMode.COVER}
+          />
+        ) : (
+          <Image
+            resizeMode="cover"
+            style={{ height: 130, width: columnWidth, flex: 1 }}
+            source={{ uri: item.multimediaUrl }}
+          />
+        )}
+      </View>
+    </Link>
   );
 };
 

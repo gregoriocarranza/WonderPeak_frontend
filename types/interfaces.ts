@@ -48,11 +48,17 @@ export type PostData = {
 };
 
 export type Advertising = {
-    id: string,
-    multimediaUrl: string,
-    commerceImage: string, 
-    commerceName: string,
-    commerceUrl: string,
+    id: string;
+    multimediaUrl: string;
+    commerceImage: string;
+    commerceName: string;
+    commerceUrl: string;
     title: string | null;
     text: string | null;
-}
+};
+
+export type MediaItem = {
+  id: string;
+  type: string | "image" | "video";
+  source: any;
+};

@@ -5,17 +5,11 @@ import { Colors } from "@/constants/Colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import PostCarousel from "./PostCarousel";
 import i18n from "@/languages";
-import { Post } from "@/types/interfaces";
-import { capitalizeWords } from "@/utils";
+import { MediaItem, Post } from "@/types/interfaces";
+import { capitalizeWords, formatDate } from "@/utils";
 import { Link } from "expo-router";
 import { getMediaType } from "@/utils/getMediaType";
 import { handlePostFavorite, handlePostLike } from "@/services/postServices";
-
-type MediaItem = {
-  id: string;
-  type: string | "image" | "video";
-  source: any;
-};
 
 export default function PostItem({
   postUuid,
@@ -30,14 +24,6 @@ export default function PostItem({
   createdAt,
   updatedAt,
 }: Post) {
-  const formatDate = (isoString: string): string => {
-    if (!isoString) return "";
-    const date = new Date(isoString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() returns 0-11
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
   //TODO: cada posteo del feed tiene que tener un atributo que sea liked /isLiked que sea la busqueda del userId en la base del Feed
   const [likeState, setLikeState] = useState(false);
   const [bookmarkState, setbookmarkState] = useState(false);
@@ -86,7 +72,7 @@ export default function PostItem({
             <Text style={styles.location} className="font-pregular">
               📍
               {capitalizeWords(location?.placeHolder) ||
-                "Ubicación no disponible"}
+                i18n.t("locationNotAvailable")}
             </Text>
           </View>
         </View>
