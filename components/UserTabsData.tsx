@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { RefreshControl, ScrollView, View, StyleSheet } from "react-native";
 import React, { useEffect, useState, useMemo } from "react";
 import PostsLayout from "@/components/PostsLayout";
 import i18n from "@/languages";
@@ -20,9 +20,17 @@ interface Props {
   type: TabType;
 }
 
+enum TabsType {
+  Posts = 0,
+  Followers = 1,
+  Following = 2,
+  BestFriends = 3,
+}
+
 export default function UserTabsData({ id, type }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [data, setData] = useState<{
     posts: Post[];
     followers: UserData[];
@@ -34,6 +42,14 @@ export default function UserTabsData({ id, type }: Props) {
     following: [],
     bestFriends: [],
   });
+
+  const handleRefresh = (): void => {
+    setRefreshing(true);
+    getRequiredData();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
 
   const commonTabs = useMemo(
     () => [
@@ -74,13 +90,19 @@ export default function UserTabsData({ id, type }: Props) {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 0:
-        return <PostsLayout data={data.posts} />;
-      case 1:
+      case TabsType.Posts:
+        return (
+          <PostsLayout
+            data={data.posts}
+            refreshing={refreshing}
+            handleRefresh={handleRefresh}
+          />
+        );
+      case TabsType.Followers:
         return <UsersList data={data.followers} />;
-      case 2:
+      case TabsType.Following:
         return <UsersList data={data.following} />;
-      case 3:
+      case TabsType.BestFriends:
         return type === "profile" ? (
           <UsersList data={data.bestFriends} />
         ) : null;
@@ -89,42 +111,46 @@ export default function UserTabsData({ id, type }: Props) {
     }
   };
 
-  const getCommonData = async () => {
+  const fetchData = async (
+    fetcher: () => Promise<{ data: any }>,
+    errorMessage: string,
+    dataKey: keyof typeof data
+  ) => {
     try {
-      console.log("common data");
-
-      const requests = [
-        getUserPosts(id),
-        getUserFollowers(id),
-        getUserFollowing(id),
-      ];
-
-      if (type === "profile") {
-        requests.push(getUserFavorites(id));
-      }
-
-      const responses = await Promise.all(requests);
-      console.log(responses, "common data");
-
-      setData({
-        posts: responses[0].data,
-        followers: responses[1].data,
-        following: responses[2].data,
-        bestFriends: responses[3]?.data || [],
-      });
+      const response = await fetcher();
+      setData((prevData) => ({ ...prevData, [dataKey]: response.data }));
     } catch (error) {
-      throw new Error("Error getting common data", { cause: error });
+      throw new Error(errorMessage, { cause: error });
     }
   };
 
+  const getPosts = () =>
+    fetchData(() => getUserPosts(id), "Error getting posts", "posts");
+
+  const getFollowers = () =>
+    fetchData(
+      () => getUserFollowers(id),
+      "Error getting followers",
+      "followers"
+    );
+
+  const getFollowing = () =>
+    fetchData(
+      () => getUserFollowing(id),
+      "Error getting following",
+      "following"
+    );
+
+  const getBestFriend = () =>
+    fetchData(
+      () => getUserFavorites(id),
+      "Error getting best friend",
+      "bestFriends"
+    );
+
   const getFavoritesData = async () => {
     try {
-      console.log("getFavoritesData");
-
       const response = await getFavoritesPosts();
-      console.log(response, "RESPONsE");
-      console.log(response.data, "RESPONsE.DATA");
-
       setData({
         posts: response.data,
         followers: [],
@@ -133,6 +159,29 @@ export default function UserTabsData({ id, type }: Props) {
       });
     } catch (error) {
       throw new Error("Error getting favorites posts", { cause: error });
+    }
+  };
+
+  const getRequiredData = async () => {
+    try {
+      if (type === "favorites") {
+        await getFavoritesData();
+        return;
+      }
+
+      const dataFetchers = {
+        [TabsType.Posts]: getPosts,
+        [TabsType.Followers]: getFollowers,
+        [TabsType.Following]: getFollowing,
+        [TabsType.BestFriends]: type === "profile" ? getBestFriend : null,
+      } as const;
+
+      const fetcher = dataFetchers[activeTab as TabsType];
+      if (fetcher) {
+        await fetcher();
+      }
+    } catch (error) {
+      console.error("Error al obtener datos:", error);
     }
   };
 
@@ -145,7 +194,9 @@ export default function UserTabsData({ id, type }: Props) {
 
       try {
         setIsLoading(true);
-        type === "favorites" ? await getFavoritesData() : await getCommonData();
+        type === "favorites"
+          ? await getFavoritesData()
+          : await getRequiredData();
       } catch (error) {
         console.error("Error fetching user data:", error);
       } finally {
