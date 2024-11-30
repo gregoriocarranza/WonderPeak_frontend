@@ -24,7 +24,9 @@ export const Colors = {
   darkGray: "#BDBDBD",
   red: "#E61818",
   darkPurple: "#45414A",
+  violet: "#27174E",
   tabsBackground: "#FEF7FF",
+  green: "#34C759",
   light: {
     text: '#11181C',
     background: '#fff',

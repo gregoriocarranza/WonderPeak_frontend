@@ -76,5 +76,7 @@
   },
   "saved": "Saved",
   "locationNotAvailable": "Location not available",
-  "emptyStateFavorites": "You don't have saved posts"
+  "emptyStateFavorites": "You don't have saved posts",
+  "stopFollowing": "Stop following",
+  "emptyStateUsers": "You don't users to show"
 }

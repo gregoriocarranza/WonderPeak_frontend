@@ -77,5 +77,7 @@
   },
   "saved": "Guardados",
   "locationNotAvailable": "Ubicación no disponible",
-  "emptyStateFavorites": "No tienes post guardados"
+  "emptyStateFavorites": "No tienes post guardados",
+  "stopFollowing": "Dejar de seguir",
+  "emptyStateUsers": "No tienes usuarios en este momento"
 }

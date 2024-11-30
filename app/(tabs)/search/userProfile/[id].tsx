@@ -1,11 +1,21 @@
-import { Pressable, StyleSheet, View, Text } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import i18n from "@/languages";
-import { getUserById } from "@/services/userServices";
+import {
+  getUserById,
+  handleUserFavorite,
+  handleUserFollow,
+} from "@/services/userServices";
 import { UserInfo } from "@/types/interfaces";
 import HeaderUser from "@/components/HeaderUser";
 import GlobalLoading from "@/components/GlobalLoading";
@@ -17,9 +27,36 @@ export default function userProfile() {
 
   const [data, setData] = useState<UserInfo | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoadingFollow, setIsLoadingFollow] = useState(false);
+  const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
+
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const goToSearch = () => {
-    router.back();
+    router.replace("/search");
+  };
+  const handleFollow = async () => {
+    try {
+      setIsLoadingFollow(true);
+      await handleUserFollow(validId);
+      setIsFollowing(!isFollowing);
+    } catch (error) {
+      console.error("Error handling the user follow");
+    } finally {
+      setIsLoadingFollow(false);
+    }
+  };
+  const handleFavorite = async () => {
+    try {
+      setIsLoadingFavorite(true);
+      await handleUserFavorite(validId);
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error("Error handling the user as favorite");
+    } finally {
+      setIsLoadingFavorite(false);
+    }
   };
 
   useEffect(() => {
@@ -57,13 +94,45 @@ export default function userProfile() {
             userData={data}
           />
           <View style={styles.actionsSection}>
-            <Pressable style={styles.followButton}>
-              <Text className="font-pregular" style={styles.followText}>
-                {i18n.t("follow")}
-              </Text>
+            <Pressable
+              style={[
+                styles.followButton,
+                isFollowing && styles.stopFollowButton,
+              ]}
+              onPress={handleFollow}
+              disabled={isLoadingFollow}
+            >
+              {isLoadingFollow ? (
+                <ActivityIndicator color={Colors.darkPurple} />
+              ) : (
+                <Text
+                  className="font-pregular"
+                  style={[
+                    styles.followText,
+                    isFollowing && styles.stopFollowText,
+                  ]}
+                >
+                  {i18n.t(isFollowing ? "stopFollowing" : "follow")}
+                </Text>
+              )}
             </Pressable>
-            <Pressable style={styles.followButton}>
-              <MaterialIcons name="stars" size={24} color={Colors.darkPurple} />
+            <Pressable
+              style={[
+                styles.followButton,
+                isFavorite && styles.favoritesButton,
+              ]}
+              onPress={handleFavorite}
+              disabled={isLoadingFavorite}
+            >
+              {isLoadingFavorite ? (
+                <ActivityIndicator color={Colors.darkPurple} />
+              ) : (
+                <MaterialIcons
+                  name="stars"
+                  size={24}
+                  color={isFavorite ? Colors.white : Colors.darkPurple}
+                />
+              )}
             </Pressable>
           </View>
           <UserTabsData id={validId} type="basic" />
@@ -103,5 +172,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  stopFollowButton: {
+    borderColor: Colors.violet,
+    backgroundColor: Colors.darkPurple,
+  },
+  stopFollowText: {
+    color: Colors.white,
+  },
+  favoritesButton: {
+    borderColor: Colors.green,
+    backgroundColor: Colors.green,
   },
 });

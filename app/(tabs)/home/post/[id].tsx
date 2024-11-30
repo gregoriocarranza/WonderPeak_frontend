@@ -78,8 +78,6 @@ export default function PostDetail() {
         setData(data.data);
         setUserData(userData.data);
 
-        console.log(data, "DATA");
-
         if (data) {
           const mediaData = getMediaData(data.data);
           setMediaData(mediaData);

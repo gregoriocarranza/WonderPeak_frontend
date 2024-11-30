@@ -99,12 +99,28 @@ export default function UserTabsData({ id, type }: Props) {
           />
         );
       case TabsType.Followers:
-        return <UsersList data={data.followers} />;
+        return (
+          <UsersList
+            data={data.followers}
+            refreshing={refreshing}
+            handleRefresh={handleRefresh}
+          />
+        );
       case TabsType.Following:
-        return <UsersList data={data.following} />;
+        return (
+          <UsersList
+            data={data.following}
+            refreshing={refreshing}
+            handleRefresh={handleRefresh}
+          />
+        );
       case TabsType.BestFriends:
         return type === "profile" ? (
-          <UsersList data={data.bestFriends} />
+          <UsersList
+            data={data.bestFriends}
+            refreshing={refreshing}
+            handleRefresh={handleRefresh}
+          />
         ) : null;
       default:
         return null;
@@ -169,17 +185,14 @@ export default function UserTabsData({ id, type }: Props) {
         return;
       }
 
-      const dataFetchers = {
-        [TabsType.Posts]: getPosts,
-        [TabsType.Followers]: getFollowers,
-        [TabsType.Following]: getFollowing,
-        [TabsType.BestFriends]: type === "profile" ? getBestFriend : null,
-      } as const;
+      const dataFetchers = [
+        getPosts(),
+        getFollowers(),
+        getFollowing(),
+        type === "profile" ? getBestFriend() : null,
+      ];
 
-      const fetcher = dataFetchers[activeTab as TabsType];
-      if (fetcher) {
-        await fetcher();
-      }
+      await Promise.all(dataFetchers);
     } catch (error) {
       console.error("Error al obtener datos:", error);
     }

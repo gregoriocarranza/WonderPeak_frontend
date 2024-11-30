@@ -1,8 +1,18 @@
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React from "react";
 import { Link } from "expo-router";
 import { UserData } from "@/types/interfaces";
 import { Colors } from "@/constants/Colors";
+import { MaterialIcons } from "@expo/vector-icons";
+import i18n from "@/languages";
 
 type RenderItemProp = {
   item: UserData;
@@ -10,6 +20,8 @@ type RenderItemProp = {
 
 type Props = {
   data: UserData[];
+  refreshing: boolean;
+  handleRefresh: () => void;
 };
 
 const RenderItem = ({ item }: RenderItemProp) => {
@@ -33,14 +45,41 @@ const RenderItem = ({ item }: RenderItemProp) => {
   );
 };
 
-export default function UsersList({ data }: Props) {
+export default function UsersList({ data, refreshing, handleRefresh }: Props) {
   return (
-    <View>
-      <FlatList
-        data={data}
-        renderItem={({ item }) => <RenderItem item={item} />}
-      />
-    </View>
+    <>
+      {data && data.length ? (
+        <View>
+          <FlatList
+            data={data}
+            renderItem={({ item }) => <RenderItem item={item} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+              />
+            }
+            refreshing={refreshing}
+          />
+        </View>
+      ) : (
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
+          contentContainerStyle={styles.emptyStateContainer}
+        >
+          <MaterialIcons
+            name="person-outline"
+            size={100}
+            color={Colors.lavenderGray}
+          />
+          <Text className="font-pbold" style={styles.text}>
+            {i18n.t("emptyStateUsers")}
+          </Text>
+        </ScrollView>
+      )}
+    </>
   );
 }
 
@@ -60,5 +99,19 @@ const styles = StyleSheet.create({
   userData: {
     flex: 1,
     alignItems: "center",
+  },
+  emptyStateContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 24,
+    maxWidth: 300,
+    textAlign: "center",
+    lineHeight: 42,
+    width: "80%",
+    marginTop: 16,
+    color: Colors.lavenderGray,
   },
 });
