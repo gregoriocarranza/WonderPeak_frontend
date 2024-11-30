@@ -75,5 +75,6 @@
     "other": "Posts"
   },
   "saved": "Saved",
-  "locationNotAvailable": "Location not available"
+  "locationNotAvailable": "Location not available",
+  "emptyStateFavorites": "You don't have saved posts"
 }

@@ -76,5 +76,6 @@
     "other": "Publicaciones"
   },
   "saved": "Guardados",
-  "locationNotAvailable": "Ubicación no disponible"
+  "locationNotAvailable": "Ubicación no disponible",
+  "emptyStateFavorites": "No tienes post guardados"
 }

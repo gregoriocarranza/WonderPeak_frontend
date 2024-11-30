@@ -3,7 +3,6 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
 import HeaderUser from "@/components/HeaderUser";
-import PostsLayout from "@/components/PostsLayout";
 import { useAuth } from "@/hooks/authContext";
 import UserTabsData from "@/components/UserTabsData";
 
