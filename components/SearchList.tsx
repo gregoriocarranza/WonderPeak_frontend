@@ -1,8 +1,16 @@
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React from "react";
-import { Link } from "expo-router";
+import { router } from "expo-router";
 import { images } from "@/constants";
 import { Colors } from "@/constants/Colors";
+import { useAuth } from "@/hooks/authContext";
 
 interface DataUser {
   userUuid: string;
@@ -17,15 +25,21 @@ interface Props {
 }
 
 const RenderElement = ({ user }: { user: DataUser }) => {
-  return (
-    <View>
-      <Link
-        href={{
+  const { userInfo } = useAuth();
+  const userData = userInfo ? JSON.parse(userInfo) : null;
+
+  const goToProfile = () => {
+    const myProfile = userData.userUuid === user.userUuid;
+    myProfile
+      ? router.push("/(tabs)/profile")
+      : router.push({
           pathname: "/search/userProfile/[id]",
           params: { id: user.userUuid },
-        }}
-        style={styles.borderTop}
-      >
+        });
+  };
+  return (
+    <View>
+      <Pressable onPress={goToProfile} style={styles.borderTop}>
         <View className="flex-row" style={styles.itemGlobalContainer}>
           <Image source={images.userProfile} style={styles.itemImage} />
           <View style={styles.userData}>
@@ -37,7 +51,7 @@ const RenderElement = ({ user }: { user: DataUser }) => {
             </Text>
           </View>
         </View>
-      </Link>
+      </Pressable>
     </View>
   );
 };
