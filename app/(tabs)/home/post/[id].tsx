@@ -104,6 +104,7 @@ export default function PostDetail() {
             showDetails={false}
             goBackAction={goBack}
             userData={userData}
+            avatarSize={80}
           />
 
           {data && (

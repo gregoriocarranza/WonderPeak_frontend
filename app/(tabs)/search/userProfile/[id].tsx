@@ -92,6 +92,7 @@ export default function userProfile() {
             goBackAction={goToSearch}
             showDetails={true}
             userData={data}
+            avatarSize={100}
           />
           <View style={styles.actionsSection}>
             <Pressable

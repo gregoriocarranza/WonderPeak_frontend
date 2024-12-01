@@ -13,7 +13,12 @@ export default function Favorites() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
-      <HeaderUser isOwner showDetails={true} userData={userData} />
+      <HeaderUser
+        isOwner
+        showDetails={true}
+        userData={userData}
+        avatarSize={100}
+      />
       <UserTabsData id={id} type="favorites" />
     </SafeAreaView>
   );

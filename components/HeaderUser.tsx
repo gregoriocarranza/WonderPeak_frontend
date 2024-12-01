@@ -18,6 +18,7 @@ type Props = {
   showDetails?: boolean;
   goBackAction?: () => void;
   userData?: UserInfo;
+  avatarSize?: 100 | 80 | 70;
 };
 
 export default function HeaderUser({
@@ -26,6 +27,7 @@ export default function HeaderUser({
   goBackAction,
   showDetails,
   userData,
+  avatarSize = 70,
 }: Props) {
   const goToSettings = () => {
     router.push("/settings");
@@ -61,6 +63,7 @@ export default function HeaderUser({
 
       <View className="items-center">
         <Avatar
+          size={avatarSize}
           image={userData?.profileImage}
           gamification={userData?.gamificationLevel}
         />
