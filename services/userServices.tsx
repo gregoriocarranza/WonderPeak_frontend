@@ -115,3 +115,19 @@ export const handleUserFollow = async (userId: string) => {
     throw error;
   }
 };
+
+export const deleteUser = async () => {
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(`${USER_URL}/me`, {
+      method: "DELETE",
+      headers,
+    });
+
+    if (!response.ok) throw new Error("Error al eliminar la cuenta");
+    return await response.json();
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    throw error;
+  }
+};

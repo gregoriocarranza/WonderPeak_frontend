@@ -19,6 +19,7 @@ type Props = {
   otherStyles?: string;
   type?: string;
   keyboardType?: TextInputProps["keyboardType"];
+  isReadOnly?: boolean;
 };
 
 export default function FormField({
@@ -29,6 +30,7 @@ export default function FormField({
   placeholder,
   keyboardType,
   type,
+  isReadOnly = false,
 }: Props) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -48,6 +50,7 @@ export default function FormField({
           onChangeText={handleChangeText}
           secureTextEntry={type === "password" && !showPassword}
           keyboardType={keyboardType}
+          readOnly={isReadOnly}
         />
 
         {type === "password" && (

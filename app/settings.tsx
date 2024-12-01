@@ -18,6 +18,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import FormSelect from "@/components/FormSelect";
 import { useAuth } from "@/hooks/authContext";
+import { deleteUser } from "@/services/userServices";
+import GlobalLoading from "@/components/GlobalLoading";
 
 type FormState = {
   name: string;
@@ -34,6 +36,11 @@ type PasswordFormState = {
   newPasswordConfirm: string;
 };
 
+type ConfirmationModalBody = {
+  title: string;
+  text: string;
+};
+
 const FORM_TYPES = {
   general: "general",
   password: "password",
@@ -42,9 +49,14 @@ const FORM_TYPES = {
 type FormTypes = (typeof FORM_TYPES)[keyof typeof FORM_TYPES];
 
 export default function Settings() {
-  const { userInfo } = useAuth();
+  const { userInfo, logout } = useAuth();
   const userData = userInfo ? JSON.parse(userInfo) : null;
 
+  const [confirmationModal, setConfirmationModal] =
+    useState<ConfirmationModalBody>({
+      title: "",
+      text: "String",
+    });
   const [generalForm, setGeneralForm] = useState<FormState>({
     name: userData?.name || "",
     lastname: userData?.lastname || "",
@@ -61,24 +73,62 @@ export default function Settings() {
   const [formType, setFormType] = useState<FormTypes>(FORM_TYPES.general);
   const [isOpenConfirmationModal, setIsOpenConfirmationModal] =
     useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const goBack = () => {
     if (formType === FORM_TYPES.password) {
       setIsOpenConfirmationModal(true);
+      setConfirmationModal({
+        title: i18n.t("areYouSureToExit"),
+        text: i18n.t("youWillLoseYourChanges"),
+      });
     } else {
       router.back();
     }
   };
 
   const confirmAction = () => {
-    setFormType(FORM_TYPES.general);
+    formType === FORM_TYPES.password
+      ? setFormType(FORM_TYPES.general)
+      : confirmDeleteAccount();
+
     setIsOpenConfirmationModal(false);
   };
 
   const handleForm = () => {};
 
+  const handleLogout = () => {
+    logout();
+    goToSingIn();
+  };
+
+  const deleteAccount = () => {
+    setIsOpenConfirmationModal(true);
+    setConfirmationModal({
+      title: i18n.t("deleteAccount"),
+      text: i18n.t("areYouSureDeleleAccount"),
+    });
+  };
+
+  const confirmDeleteAccount = async () => {
+    try {
+      setIsLoading(true);
+      await deleteUser();
+      goToSingIn();
+    } catch (error) {
+      console.error("Error deleting account", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const goToSingIn = () => {
+    router.replace("/sign-in");
+  };
+
   return (
     <>
+      {isLoading && <GlobalLoading />}
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
         <HeaderUser
           isOwner={false}
@@ -121,6 +171,7 @@ export default function Settings() {
                 <FormField
                   title={i18n.t("email")}
                   value={generalForm.email}
+                  isReadOnly
                   handleChangeText={(e) =>
                     setGeneralForm({ ...generalForm, email: e })
                   }
@@ -148,7 +199,11 @@ export default function Settings() {
                     {i18n.t("editPassword")}
                   </Text>
                 </Pressable>
-                <Pressable style={styles.actionButton} className="mb-4">
+                <Pressable
+                  style={styles.actionButton}
+                  className="mb-4"
+                  onPress={handleLogout}
+                >
                   <MaterialIcons name="logout" size={24} color="black" />
                   <Text
                     style={styles.actionText}
@@ -157,7 +212,10 @@ export default function Settings() {
                     {i18n.t("logout")}
                   </Text>
                 </Pressable>
-                <Pressable style={[styles.actionButton, styles.dangerAction]}>
+                <Pressable
+                  style={[styles.actionButton, styles.dangerAction]}
+                  onPress={deleteAccount}
+                >
                   <MaterialIcons name="close" size={24} color={Colors.red} />
                   <Text
                     style={styles.dangerText}
@@ -172,30 +230,33 @@ export default function Settings() {
             <View className="px-6">
               <FormField
                 title={i18n.t("currentPassword")}
-                value={generalForm.name}
+                value={passwordForm.currentPassword}
                 handleChangeText={(e) =>
                   setPasswordForm({ ...passwordForm, currentPassword: e })
                 }
                 placeholder="********"
                 otherStyles="mb-4"
+                type="password"
               />
               <FormField
                 title={i18n.t("newPassword")}
-                value={generalForm.name}
+                value={passwordForm.newPassword}
                 handleChangeText={(e) =>
                   setPasswordForm({ ...passwordForm, newPassword: e })
                 }
                 placeholder="********"
                 otherStyles="mb-4"
+                type="password"
               />
               <FormField
                 title={i18n.t("repetPassword")}
-                value={generalForm.lastname}
+                value={passwordForm.newPasswordConfirm}
                 handleChangeText={(e) =>
                   setPasswordForm({ ...passwordForm, newPasswordConfirm: e })
                 }
                 placeholder="********"
                 otherStyles="mb-4"
+                type="password"
               />
             </View>
           )}
@@ -214,6 +275,8 @@ export default function Settings() {
         <ConfirmationModal
           cancelAction={() => setIsOpenConfirmationModal(false)}
           confirmAction={confirmAction}
+          title={confirmationModal.title}
+          text={confirmationModal.text}
         />
       )}
     </>
@@ -230,17 +293,21 @@ const styles = StyleSheet.create({
   actionButton: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     borderWidth: 2,
     padding: 4,
     paddingHorizontal: 12,
-    width: 200,
+    width: 270,
     borderColor: Colors.gray,
-    borderRadius: 24,
+    borderRadius: 28,
+    height: 60,
   },
   actionText: {
     color: Colors.gray,
   },
-  formContainer: {},
+  formContainer: {
+    marginTop: 16,
+  },
   dangerAction: {
     borderColor: Colors.red,
   },

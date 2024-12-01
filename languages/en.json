@@ -78,5 +78,6 @@
   "locationNotAvailable": "Location not available",
   "emptyStateFavorites": "You don't have saved posts",
   "stopFollowing": "Stop following",
-  "emptyStateUsers": "You don't users to show"
+  "emptyStateUsers": "You don't users to show",
+  "areYouSureDeleleAccount": "Are you sure to delete your account?"
 }

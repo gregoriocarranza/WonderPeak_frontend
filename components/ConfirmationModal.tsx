@@ -7,21 +7,26 @@ import CustomButton from "./CustomButton";
 type Props = {
   cancelAction: () => void;
   confirmAction: () => void;
+  title: string;
+  text: string;
 };
 
 export default function ConfirmationModal({
   cancelAction,
   confirmAction,
+  title,
+  text,
 }: Props) {
   return (
     <View style={styles.modalBackground}>
       <View style={styles.modal}>
         <View style={styles.body}>
           <Text className="font-pbold text-center" style={{ fontSize: 16 }}>
-            {i18n.t("areYouSureToExit")}
+            {title}
           </Text>
           <Text className="font-pregular text-center" style={{ fontSize: 16 }}>
-            {i18n.t("youWillLoseYourChanges")}
+            {}
+            {text}
           </Text>
         </View>
         <View className="flex-row" style={styles.footer}>
