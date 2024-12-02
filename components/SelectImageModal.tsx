@@ -6,9 +6,15 @@ import { Ionicons } from "@expo/vector-icons";
 
 type Props = {
   cancelAction: () => void;
+  onCameraSelected: () => void;
+  onGallerySelected: () => void;
 };
 
-export default function SelectImageModal({ cancelAction }: Props) {
+export default function SelectImageModal({
+  cancelAction,
+  onCameraSelected,
+  onGallerySelected,
+}: Props) {
   return (
     <View style={styles.modalBackground}>
       <View style={styles.modal}>
@@ -16,18 +22,18 @@ export default function SelectImageModal({ cancelAction }: Props) {
           <Ionicons name="close" size={24} color={Colors.secondary} />
         </Pressable>
         <View style={styles.body}>
-          <View style={styles.box}>
+          <Pressable style={styles.box} onPress={onCameraSelected}>
             <Ionicons name="camera" size={32} color={Colors.secondary} />
             <Text className="font-pbold text-center" style={styles.text}>
               {i18n.t("camera")}
             </Text>
-          </View>
-          <View style={styles.box}>
+          </Pressable>
+          <Pressable style={styles.box} onPress={onGallerySelected}>
             <Ionicons name="image" size={32} color={Colors.secondary} />
             <Text className="font-pbold text-center" style={styles.text}>
               {i18n.t("gallery")}
             </Text>
-          </View>
+          </Pressable>
         </View>
       </View>
     </View>

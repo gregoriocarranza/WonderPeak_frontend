@@ -121,34 +121,11 @@ export default function Settings() {
     router.replace("/sign-in");
   };
 
-  const handlePictures = async (type: "profileImage" | "coverImage") => {
-    try {
-      await ImagePicker.requestCameraPermissionsAsync();
-      const result = await ImagePicker.launchCameraAsync({
-        cameraType: ImagePicker.CameraType.front,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
-      });
-
-      if (!result.canceled) {
-        setGeneralForm({ ...generalForm, [type]: result.assets[0].uri });
-      }
-    } catch (error) {
-      console.error("Error uploading an image", error);
-      Alert.alert("Error al cargar imagen");
-    }
-  };
-
   return (
     <>
       {isLoading && <GlobalLoading />}
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
-        <HeaderSetttings
-          goBackAction={goBack}
-          temporalData={generalForm}
-          handlePictures={handlePictures}
-        />
+        <HeaderSetttings goBackAction={goBack} temporalData={generalForm} />
         <ScrollView style={styles.formContainer}>
           {formType === FORM_TYPES.general ? (
             <>

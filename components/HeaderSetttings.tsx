@@ -5,36 +5,84 @@ import {
   Text,
   View,
   Image,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import * as ImagePicker from "expo-image-picker";
 import { Colors } from "@/constants/Colors";
 import { FormState } from "@/types/interfaces";
 import EditPicturesButton from "./EditPicturesButton";
-import { LinearGradient } from "expo-linear-gradient";
 import SelectImageModal from "./SelectImageModal";
 
 type Props = {
   goBackAction?: () => void;
   temporalData?: FormState;
-  handlePictures: (type: "profileImage" | "coverImage") => void;
+  // handlePictures: (type: "profileImage" | "coverImage") => void;
 };
 
-export default function HeaderSetttings({
-  goBackAction,
-  temporalData,
-  handlePictures,
-}: Props) {
+export default function HeaderSetttings({ goBackAction, temporalData }: Props) {
   const [isOpenSelectModal, setIsOpenSelectModal] = useState(false);
+  const [currentType, setCurrentType] = useState<"profile" | "cover">();
+  const [selectedImages, setSelectedImages] = useState({
+    profile: "",
+    cover: "",
+  });
 
-  const openSelectImageModal = () => {
+  const openSelectImageModal = (type: "profile" | "cover") => {
     setIsOpenSelectModal(true);
+    setCurrentType(type);
+  };
+
+  const handlePictureFromCamera = async () => {
+    try {
+      await ImagePicker.requestCameraPermissionsAsync();
+      const result = await ImagePicker.launchCameraAsync({
+        cameraType: ImagePicker.CameraType.front,
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.canceled && currentType) {
+        setSelectedImages((prevData) => ({
+          ...prevData,
+          [currentType]: result.assets[0].uri,
+        }));
+      }
+    } catch (error) {
+      console.error("Error uploading an image", error);
+      Alert.alert("Error al cargar imagen");
+    } finally {
+      setIsOpenSelectModal(false);
+    }
+  };
+
+  const handlePictureFromGallery = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.canceled && currentType) {
+        setSelectedImages((prevData) => ({
+          ...prevData,
+          [currentType]: result.assets[0].uri,
+        }));
+      }
+    } catch (error) {
+      console.error("Error uploading an image", error);
+      Alert.alert("Error al cargar imagen");
+    } finally {
+      setIsOpenSelectModal(false);
+    }
   };
 
   return (
     <>
       <ImageBackground
-        source={{ uri: temporalData?.coverImage }}
+        source={{ uri: selectedImages.cover || temporalData?.coverImage }}
         resizeMode="cover"
         className="justify-center items-center"
         style={[styles.globalContainer]}
@@ -62,7 +110,9 @@ export default function HeaderSetttings({
 
               <View style={styles.profileImg}>
                 <Image
-                  source={{ uri: temporalData?.profileImage }}
+                  source={{
+                    uri: selectedImages.profile || temporalData?.profileImage,
+                  }}
                   style={styles.profileImg}
                   className="w-full h-100"
                 />
@@ -70,7 +120,9 @@ export default function HeaderSetttings({
             </View>
 
             <View style={styles.editProfilePicture}>
-              <EditPicturesButton onPressAction={openSelectImageModal} />
+              <EditPicturesButton
+                onPressAction={() => openSelectImageModal("profile")}
+              />
             </View>
           </View>
           <Text className="font-psemibold mt-4">
@@ -81,12 +133,18 @@ export default function HeaderSetttings({
           </Text>
         </View>
         <View style={styles.editCoverPicture}>
-          <EditPicturesButton onPressAction={openSelectImageModal} />
+          <EditPicturesButton
+            onPressAction={() => openSelectImageModal("cover")}
+          />
         </View>
       </ImageBackground>
 
       {isOpenSelectModal && (
-        <SelectImageModal cancelAction={() => setIsOpenSelectModal(false)} />
+        <SelectImageModal
+          cancelAction={() => setIsOpenSelectModal(false)}
+          onCameraSelected={handlePictureFromCamera}
+          onGallerySelected={handlePictureFromGallery}
+        />
       )}
     </>
   );
