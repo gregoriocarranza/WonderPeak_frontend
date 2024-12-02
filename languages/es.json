@@ -80,5 +80,7 @@
   "emptyStateFavorites": "No tienes post guardados",
   "stopFollowing": "Dejar de seguir",
   "emptyStateUsers": "No tienes usuarios en este momento",
-  "areYouSureDeleleAccount": "Estas seguro de eliminar su cuenta?"
+  "areYouSureDeleleAccount": "Estas seguro de eliminar su cuenta?",
+  "camera": "Cámara",
+  "gallery": "Galería"
 }

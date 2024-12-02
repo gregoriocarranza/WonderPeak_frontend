@@ -1,5 +1,5 @@
 import {
-  Image,
+  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -8,27 +8,20 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Colors } from "@/constants/Colors";
-import HeaderUser from "@/components/HeaderUser";
 import { router } from "expo-router";
-import FormField from "@/components/FormField";
-import i18n from "@/languages";
-import CustomButton from "@/components/CustomButton";
+import * as ImagePicker from "expo-image-picker";
 import { MaterialIcons } from "@expo/vector-icons";
-import ConfirmationModal from "@/components/ConfirmationModal";
-import FormSelect from "@/components/FormSelect";
+import { Colors } from "@/constants/Colors";
+import i18n from "@/languages";
 import { useAuth } from "@/hooks/authContext";
 import { deleteUser } from "@/services/userServices";
+import FormField from "@/components/FormField";
+import CustomButton from "@/components/CustomButton";
+import ConfirmationModal from "@/components/ConfirmationModal";
+import FormSelect from "@/components/FormSelect";
 import GlobalLoading from "@/components/GlobalLoading";
-
-type FormState = {
-  name: string;
-  lastname: string;
-  nickname: string;
-  email: string;
-  gender: string;
-  description: string;
-};
+import HeaderSetttings from "@/components/HeaderSetttings";
+import { FormState } from "@/types/interfaces";
 
 type PasswordFormState = {
   currentPassword: string;
@@ -64,6 +57,8 @@ export default function Settings() {
     email: userData?.email || "",
     gender: userData?.gender || "",
     description: userData?.description || "",
+    profileImage: userData?.profileImage || "",
+    coverImage: userData?.coverImage || "",
   });
   const [passwordForm, setPasswordForm] = useState<PasswordFormState>({
     currentPassword: "",
@@ -126,16 +121,33 @@ export default function Settings() {
     router.replace("/sign-in");
   };
 
+  const handlePictures = async (type: "profileImage" | "coverImage") => {
+    try {
+      await ImagePicker.requestCameraPermissionsAsync();
+      const result = await ImagePicker.launchCameraAsync({
+        cameraType: ImagePicker.CameraType.front,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        setGeneralForm({ ...generalForm, [type]: result.assets[0].uri });
+      }
+    } catch (error) {
+      console.error("Error uploading an image", error);
+      Alert.alert("Error al cargar imagen");
+    }
+  };
+
   return (
     <>
       {isLoading && <GlobalLoading />}
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
-        <HeaderUser
-          isOwner={false}
-          showGoBack={true}
-          showDetails={false}
+        <HeaderSetttings
           goBackAction={goBack}
-          userData={userData}
+          temporalData={generalForm}
+          handlePictures={handlePictures}
         />
         <ScrollView style={styles.formContainer}>
           {formType === FORM_TYPES.general ? (
@@ -179,6 +191,7 @@ export default function Settings() {
                   otherStyles="mb-4"
                 />
                 <FormSelect
+                  title={i18n.t("gender")}
                   handleChange={(e) =>
                     setGeneralForm({ ...generalForm, email: e })
                   }

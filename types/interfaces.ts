@@ -62,3 +62,14 @@ export type MediaItem = {
   type: string | "image" | "video";
   source: any;
 };
+
+export type FormState = {
+    name: string;
+    lastname: string;
+    nickname: string;
+    email: string;
+    gender: string;
+    description: string;
+    profileImage: string;
+    coverImage: string;
+  };

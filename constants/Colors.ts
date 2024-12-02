@@ -25,6 +25,7 @@ export const Colors = {
   red: "#E61818",
   darkPurple: "#45414A",
   violet: "#27174E",
+  deepPurple: "#65558F",
   tabsBackground: "#FEF7FF",
   green: "#34C759",
   light: {

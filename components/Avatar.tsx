@@ -12,7 +12,7 @@ import { isValidImage } from "@/utils";
 type Props = {
   image: string | undefined;
   gamification: any;
-  size: 100 | 80 | 70;
+  size?: 100 | 80 | 70;
 };
 
 export default function Avatar({ image = "", gamification, size = 70 }: Props) {

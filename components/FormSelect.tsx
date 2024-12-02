@@ -17,9 +17,10 @@ const data: itemType[] = [
 
 type Props = {
   handleChange: (text: string) => void;
+  title?: string;
 };
 
-export default function FormSelect({ handleChange }: Props) {
+export default function FormSelect({ handleChange, title }: Props) {
   const [value, setValue] = useState<string>("");
   const [isFocus, setIsFocus] = useState<boolean>(false);
 
@@ -39,6 +40,11 @@ export default function FormSelect({ handleChange }: Props) {
 
   return (
     <View className={`sapce-y-2 w-full`}>
+      {title && (
+        <Text className="text-base font-pregular text-black focus:border-secondary">
+          {title}
+        </Text>
+      )}
       <Dropdown
         style={[
           styles.dropdown,
@@ -67,7 +73,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 30,
     height: 56,
-    marginTop: 16,
   },
   item: {
     padding: 17,
