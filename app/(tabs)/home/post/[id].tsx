@@ -25,8 +25,8 @@ export default function PostDetail() {
   const [data, setData] = useState<Post>();
   const [userData, setUserData] = useState<UserInfo | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [likeState, setLikeState] = useState(false);
-  const [bookmarkState, setbookmarkState] = useState(false);
+  const [likeState, setLikeState] = useState<boolean>();
+  const [bookmarkState, setbookmarkState] = useState<boolean>();
   const [mediaData, setMediaData] = useState<MediaItem[]>([
     { id: "", type: "", source: "" },
   ]);
@@ -81,6 +81,8 @@ export default function PostDetail() {
         if (data) {
           const mediaData = getMediaData(data.data);
           setMediaData(mediaData);
+          setbookmarkState(data.data.favorite);
+          setLikeState(data.data.liked);
         }
       } catch (error) {
         console.error(error);

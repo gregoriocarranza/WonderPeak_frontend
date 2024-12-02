@@ -23,10 +23,12 @@ export default function PostItem({
   likesCount,
   createdAt,
   updatedAt,
+  favorite,
+  liked,
 }: Post) {
   //TODO: cada posteo del feed tiene que tener un atributo que sea liked /isLiked que sea la busqueda del userId en la base del Feed
-  const [likeState, setLikeState] = useState(false);
-  const [bookmarkState, setbookmarkState] = useState(false);
+  const [likeState, setLikeState] = useState(liked);
+  const [bookmarkState, setbookmarkState] = useState(favorite);
   const mediaType = getMediaType(multimediaUrl).split("/")[0];
   const multimediaUrlFix = getMediaType(multimediaUrl).split("/")[0];
   const mediaData: MediaItem[] = [

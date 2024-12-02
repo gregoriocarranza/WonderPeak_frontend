@@ -41,6 +41,8 @@ export type Post = {
     likesCount: number | null;
     createdAt: string;
     updatedAt: string | null;
+    favorite: boolean,
+    liked: boolean
 };
 
 export type PostData = {

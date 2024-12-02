@@ -20,8 +20,10 @@ import { UserInfo } from "@/types/interfaces";
 import HeaderUser from "@/components/HeaderUser";
 import GlobalLoading from "@/components/GlobalLoading";
 import UserTabsData from "@/components/UserTabsData";
+import { useAuth } from "@/hooks/authContext";
 
 export default function userProfile() {
+  const { userInfo } = useAuth();
   const { id } = useLocalSearchParams();
   const validId = Array.isArray(id) ? id[0] : id;
 
@@ -68,9 +70,14 @@ export default function userProfile() {
           return;
         }
 
-        const userData = await getUserById(validId);
+        const userData = userInfo ? JSON.parse(userInfo) : null;
+        if (userData && userData.userUuid === validId) {
+          router.replace("/profile");
+          return;
+        }
 
-        setData(userData.data);
+        const userDataResponse = await getUserById(validId);
+        setData(userDataResponse.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -79,7 +86,7 @@ export default function userProfile() {
     };
 
     fetchInitialData();
-  }, [id]);
+  }, [id, userInfo]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>

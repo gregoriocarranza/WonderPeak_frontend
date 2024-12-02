@@ -29,19 +29,19 @@ const RenderElement = ({ user }: { user: DataUser }) => {
   const userData = userInfo ? JSON.parse(userInfo) : null;
 
   const goToProfile = () => {
-    const myProfile = userData.userUuid === user.userUuid;
-    myProfile
-      ? router.push("/(tabs)/profile")
-      : router.push({
-          pathname: "/search/userProfile/[id]",
-          params: { id: user.userUuid },
-        });
+    router.push({
+      pathname: "/search/userProfile/[id]",
+      params: { id: user.userUuid },
+    });
   };
   return (
     <View>
       <Pressable onPress={goToProfile} style={styles.borderTop}>
         <View className="flex-row" style={styles.itemGlobalContainer}>
-          <Image source={images.userProfile} style={styles.itemImage} />
+          <Image
+            source={{ uri: userData?.profileImage }}
+            style={styles.itemImage}
+          />
           <View style={styles.userData}>
             <Text className="font-psemibold">{`${user.name || ""} ${
               user.lastname || ""

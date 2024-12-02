@@ -14,7 +14,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import i18n from "@/languages";
 import { useAuth } from "@/hooks/authContext";
-import { deleteUser } from "@/services/userServices";
+import { deleteUser, updateUser } from "@/services/userServices";
 import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
 import ConfirmationModal from "@/components/ConfirmationModal";
@@ -60,6 +60,7 @@ export default function Settings() {
     profileImage: userData?.profileImage || "",
     coverImage: userData?.coverImage || "",
   });
+
   const [passwordForm, setPasswordForm] = useState<PasswordFormState>({
     currentPassword: "",
     newPassword: "",
@@ -90,7 +91,13 @@ export default function Settings() {
     setIsOpenConfirmationModal(false);
   };
 
-  const handleForm = () => {};
+  const handleImage = (type: "profileImage" | "coverImage", image: string) => {
+    setGeneralForm({ ...generalForm, [type]: image });
+  };
+
+  const handleForm = () => {
+    updateUser(generalForm);
+  };
 
   const handleLogout = () => {
     logout();
@@ -125,7 +132,11 @@ export default function Settings() {
     <>
       {isLoading && <GlobalLoading />}
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
-        <HeaderSetttings goBackAction={goBack} temporalData={generalForm} />
+        <HeaderSetttings
+          goBackAction={goBack}
+          temporalData={generalForm}
+          handleImage={handleImage}
+        />
         <ScrollView style={styles.formContainer}>
           {formType === FORM_TYPES.general ? (
             <>
@@ -161,16 +172,23 @@ export default function Settings() {
                   title={i18n.t("email")}
                   value={generalForm.email}
                   isReadOnly
-                  handleChangeText={(e) =>
-                    setGeneralForm({ ...generalForm, email: e })
-                  }
+                  handleChangeText={() => {}}
                   placeholder={i18n.t("email")}
+                  otherStyles="mb-4"
+                />
+                <FormField
+                  title={i18n.t("description")}
+                  value={generalForm.description}
+                  handleChangeText={(e) =>
+                    setGeneralForm({ ...generalForm, description: e })
+                  }
+                  placeholder={i18n.t("description")}
                   otherStyles="mb-4"
                 />
                 <FormSelect
                   title={i18n.t("gender")}
                   handleChange={(e) =>
-                    setGeneralForm({ ...generalForm, email: e })
+                    setGeneralForm({ ...generalForm, gender: e })
                   }
                 />
               </View>

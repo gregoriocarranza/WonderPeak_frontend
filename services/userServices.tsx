@@ -131,3 +131,7 @@ export const deleteUser = async () => {
     throw error;
   }
 };
+
+export const updateUser = async (data: any) => {
+  console.log(data);
+};

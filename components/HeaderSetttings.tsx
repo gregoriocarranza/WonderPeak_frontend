@@ -19,18 +19,24 @@ import SelectImageModal from "./SelectImageModal";
 type Props = {
   goBackAction?: () => void;
   temporalData?: FormState;
-  // handlePictures: (type: "profileImage" | "coverImage") => void;
+  handleImage: (type: "profileImage" | "coverImage", data: string) => void;
 };
 
-export default function HeaderSetttings({ goBackAction, temporalData }: Props) {
+export default function HeaderSetttings({
+  goBackAction,
+  temporalData,
+  handleImage,
+}: Props) {
   const [isOpenSelectModal, setIsOpenSelectModal] = useState(false);
-  const [currentType, setCurrentType] = useState<"profile" | "cover">();
+  const [currentType, setCurrentType] = useState<
+    "profileImage" | "coverImage"
+  >();
   const [selectedImages, setSelectedImages] = useState({
-    profile: "",
-    cover: "",
+    profileImage: "",
+    coverImage: "",
   });
 
-  const openSelectImageModal = (type: "profile" | "cover") => {
+  const openSelectImageModal = (type: "profileImage" | "coverImage") => {
     setIsOpenSelectModal(true);
     setCurrentType(type);
   };
@@ -45,10 +51,12 @@ export default function HeaderSetttings({ goBackAction, temporalData }: Props) {
       });
 
       if (!result.canceled && currentType) {
+        const data = result.assets[0].uri;
         setSelectedImages((prevData) => ({
           ...prevData,
-          [currentType]: result.assets[0].uri,
+          [currentType]: data,
         }));
+        handleImage(currentType, data);
       }
     } catch (error) {
       console.error("Error uploading an image", error);
@@ -66,10 +74,12 @@ export default function HeaderSetttings({ goBackAction, temporalData }: Props) {
       });
 
       if (!result.canceled && currentType) {
+        const data = result.assets[0].uri;
         setSelectedImages((prevData) => ({
           ...prevData,
-          [currentType]: result.assets[0].uri,
+          [currentType]: data,
         }));
+        handleImage(currentType, data);
       }
     } catch (error) {
       console.error("Error uploading an image", error);
@@ -82,7 +92,7 @@ export default function HeaderSetttings({ goBackAction, temporalData }: Props) {
   return (
     <>
       <ImageBackground
-        source={{ uri: selectedImages.cover || temporalData?.coverImage }}
+        source={{ uri: selectedImages.coverImage || temporalData?.coverImage }}
         resizeMode="cover"
         className="justify-center items-center"
         style={[styles.globalContainer]}
@@ -111,7 +121,8 @@ export default function HeaderSetttings({ goBackAction, temporalData }: Props) {
               <View style={styles.profileImg}>
                 <Image
                   source={{
-                    uri: selectedImages.profile || temporalData?.profileImage,
+                    uri:
+                      selectedImages.profileImage || temporalData?.profileImage,
                   }}
                   style={styles.profileImg}
                   className="w-full h-100"
@@ -121,7 +132,7 @@ export default function HeaderSetttings({ goBackAction, temporalData }: Props) {
 
             <View style={styles.editProfilePicture}>
               <EditPicturesButton
-                onPressAction={() => openSelectImageModal("profile")}
+                onPressAction={() => openSelectImageModal("profileImage")}
               />
             </View>
           </View>
@@ -134,7 +145,7 @@ export default function HeaderSetttings({ goBackAction, temporalData }: Props) {
         </View>
         <View style={styles.editCoverPicture}>
           <EditPicturesButton
-            onPressAction={() => openSelectImageModal("cover")}
+            onPressAction={() => openSelectImageModal("coverImage")}
           />
         </View>
       </ImageBackground>
