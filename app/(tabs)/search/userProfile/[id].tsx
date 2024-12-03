@@ -32,8 +32,8 @@ export default function userProfile() {
   const [isLoadingFollow, setIsLoadingFollow] = useState(false);
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
 
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [imFollower, setImFollower] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(data?.isFavorite);
 
   const goToSearch = () => {
     router.replace("/search");
@@ -42,7 +42,7 @@ export default function userProfile() {
     try {
       setIsLoadingFollow(true);
       await handleUserFollow(validId);
-      setIsFollowing(!isFollowing);
+      setImFollower(!imFollower);
     } catch (error) {
       console.error("Error handling the user follow");
     } finally {
@@ -77,7 +77,11 @@ export default function userProfile() {
         }
 
         const userDataResponse = await getUserById(validId);
+        console.log(userDataResponse, "USER DATA RESPONSE");
+
         setData(userDataResponse.data);
+        setImFollower(userDataResponse.data?.imFollower || false);
+        setIsFavorite(userDataResponse.data?.isFavorite);
       } catch (error) {
         console.error(error);
       } finally {
@@ -105,7 +109,7 @@ export default function userProfile() {
             <Pressable
               style={[
                 styles.followButton,
-                isFollowing && styles.stopFollowButton,
+                imFollower && styles.stopFollowButton,
               ]}
               onPress={handleFollow}
               disabled={isLoadingFollow}
@@ -117,10 +121,10 @@ export default function userProfile() {
                   className="font-pregular"
                   style={[
                     styles.followText,
-                    isFollowing && styles.stopFollowText,
+                    imFollower && styles.stopFollowText,
                   ]}
                 >
-                  {i18n.t(isFollowing ? "stopFollowing" : "follow")}
+                  {i18n.t(imFollower ? "stopFollowing" : "follow")}
                 </Text>
               )}
             </Pressable>
