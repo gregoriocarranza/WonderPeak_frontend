@@ -214,7 +214,6 @@ export default function PostDetail() {
           <CommentsModal
             isVisible={isCommentsVisible}
             onClose={() => setIsCommentsVisible(false)}
-            postId={validId}
             comments={comments}
             onSubmit={handleAddComment}
             isLoading={isLoadingComments}

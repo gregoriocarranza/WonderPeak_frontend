@@ -85,5 +85,8 @@
   "gallery": "Galería",
   "writeAComment": "Escribe un comentario...",
   "commentCannotBeEmpty": "El comentario no puede estar vacío",
-  "errorSendingComment": "Error al enviar el comentario"
+  "errorSendingComment": "Error al enviar el comentario",
+  "spanish": "Español",
+  "english": "Inglés",
+  "language": "Idioma"
 }

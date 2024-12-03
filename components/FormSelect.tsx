@@ -9,19 +9,22 @@ type itemType = {
   value: string;
 };
 
-const data: itemType[] = [
-  { label: i18n.t("female"), value: "female" },
-  { label: i18n.t("male"), value: "male" },
-  { label: i18n.t("other"), value: "other" },
-];
-
 type Props = {
   handleChange: (text: string) => void;
   title?: string;
+  placeholder: string;
+  data: itemType[];
+  initialValue?: string;
 };
 
-export default function FormSelect({ handleChange, title }: Props) {
-  const [value, setValue] = useState<string>("");
+export default function FormSelect({
+  handleChange,
+  title,
+  placeholder,
+  data,
+  initialValue = "",
+}: Props) {
+  const [value, setValue] = useState<string>(initialValue);
   const [isFocus, setIsFocus] = useState<boolean>(false);
 
   const renderItem = (item: itemType) => {
@@ -56,7 +59,7 @@ export default function FormSelect({ handleChange, title }: Props) {
         data={data}
         labelField="label"
         valueField="value"
-        placeholder={i18n.t("gender")}
+        placeholder={placeholder}
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}

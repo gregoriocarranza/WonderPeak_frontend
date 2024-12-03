@@ -58,7 +58,7 @@ const CommentItem = ({ comment }: { comment: CommentWithUser }) => {
     };
 
     fetchUserData();
-  }, [comment.userUuid]);
+  }, [comment.userUuid, userData]);
 
   if (!userData) {
     return (

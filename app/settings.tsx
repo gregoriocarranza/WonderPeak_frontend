@@ -9,7 +9,6 @@ import {
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import * as ImagePicker from "expo-image-picker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import i18n from "@/languages";
@@ -22,6 +21,7 @@ import FormSelect from "@/components/FormSelect";
 import GlobalLoading from "@/components/GlobalLoading";
 import HeaderSetttings from "@/components/HeaderSetttings";
 import { FormState } from "@/types/interfaces";
+import { useLanguage } from "@/hooks/languageContext";
 
 type PasswordFormState = {
   currentPassword: string;
@@ -38,6 +38,17 @@ const FORM_TYPES = {
   general: "general",
   password: "password",
 } as const;
+
+const genderData = [
+  { label: i18n.t("female"), value: "female" },
+  { label: i18n.t("male"), value: "male" },
+  { label: i18n.t("other"), value: "other" },
+];
+
+const languageData = [
+  { label: i18n.t("spanish"), value: "es" },
+  { label: i18n.t("english"), value: "en" },
+];
 
 type FormTypes = (typeof FORM_TYPES)[keyof typeof FORM_TYPES];
 
@@ -70,6 +81,12 @@ export default function Settings() {
   const [isOpenConfirmationModal, setIsOpenConfirmationModal] =
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { currentLanguage, changeLanguage } = useLanguage();
+
+  const handleLanguageChange = (lang: string) => {
+    changeLanguage(lang);
+  };
 
   const goBack = () => {
     if (formType === FORM_TYPES.password) {
@@ -186,11 +203,23 @@ export default function Settings() {
                   otherStyles="mb-4"
                 />
                 <FormSelect
+                  data={genderData}
+                  initialValue={generalForm.gender}
+                  placeholder={i18n.t("gender")}
                   title={i18n.t("gender")}
                   handleChange={(e) =>
                     setGeneralForm({ ...generalForm, gender: e })
                   }
                 />
+                <View className="mt-4">
+                  <FormSelect
+                    data={languageData}
+                    placeholder={i18n.t("language")}
+                    title={i18n.t("language")}
+                    handleChange={handleLanguageChange}
+                    initialValue={currentLanguage}
+                  />
+                </View>
               </View>
 
               <View className="pt-4 pl-4">

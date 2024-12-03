@@ -163,7 +163,6 @@ export default function PostItem({
       <CommentsModal
         isVisible={isCommentsVisible}
         onClose={() => setIsCommentsVisible(false)}
-        postId={postUuid}
         comments={comments}
         onSubmit={handleAddComment}
       />
