@@ -81,5 +81,8 @@
   "emptyStateUsers": "You don't users to show",
   "areYouSureDeleleAccount": "Are you sure to delete your account?",
   "camera": "Camera",
-  "gallery": "Gallery"
+  "gallery": "Gallery",
+  "writeAComment": "Write a comment...",
+  "commentCannotBeEmpty": "Comment cannot be empty",
+  "errorSendingComment": "Error sending comment"
 }

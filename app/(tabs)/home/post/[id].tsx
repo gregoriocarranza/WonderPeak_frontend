@@ -17,6 +17,8 @@ import i18n from "@/languages";
 import { Ionicons } from "@expo/vector-icons";
 import { getMediaType } from "@/utils/getMediaType";
 import PostCarousel from "@/components/Post/PostCarousel";
+import CommentsModal from "@/components/CommentsModal";
+import { createComment, getPostComments } from "@/services/commentServices";
 
 export default function PostDetail() {
   const { id } = useLocalSearchParams();
@@ -30,6 +32,9 @@ export default function PostDetail() {
   const [mediaData, setMediaData] = useState<MediaItem[]>([
     { id: "", type: "", source: "" },
   ]);
+  const [isCommentsVisible, setIsCommentsVisible] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [isLoadingComments, setIsLoadingComments] = useState(false);
 
   const goBack = () => {
     router.back();
@@ -63,6 +68,33 @@ export default function PostDetail() {
     return [{ id: data.postUuid, type: mediaType, source: data.multimediaUrl }];
   };
 
+  const fetchComments = async () => {
+    try {
+      setIsLoadingComments(true);
+      const response = await getPostComments(validId);
+      setComments(response.data);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    } finally {
+      setIsLoadingComments(false);
+    }
+  };
+
+  const handleAddComment = async (text: string) => {
+    try {
+      await createComment(validId, text);
+      await fetchComments();
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      throw error;
+    }
+  };
+
+  const handleShowComments = async () => {
+    await fetchComments();
+    setIsCommentsVisible(true);
+  };
+
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -93,6 +125,10 @@ export default function PostDetail() {
 
     fetchInitialData();
   }, [id]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [validId]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
@@ -145,16 +181,20 @@ export default function PostDetail() {
                         {data.likesCount}
                       </Text>
                     </View>
-                    <View className="flex-row gap-1">
+                    <Pressable
+                      className="flex-row gap-1"
+                      onPress={handleShowComments}
+                    >
                       <Ionicons
                         name="chatbubble-outline"
                         size={24}
                         color={Colors.secondary}
                       />
                       <Text className="items-center font-pregular text-lg">
-                        {data.commentsCount} {i18n.t("comment", { count: 4 })}
+                        {comments.length}{" "}
+                        {i18n.t("comment", { count: comments.length })}
                       </Text>
-                    </View>
+                    </Pressable>
                   </View>
                   <View>
                     <View>
@@ -171,6 +211,14 @@ export default function PostDetail() {
               </View>
             </View>
           )}
+          <CommentsModal
+            isVisible={isCommentsVisible}
+            onClose={() => setIsCommentsVisible(false)}
+            postId={validId}
+            comments={comments}
+            onSubmit={handleAddComment}
+            isLoading={isLoadingComments}
+          />
         </>
       )}
     </SafeAreaView>
