@@ -21,3 +21,6 @@ expo-env.d.ts
 package-lock.json
 google-services.json
 expo-env.d.ts
+
+android/
+ios/
