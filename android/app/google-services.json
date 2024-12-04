@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1038840503294",
+    "project_id": "wonderpeak-d2f83",
+    "storage_bucket": "wonderpeak-d2f83.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038840503294:android:313caabaa54a9ea118feaf",
+        "android_client_info": {
+          "package_name": "com.uade.wonderpeak"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDITvWrz4XvRHTolnrcK8_x1Z9rI36R24"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
