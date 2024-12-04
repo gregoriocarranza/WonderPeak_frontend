@@ -5,6 +5,7 @@ import AuthModal from "@/components/AuthModal";
 import FormField from "@/components/FormField";
 import { Link, router } from "expo-router";
 import i18n from "@/languages";
+import FormSelect from "@/components/FormSelect";
 
 type FormState = {
   name: string;
@@ -135,10 +136,8 @@ export default function SignUp() {
               placeholder={i18n.t("email")}
               keyboardType="email-address"
             />
-            <FormField
-              value={form.gender}
-              handleChangeText={(e) => setForm({ ...form, gender: e })}
-              placeholder={i18n.t("gender")}
+            <FormSelect
+              handleChange={(e: string) => setForm({ ...form, gender: e })}
             />
             <FormField
               value={form.nickname}

@@ -1,10 +1,11 @@
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable, Alert } from "react-native";
 import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import AuthModal from "@/components/AuthModal";
 import FormField from "@/components/FormField";
 import { router } from "expo-router";
 import i18n from "@/languages";
+import { isValidEmail } from "@/utils";
 
 type FormState = {
   email: string;
@@ -18,6 +19,10 @@ export default function ResetPassword() {
   const [submitted, setSubmitted] = useState<boolean>(false);
 
   const submit = () => {
+    if (!isValidEmail(form.email)) {
+      Alert.alert("Error", i18n.t("emailNotValid"));
+      return;
+    }
     setIsSubmitting(true);
     resetPassword();
   };
@@ -92,6 +97,7 @@ export default function ResetPassword() {
 
           <CustomButton
             isLoading={isSubmitting}
+            disabled={!isValidEmail(form.email)}
             label={i18n.t("accept")}
             theme="auth"
             onPress={submit}

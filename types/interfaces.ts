@@ -10,6 +10,8 @@ export type UserInfo = {
     gender: string;
     gamificationLevel: string;
     active: string;
+    imFollower: boolean;
+    isFavorite: boolean;
 };
 
 type Location = {
@@ -19,12 +21,13 @@ type Location = {
     placeHolder:string;
 };
 
-type UserData = {
-    useruuid: string;
+export type UserData = {
+    userUuid: string;
     name: string;
     lastname: string;
     nickname: string;
-    profileuserimage: string;
+    profileImage?: string;
+    profileUserImage?: string;
     level: string;
 }
 
@@ -40,8 +43,37 @@ export type Post = {
     likesCount: number | null;
     createdAt: string;
     updatedAt: string | null;
+    favorite: boolean,
+    liked: boolean
 };
 
 export type PostData = {
     data: Post[];
 };
+
+export type Advertising = {
+    id: string;
+    multimediaUrl: string;
+    commerceImage: string;
+    commerceName: string;
+    commerceUrl: string;
+    title: string | null;
+    text: string | null;
+};
+
+export type MediaItem = {
+  id: string;
+  type: string | "image" | "video";
+  source: any;
+};
+
+export type FormState = {
+    name: string;
+    lastname: string;
+    nickname: string;
+    email: string;
+    gender: string;
+    description: string;
+    profileImage: string;
+    coverImage: string;
+  };

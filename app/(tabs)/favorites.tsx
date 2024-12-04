@@ -6,7 +6,7 @@ import HeaderUser from "@/components/HeaderUser";
 import { useAuth } from "@/hooks/authContext";
 import UserTabsData from "@/components/UserTabsData";
 
-export default function Profile() {
+export default function Favorites() {
   const { userInfo } = useAuth();
   const userData = userInfo ? JSON.parse(userInfo) : null;
   const { userUuid: id } = userData || {};
@@ -19,7 +19,7 @@ export default function Profile() {
         userData={userData}
         avatarSize={100}
       />
-      <UserTabsData id={id} type="profile" />
+      <UserTabsData id={id} type="favorites" />
     </SafeAreaView>
   );
 }

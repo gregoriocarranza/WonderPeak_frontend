@@ -12,29 +12,35 @@ import { isValidImage } from "@/utils";
 type Props = {
   image: string | undefined;
   gamification: any;
+  size?: 100 | 80 | 70;
 };
 
-export default function Avatar({ image = "", gamification }: Props) {
+export default function Avatar({ image = "", gamification, size = 70 }: Props) {
   const handleIamge = (): void => {};
+
   return (
-    <View style={styles.avatarContent}>
+    <View style={[styles.avatarContent, { width: size, height: size }]}>
       <LinearGradient
         colors={[Colors.rosePink, Colors.paleGray]}
         style={styles.background}
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
       />
-      <Pressable style={styles.profileImg} onPress={handleIamge}>
+
+      <Pressable
+        style={[styles.profileImg, { width: size - 5, height: size - 5 }]}
+        onPress={handleIamge}
+      >
         {isValidImage(image) ? (
           <Image
             source={{ uri: image }}
-            style={styles.profileImg}
+            style={[styles.profileImg, { width: size - 5, height: size - 5 }]}
             className="w-full h-100"
           />
         ) : (
           <Image
             source={images.defaultProfile}
-            style={styles.profileImg}
+            style={[styles.profileImg, { width: size - 5, height: size - 5 }]}
             className="w-full h-100"
           />
         )}
@@ -50,12 +56,8 @@ const styles = StyleSheet.create({
   avatarContent: {
     alignItems: "center",
     justifyContent: "center",
-    width: 72,
     borderRadius: 50,
-    height: 72,
-  },
-  container: {
-    flex: 1,
+    position: "relative",
   },
   background: {
     borderRadius: 50,
@@ -63,14 +65,11 @@ const styles = StyleSheet.create({
   },
   gamificationContainer: {
     position: "absolute",
-    left: 30,
-    bottom: 30,
+    zIndex: 1,
+    top: "-20%",
+    right: "-10%",
   },
   profileImg: {
     borderRadius: 50,
-    flex: 1,
-    position: "absolute",
-    width: 68,
-    height: 68,
   },
 });

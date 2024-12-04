@@ -15,6 +15,8 @@ type Props = {
   theme?: "auth" | "primary" | "secondary";
   onPress?: () => void;
   isLoading?: boolean;
+  disabled?: boolean;
+  customSize?: boolean;
 };
 
 export default function CustomButton({
@@ -22,6 +24,8 @@ export default function CustomButton({
   theme = "secondary",
   onPress,
   isLoading,
+  disabled = false,
+  customSize = false,
 }: Props) {
   const themeStyles = {
     primary: styles.primaryButton,
@@ -32,8 +36,15 @@ export default function CustomButton({
   return (
     <View>
       <TouchableOpacity
-        style={[styles.button, themeStyles[theme] || styles.secondaryButton]}
+        style={[
+          styles.button,
+          disabled
+            ? styles.disabled
+            : themeStyles[theme] || styles.secondaryButton,
+          customSize && styles.customSize,
+        ]}
         onPress={onPress}
+        disabled={disabled}
         activeOpacity={0.7}
       >
         <Text
@@ -60,6 +71,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 270,
   },
+  customSize: {
+    width: "100%",
+    height: "100%",
+  },
   buttonLabel: {
     fontSize: 16,
   },
@@ -80,5 +95,9 @@ const styles = StyleSheet.create({
     borderColor: Colors.light.buttonBackground,
     borderStyle: "solid",
     borderWidth: 2,
+  },
+  disabled: {
+    backgroundColor: Colors.disabledBackground,
+    pointerEvents: "none",
   },
 });

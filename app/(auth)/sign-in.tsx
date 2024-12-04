@@ -59,7 +59,9 @@ export default function SignIn() {
   const submit = () => {
     if (!form.email || !form.password) {
       Alert.alert("Campos incompletos", "Por favor, complete todos los campos");
+      return
     }
+
     signInUser();
   };
 

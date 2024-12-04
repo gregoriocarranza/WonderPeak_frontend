@@ -8,9 +8,8 @@ import {
   FlatList,
   Dimensions,
   Alert,
-  ActivityIndicator,
 } from "react-native";
-import * as FileSystem from 'expo-file-system'; // Importa FileSystem
+import * as FileSystem from "expo-file-system"; // Importa FileSystem
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -19,6 +18,8 @@ import i18n from "@/languages";
 import { useAuth } from "@/hooks/authContext";
 import FormField from "../FormField";
 import CustomButton from "../CustomButton";
+import GlobalLoading from "../GlobalLoading";
+import { getMediaType } from "@/utils/getMediaType";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -66,74 +67,92 @@ export default function SettingsPostComponent({
     multimediaFile: "", // Se asignará luego de la codificación
   });
 
+  //TODO Reever si es nesesario este encode con el formato que usamos ahora
 
-  const encode = async (data: SelectedImage[]) => {
+  // const encode = async (data: SelectedImage[]) => {
+  //   if (data && data.length > 0) {
+  //     try {
+  //       // Leer el archivo como base64
+  //       const base64 = await FileSystem.readAsStringAsync(data[0].uri, {
+  //         encoding: FileSystem.EncodingType.Base64,
+  //       });
 
-    if (data && data.length > 0) {
-      try {
-        // Leer el archivo como base64
-        const base64 = await FileSystem.readAsStringAsync(data[0].uri, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
+  //       // Inicializar el tipo de contenido predeterminado
+  //       let contentType = "image/jpeg"; // Valor predeterminado
+  //       if (data[0].uri.includes(".png")) {
+  //         contentType = "image/png";
+  //       } else if (
+  //         data[0].uri.includes(".jpg") ||
+  //         data[0].uri.includes(".jpeg")
+  //       ) {
+  //         contentType = "image/jpeg";
+  //       }
 
-        // Inicializar el tipo de contenido predeterminado
-        let contentType = "image/jpeg"; // Valor predeterminado
-        if (data[0].uri.includes(".png")) {
-          contentType = "image/png";
-        } else if (data[0].uri.includes(".jpg") || data[0].uri.includes(".jpeg")) {
-          contentType = "image/jpeg";
-        }
+  //       // Construir la Data URI
+  //       const dataUri = `data:${contentType};base64,${base64}`;
 
-        // Construir la Data URI
-        const dataUri = `data:${contentType};base64,${base64}`;
+  //       // Actualizar el formulario con la Data URI
+  //       setForm((prevForm) => ({ ...prevForm, multimediaFile: dataUri }));
+  //     } catch (error) {
+  //       console.error("Error al convertir la imagen a base64:", error);
+  //       Alert.alert("Error", "No se pudo procesar la imagen.");
+  //     }
+  //   }
+  // };
 
-        // Actualizar el formulario con la Data URI
-        setForm((prevForm) => ({ ...prevForm, multimediaFile: dataUri }));
-      } catch (error) {
-        console.error("Error al convertir la imagen a base64:", error);
-        Alert.alert("Error", "No se pudo procesar la imagen.");
-      }
-    }
-  };
-
-
-  useEffect(() => {
-    encode(data); // Codifica la imagen al montar el componente
-  }, [data]);
+  // useEffect(() => {
+  //   encode(data); // Codifica la imagen al montar el componente
+  // }, [data]);
 
   const uploadPost = async (): Promise<void> => {
-  
-    const formToSend = {
-        ...form,
-        location: JSON.stringify(form.location), // Stringificar location
-      };
+    const formData = new FormData();
+
+    // Adjuntar el archivo multimedia
+    if (data && data.length > 0) {
+      const fileUri = data[0].uri;
+      const fileType = getMediaType(fileUri);
+      const fileName = fileUri.split("/").pop() || "upload";
+
+      formData.append("multimediaFile", {
+        uri: fileUri,
+        type: fileType,
+        name: fileName,
+      } as any);
+      formData.append("multimediaFileType", fileType);
+
+      console.log("File URI:", { fileUri, fileType, fileName });
+    }
+
+    // Agregar metadata adicional
+    formData.append("title", form.title);
+    formData.append("text", form.text);
+    formData.append("location", JSON.stringify(form.location));
+    console.log("formData", formData);
+
     try {
       setLoading(true);
+
       const response = await fetch(
         "https://wonderpeak.uade.susoft.com.ar/api/posts",
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formToSend),
-        }
-      );
-      console.log(response, "response")
-
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
       if (!response.ok) {
-        const dataresponse = await response.json();
-        console.log(dataresponse);
-        throw new Error("Error al subir imagen de usuario");
+        const errorResponse = await response.json();
+        console.error("Error al subir el post:", errorResponse);
+        throw new Error("Error al subir el post");
       }
 
       const responseData = await response.json();
-      console.log(responseData);
+      console.log("Post creado con éxito:", responseData);
       finalAction();
-    } catch (error) {
-      console.log(error);
-      Alert.alert("Error", "Hubo un problema al subir la imagen.");
+    } catch (err: any) {
+      console.error("Error:", err);
+      Alert.alert("Error", "Hubo un problema al subir el post.");
     } finally {
       setLoading(false);
     }
@@ -146,11 +165,7 @@ export default function SettingsPostComponent({
 
   return (
     <>
-      {loading && (
-        <View style={styles.activityIndicatorContainer}>
-          <ActivityIndicator size={"large"} color={Colors.white} />
-        </View>
-      )}
+      {loading && <GlobalLoading />}
       <View className="flex-row justify-between" style={styles.header}>
         <View className="flex-row items-center justify-center">
           <Pressable onPress={goBack} className="p-2">
@@ -274,16 +289,5 @@ const styles = StyleSheet.create({
   },
   list: {
     margin: "auto",
-  },
-  activityIndicatorContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#00000033",
-    zIndex: 1,
   },
 });
