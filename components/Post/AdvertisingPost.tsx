@@ -2,6 +2,7 @@ import {
   Image,
   Linking,
   Pressable,
+  Share,
   StyleSheet,
   Text,
   View,
@@ -28,7 +29,25 @@ export default function AdvertisingPost({
 }: Advertising) {
   const mediaData: MediaItem[] = [{ id, type: "image", source: multimediaUrl }];
 
-  const shareData = () => {};
+  const shareData = async () => {
+    try {
+      const result = await Share.share({
+        message: `¡Mira este contenido increíble! ${commerceUrl}`,
+        title: "Título del contenido",
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log(`Compartido en: ${result.activityType}`);
+        } else {
+          console.log("Compartido");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Cancelado");
+      }
+    } catch (error) {
+      console.error("Error al compartir:", error);
+    }
+  };
 
   const handleOpenURL = () => {
     if (commerceUrl) {
