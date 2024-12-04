@@ -77,8 +77,6 @@ export default function userProfile() {
         }
 
         const userDataResponse = await getUserById(validId);
-        console.log(userDataResponse, "USER DATA RESPONSE");
-
         setData(userDataResponse.data);
         setImFollower(userDataResponse.data?.imFollower || false);
         setIsFavorite(userDataResponse.data?.isFavorite);
