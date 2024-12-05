@@ -89,7 +89,7 @@ export default function Home() {
       }
 
       const response = await fetch(
-        `https://wonderpeak.uade.susoft.com.ar/api/posts/feed?page=${pageNumber}&limit=2&mine=true`,
+        `https://wonderpeak.uade.susoft.com.ar/api/posts/feed?page=${pageNumber}&limit=20&mine=true`,
         {
           method: "GET",
           headers: {
