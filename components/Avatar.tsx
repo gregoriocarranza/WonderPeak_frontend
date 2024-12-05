@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import { images } from "@/constants";
 import { Colors } from "@/constants/Colors";
-import { isValidImage } from "@/utils";
+import { getGamificationImage, isValidImage } from "@/utils";
 
 //!!enm gamification deberiamos cargar los otros assets y hacer algo como asset[gamification] asi nos devuelve el asset del nivel corresp
 //!TODO:revisar porque no cambia la imagen, si es tema de tamaño o source
@@ -17,6 +17,9 @@ type Props = {
 
 export default function Avatar({ image = "", gamification, size = 70 }: Props) {
   const handleIamge = (): void => {};
+  console.log(gamification);
+
+  const gamificationImage = getGamificationImage(gamification);
 
   return (
     <View style={[styles.avatarContent, { width: size, height: size }]}>
@@ -45,9 +48,15 @@ export default function Avatar({ image = "", gamification, size = 70 }: Props) {
           />
         )}
       </Pressable>
-      <View style={styles.gamificationContainer}>
-        <Image source={images.gamification} />
-      </View>
+      {gamificationImage && (
+        <View style={styles.gamificationContainer}>
+          <Image
+            source={gamificationImage}
+            style={styles.gamificationImage}
+            resizeMode="cover"
+          />
+        </View>
+      )}
     </View>
   );
 }
@@ -65,11 +74,19 @@ const styles = StyleSheet.create({
   },
   gamificationContainer: {
     position: "absolute",
+    width: 40,
+    height: 40,
     zIndex: 1,
-    top: "-20%",
-    right: "-10%",
+    top: "-10%",
+    right: "-5%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   profileImg: {
     borderRadius: 50,
+  },
+  gamificationImage: {
+    width: 40,
+    height: 40,
   },
 });
