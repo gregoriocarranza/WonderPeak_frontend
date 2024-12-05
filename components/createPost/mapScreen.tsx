@@ -17,8 +17,8 @@ type MapScreenProps = {
 };
 
 export default function MapScreen({
-  initialLatitude = -34.602875183188374,
-  initialLongitude = -58.59995648543427,
+  initialLatitude,
+  initialLongitude,
   onConfirmLocation,
 }: MapScreenProps) {
   const [currentLocation, setCurrentLocation] = useState<{

@@ -258,8 +258,8 @@ export default function SettingsPostComponent({
       {showMap && (
         <View style={StyleSheet.absoluteFill}>
           <MapScreen
-            initialLatitude={form?.location?.latitude || 0}
-            initialLongitude={form?.location?.longitude || 0}
+            initialLatitude={form.location?.latitude ?? -34.603722}
+            initialLongitude={form.location?.longitude ?? -58.381592}
             onConfirmLocation={handleLocationSelect}
           />
         </View>

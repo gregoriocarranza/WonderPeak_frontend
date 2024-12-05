@@ -20,6 +20,7 @@ import { Colors } from "@/constants/Colors";
 import i18n from "@/languages";
 import GlobalLoading from "@/components/GlobalLoading";
 import * as Notifications from "expo-notifications";
+import { useIsFocused } from "@react-navigation/native";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -36,6 +37,7 @@ interface FeedData {
 }
 
 export default function Home() {
+  const isFocused = useIsFocused();
   const { token } = useAuth();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -156,7 +158,7 @@ export default function Home() {
     };
 
     loadData();
-  }, []);
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>

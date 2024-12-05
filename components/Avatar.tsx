@@ -17,7 +17,6 @@ type Props = {
 
 export default function Avatar({ image = "", gamification, size = 70 }: Props) {
   const handleIamge = (): void => {};
-  console.log(gamification);
 
   const gamificationImage = getGamificationImage(gamification);
 
