@@ -17,14 +17,14 @@ type MapScreenProps = {
 };
 
 export default function MapScreen({
-  initialLatitude,
-  initialLongitude,
+  initialLatitude = -34.602875183188374,
+  initialLongitude = -58.59995648543427,
   onConfirmLocation,
 }: MapScreenProps) {
   const [currentLocation, setCurrentLocation] = useState<{
     latitude: number;
     longitude: number;
-  } | null>({ latitude: initialLatitude, longitude: initialLongitude });
+  }>({ latitude: initialLatitude, longitude: initialLongitude });
 
   const [selectedLocation, setSelectedLocation] = useState<{
     latitude: number;
@@ -48,7 +48,10 @@ export default function MapScreen({
       });
     };
 
-    if (!currentLocation || (currentLocation.latitude === 0 && currentLocation.longitude === 0)) {
+    if (
+      !currentLocation ||
+      (currentLocation.latitude === 0 && currentLocation.longitude === 0)
+    ) {
       fetchLocation();
     }
   }, [currentLocation]);
@@ -67,7 +70,9 @@ export default function MapScreen({
   };
 
   if (!currentLocation) {
-    return <ActivityIndicator size="large" color="blue" style={styles.loader} />;
+    return (
+      <ActivityIndicator size="large" color="blue" style={styles.loader} />
+    );
   }
 
   return (
@@ -75,15 +80,15 @@ export default function MapScreen({
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude,
+          latitude: currentLocation?.latitude,
+          longitude: currentLocation?.longitude,
           latitudeDelta: 0.5,
           longitudeDelta: 0.5,
         }}
-        zoomEnabled={true} 
-        scrollEnabled={true} 
-        rotateEnabled={true} 
-        showsUserLocation={true}  
+        zoomEnabled={true}
+        scrollEnabled={true}
+        rotateEnabled={true}
+        showsUserLocation={true}
         onPress={handleSelectLocation}
       >
         {selectedLocation && <Marker coordinate={selectedLocation} />}

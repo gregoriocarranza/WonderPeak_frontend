@@ -151,12 +151,7 @@ export default function SettingsPostComponent({
       return false;
     }
 
-    if (
-      !form.location.placeHolder.trim() ||
-      form.location.latitude === null ||
-      form.location.longitude === null ||
-      !form.location.mapsUrl.trim()
-    ) {
+    if (!form?.location?.placeHolder.trim()) {
       Alert.alert("Error", "La ubicación es obligatoria.");
       return false;
     }
@@ -227,7 +222,7 @@ export default function SettingsPostComponent({
           />
           <FormField
             title={i18n.t("addLocation")}
-            value={form.location.placeHolder}
+            value={form?.location?.placeHolder}
             placeholder={i18n.t("locationLegend")}
             handleChangeText={(e) =>
               setForm((prev) => ({
@@ -244,10 +239,10 @@ export default function SettingsPostComponent({
         <View className="mb-4">
           <CustomButton
             label={
-              form.location.latitude && form.location.longitude
-                ? `Lat: ${form.location.latitude.toFixed(
+              form?.location?.latitude && form?.location?.longitude
+                ? `Lat: ${form?.location?.latitude.toFixed(
                     3
-                  )}, Long: ${form.location.longitude.toFixed(3)}`
+                  )}, Long: ${form?.location?.longitude.toFixed(3)}`
                 : "Seleccionar ubicación"
             }
             onPress={() => setShowMap(true)}
@@ -263,8 +258,8 @@ export default function SettingsPostComponent({
       {showMap && (
         <View style={StyleSheet.absoluteFill}>
           <MapScreen
-            initialLatitude={form.location.latitude || 0}
-            initialLongitude={form.location.longitude || 0}
+            initialLatitude={form?.location?.latitude || 0}
+            initialLongitude={form?.location?.longitude || 0}
             onConfirmLocation={handleLocationSelect}
           />
         </View>
