@@ -132,13 +132,19 @@ export const deleteUser = async () => {
   }
 };
 
-export const updateUser = async (data: any) => {
+export const updateUser = async (formData: FormData) => {
   try {
     const headers = await getHeaders();
+    const formDataHeaders = {
+      ...headers,
+      Accept: "application/json",
+      "Content-Type": "multipart/form-data",
+    };
+
     const response = await fetch(`${USER_URL}/me`, {
       method: "PUT",
-      headers,
-      body: JSON.stringify(data),
+      headers: formDataHeaders,
+      body: formData,
     });
 
     if (!response.ok) throw new Error("Error al actualizar el usuario");

@@ -10,8 +10,8 @@ export type UserInfo = {
     gender: string;
     gamificationLevel: string;
     active: string;
-    imFollower: boolean;
-    isFavorite: boolean;
+    imFollower?: boolean;
+    isFavorite?: boolean;
 };
 
 type Location = {

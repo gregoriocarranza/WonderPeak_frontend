@@ -10,15 +10,11 @@ import { UserInfo } from "@/types/interfaces";
 import i18n from "@/languages";
 
 export default function HeaderHome() {
-  const { token, logout, userMe } = useAuth();
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const { token, logout, userMe, userInfo } = useAuth();
+  const [localUserInfo, setLocalUserInfo] = useState<UserInfo | null>(null);
 
   const fetchUserInfo = async () => {
     try {
-      if (userInfo) {
-        return;
-      }
-
       let savedToken = token;
       if (!savedToken) {
         savedToken = await AsyncStorage.getItem("token");
@@ -48,7 +44,7 @@ export default function HeaderHome() {
       let info: UserInfo = data.data;
       userMe(data.data);
 
-      setUserInfo({
+      setLocalUserInfo({
         userUuid: info.userUuid,
         name: info.name,
         lastname: info.lastname,
@@ -69,8 +65,14 @@ export default function HeaderHome() {
   };
 
   useEffect(() => {
-    fetchUserInfo();
-  }, []);
+    if (!localUserInfo) {
+      fetchUserInfo();
+      return;
+    }
+
+    const data = userInfo ? JSON.parse(userInfo) : null;
+    setLocalUserInfo(data);
+  }, [userInfo]);
 
   const handleLogout = async () => {
     await logout();
@@ -78,8 +80,8 @@ export default function HeaderHome() {
   };
 
   const generateHeaderName = () => {
-    if (userInfo) {
-      const { name, lastname } = userInfo;
+    if (localUserInfo) {
+      const { name, lastname } = localUserInfo;
 
       return `${name || ""} ${lastname || ""}`;
     }
@@ -91,15 +93,15 @@ export default function HeaderHome() {
     <View className="flex-row mb-4 justify-between" style={styles.header}>
       <View className="flex-row">
         <Avatar
-          image={userInfo?.profileImage}
-          gamification={userInfo?.gamificationLevel}
+          image={localUserInfo?.profileImage}
+          gamification={localUserInfo?.gamificationLevel}
         />
         <View className="ml-6 justify-center">
           <Text className="font-psemibold text-lg text-text">
             {generateHeaderName()}
           </Text>
           <Text className="font-pregular text-text">
-            @{userInfo?.nickname || "usuario"}
+            @{localUserInfo?.nickname || "usuario"}
           </Text>
         </View>
       </View>
