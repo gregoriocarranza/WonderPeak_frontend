@@ -132,19 +132,45 @@ export const deleteUser = async () => {
   }
 };
 
-export const updateUser = async (data: any) => {
+export const updateUser = async (formData: FormData) => {
   try {
     const headers = await getHeaders();
+    const formDataHeaders = {
+      ...headers,
+      Accept: "application/json",
+      "Content-Type": "multipart/form-data",
+    };
+
     const response = await fetch(`${USER_URL}/me`, {
       method: "PUT",
-      headers,
-      body: JSON.stringify(data),
+      headers: formDataHeaders,
+      body: formData,
     });
 
     if (!response.ok) throw new Error("Error al actualizar el usuario");
     return await response.json();
   } catch (error) {
     console.error("Error updating user:", error);
+    throw error;
+  }
+};
+
+export const updateUserPassword = async (data: {
+  password: string;
+  newPassword: string;
+}) => {
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(`${USER_URL}/me/password`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) throw new Error("Error al actualizar la contraseña");
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating password:", error);
     throw error;
   }
 };
