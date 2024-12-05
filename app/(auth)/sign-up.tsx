@@ -6,6 +6,7 @@ import FormField from "@/components/FormField";
 import { Link, router } from "expo-router";
 import i18n from "@/languages";
 import FormSelect from "@/components/FormSelect";
+import { genderData } from "@/utils";
 
 type FormState = {
   name: string;
@@ -18,7 +19,6 @@ type FormState = {
 type ValidateState = {
   confirmPassword: string;
 };
-
 
 export default function SignUp() {
   const [form, setForm] = useState<FormState>({
@@ -136,9 +136,13 @@ export default function SignUp() {
               placeholder={i18n.t("email")}
               keyboardType="email-address"
             />
-            <FormSelect
-              handleChange={(e: string) => setForm({ ...form, gender: e })}
-            />
+            <View className="mt-4">
+              <FormSelect
+                data={genderData}
+                placeholder={i18n.t("gender")}
+                handleChange={(e: string) => setForm({ ...form, gender: e })}
+              />
+            </View>
             <FormField
               value={form.nickname}
               handleChangeText={(e) => setForm({ ...form, nickname: e })}
@@ -153,7 +157,9 @@ export default function SignUp() {
             <FormField
               value={confirmPassword.confirmPassword}
               placeholder={i18n.t("confirmPassword")}
-              handleChangeText={(e) => setconfirmPassword({ ...confirmPassword, confirmPassword: e })}
+              handleChangeText={(e) =>
+                setconfirmPassword({ ...confirmPassword, confirmPassword: e })
+              }
               otherStyles="mb-5"
               type="password"
             />
