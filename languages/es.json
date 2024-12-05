@@ -90,5 +90,6 @@
   "english": "Inglés",
   "language": "Idioma",
   "successfulModification": "Modificación exitosa",
-  "errorUpdatingUser": "Error al actualizar usuario"
+  "errorUpdatingUser": "Error al actualizar usuario",
+  "loadingMorePosts": "Cargando más publicaciones..."
 }
