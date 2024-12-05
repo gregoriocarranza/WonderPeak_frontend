@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   RefreshControl,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -30,6 +31,10 @@ Notifications.setNotificationHandler({
 
 type NotificationType = Notifications.Notification | null;
 
+interface FeedData {
+  data: Array<any>;
+}
+
 export default function Home() {
   const { token } = useAuth();
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -37,6 +42,10 @@ export default function Home() {
   const notificationListener = useRef<Notifications.Subscription | null>(null);
   const responseListener = useRef<Notifications.Subscription | null>(null);
   const [notification, setNotification] = useState<NotificationType>(null);
+  const [page, setPage] = useState<number>(0);
+  const [lastPage, setLimitPage] = useState<number>(0);
+  const [userFeed, setUserFeed] = useState<FeedData | null>(null);
+  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
 
   useEffect(() => {
     notificationListener.current =
@@ -67,17 +76,7 @@ export default function Home() {
     };
   }, []);
 
-  const handleRefresh = (): void => {
-    setRefreshing(true);
-    fetchUserFeed();
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  };
-
-  const [userFeed, setUserFeed] = useState<any | null>(null);
-
-  const fetchUserFeed = async () => {
+  const getFeedData = async (pageNumber: number = 0) => {
     try {
       let savedToken = token;
       if (!savedToken) {
@@ -90,7 +89,7 @@ export default function Home() {
       }
 
       const response = await fetch(
-        "https://wonderpeak.uade.susoft.com.ar/api/posts/feed?page=0&limit=20&mine=true",
+        `https://wonderpeak.uade.susoft.com.ar/api/posts/feed?page=${pageNumber}&limit=2&mine=true`,
         {
           method: "GET",
           headers: {
@@ -100,16 +99,53 @@ export default function Home() {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Error al obtener la información del usuario");
-      }
-      //!! aca hay que trabajar un poco mas esto para que se pueda recuperar del Context si la info ya esta
       const data = await response.json();
-      // console.log(data, "USER FEED");
+      return data;
+    } catch (error) {
+      console.error("Error getting feed", error);
+      Alert.alert("Error obteniendo posts");
+    }
+  };
+
+  const fetchUserFeed = async () => {
+    try {
+      const data = await getFeedData(0);
+      setPage(data.page);
+      setLimitPage(data.totalPages || data.page);
       setUserFeed(data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
+  };
+
+  const handleLoadMore = async () => {
+    if (isLoadingMore) return;
+
+    setPage(page + 1);
+    if (isLastPage()) return;
+
+    setIsLoadingMore(true);
+    const data = await getFeedData(page + 1);
+    if (!data || !data.count) {
+      setIsLoadingMore(false);
+      return;
+    }
+
+    setUserFeed((prevData) => ({
+      data: [...(prevData?.data || []), ...data.data],
+    }));
+    setIsLoadingMore(false);
+  };
+
+  const handleRefresh = async (): Promise<void> => {
+    setRefreshing(true);
+    setPage(0);
+    await fetchUserFeed();
+    setRefreshing(false);
+  };
+
+  const isLastPage = () => {
+    return page >= lastPage;
   };
 
   useEffect(() => {
@@ -142,6 +178,17 @@ export default function Home() {
           )}
           refreshing={refreshing}
           onRefresh={handleRefresh}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={() =>
+            isLoadingMore ? (
+              <View style={{ padding: 20 }}>
+                <Text className="font-pregular text-center">
+                  {i18n.t("loadingMorePosts")}
+                </Text>
+              </View>
+            ) : null
+          }
         />
       ) : (
         !loading && (

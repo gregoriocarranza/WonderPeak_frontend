@@ -89,5 +89,6 @@
   "english": "English",
   "language": "Language",
   "successfulModification": "Successful modification",
-  "errorUpdatingUser": "Error updating user"
+  "errorUpdatingUser": "Error updating user",
+  "loadingMorePosts": "Loading more posts..."
 }
