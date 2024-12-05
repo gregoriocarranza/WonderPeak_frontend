@@ -24,7 +24,8 @@ type Location = {
 export type UserData = {
     userUuid: string;
     name: string;
-    lastname: string;
+    lastName?: string;  
+    lastname?: string;
     nickname: string;
     profileImage?: string;
     profileUserImage?: string;
@@ -74,6 +75,17 @@ export type FormState = {
     email: string;
     gender: string;
     description: string;
+    profileImage: string;
+    coverImage: string;
+  };
+
+  export type SendFormState = {
+    name: string;
+    lastname: string;
+    nickname: string;
+    email: string;
+    gender: string;
+    bio: string;
     profileImage: string;
     coverImage: string;
   };

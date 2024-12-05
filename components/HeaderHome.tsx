@@ -61,8 +61,9 @@ export default function HeaderHome() {
         gender: info.gender,
         gamificationLevel: info.gamificationLevel,
         active: info.active,
-      })
-
+        imFollower: false,
+        isFavorite: false,
+      });
     } catch (error) {
       console.log(error);
     }

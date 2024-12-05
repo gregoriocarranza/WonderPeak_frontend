@@ -15,7 +15,7 @@ type AuthContextType = {
   token: string | null;
   isAuthenticated: boolean;
   userInfo: string | null;
-  userMe: (user: string) => void;
+  userMe: (user: UserInfo) => void;
   login: (token: string) => void;
   logout: () => void;
 };
@@ -55,9 +55,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await AsyncStorage.removeItem("user");
   };
 
-  const userMe = async (user: any) => {
-    setUserInfo(user);
-    await AsyncStorage.setItem("user", JSON.stringify(user));
+  const userMe = async (user: UserInfo) => {
+    const userString = JSON.stringify(user);
+    setUserInfo(userString);
+    await AsyncStorage.setItem("user", userString);
   };
 
   const value: AuthContextType = {

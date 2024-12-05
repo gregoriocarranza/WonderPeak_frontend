@@ -133,5 +133,18 @@ export const deleteUser = async () => {
 };
 
 export const updateUser = async (data: any) => {
-  console.log(data);
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(`${USER_URL}/me`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) throw new Error("Error al actualizar el usuario");
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
 };

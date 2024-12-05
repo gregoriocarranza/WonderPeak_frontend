@@ -88,5 +88,7 @@
   "errorSendingComment": "Error al enviar el comentario",
   "spanish": "Español",
   "english": "Inglés",
-  "language": "Idioma"
+  "language": "Idioma",
+  "successfulModification": "Modificación exitosa",
+  "errorUpdatingUser": "Error al actualizar usuario"
 }

@@ -20,8 +20,9 @@ import ConfirmationModal from "@/components/ConfirmationModal";
 import FormSelect from "@/components/FormSelect";
 import GlobalLoading from "@/components/GlobalLoading";
 import HeaderSetttings from "@/components/HeaderSetttings";
-import { FormState } from "@/types/interfaces";
+import { FormState, SendFormState } from "@/types/interfaces";
 import { useLanguage } from "@/hooks/languageContext";
+import { genderData } from "@/utils";
 
 type PasswordFormState = {
   currentPassword: string;
@@ -39,12 +40,6 @@ const FORM_TYPES = {
   password: "password",
 } as const;
 
-const genderData = [
-  { label: i18n.t("female"), value: "female" },
-  { label: i18n.t("male"), value: "male" },
-  { label: i18n.t("other"), value: "other" },
-];
-
 const languageData = [
   { label: i18n.t("spanish"), value: "es" },
   { label: i18n.t("english"), value: "en" },
@@ -53,7 +48,7 @@ const languageData = [
 type FormTypes = (typeof FORM_TYPES)[keyof typeof FORM_TYPES];
 
 export default function Settings() {
-  const { userInfo, logout } = useAuth();
+  const { userInfo, logout, userMe } = useAuth();
   const userData = userInfo ? JSON.parse(userInfo) : null;
 
   const [confirmationModal, setConfirmationModal] =
@@ -61,13 +56,13 @@ export default function Settings() {
       title: "",
       text: "String",
     });
-  const [generalForm, setGeneralForm] = useState<FormState>({
+  const [generalForm, setGeneralForm] = useState<SendFormState>({
     name: userData?.name || "",
     lastname: userData?.lastname || "",
     nickname: userData?.nickname || "",
     email: userData?.email || "",
     gender: userData?.gender || "",
-    description: userData?.description || "",
+    bio: userData?.description || "",
     profileImage: userData?.profileImage || "",
     coverImage: userData?.coverImage || "",
   });
@@ -112,8 +107,18 @@ export default function Settings() {
     setGeneralForm({ ...generalForm, [type]: image });
   };
 
-  const handleForm = () => {
-    updateUser(generalForm);
+  const handleForm = async () => {
+    try {
+      setIsLoading(true);
+      const response = await updateUser(generalForm);
+      userMe(response.data);
+      Alert.alert(i18n.t("successfulModification"));
+    } catch (error) {
+      Alert.alert(i18n.t("errorUpdatingUser"));
+      console.error("Error updating user", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleLogout = () => {
@@ -151,7 +156,7 @@ export default function Settings() {
       <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
         <HeaderSetttings
           goBackAction={goBack}
-          temporalData={generalForm}
+          temporalData={{ ...generalForm, description: generalForm.bio }}
           handleImage={handleImage}
         />
         <ScrollView style={styles.formContainer}>
@@ -195,9 +200,9 @@ export default function Settings() {
                 />
                 <FormField
                   title={i18n.t("description")}
-                  value={generalForm.description}
+                  value={generalForm.bio}
                   handleChangeText={(e) =>
-                    setGeneralForm({ ...generalForm, description: e })
+                    setGeneralForm({ ...generalForm, bio: e })
                   }
                   placeholder={i18n.t("description")}
                   otherStyles="mb-4"

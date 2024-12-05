@@ -98,7 +98,7 @@ export default function PostItem({
             />
             <View className="ml-4">
               <Text className="font-psemibold text-lg">
-                {user?.name} {user?.lastname}{" "}
+                {user?.name} {user?.lastName}{" "}
               </Text>
               <Text style={styles.location} className="font-pregular">
                 📍
