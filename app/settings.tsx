@@ -13,7 +13,11 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import i18n from "@/languages";
 import { useAuth } from "@/hooks/authContext";
-import { deleteUser, updateUser } from "@/services/userServices";
+import {
+  deleteUser,
+  updateUser,
+  updateUserPassword,
+} from "@/services/userServices";
 import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
 import ConfirmationModal from "@/components/ConfirmationModal";
@@ -109,6 +113,11 @@ export default function Settings() {
   };
 
   const handleForm = async () => {
+    if (formType === "password") {
+      handleFormPassword();
+      return;
+    }
+
     try {
       setIsLoading(true);
 
@@ -184,6 +193,39 @@ export default function Settings() {
 
   const goToSingIn = () => {
     router.replace("/sign-in");
+  };
+
+  const areValidsPasswords = () => {
+    const areEquals =
+      passwordForm.newPassword === passwordForm.newPasswordConfirm;
+    if (!areEquals) {
+      Alert.alert("Las constraseñas no coinciden");
+    }
+
+    return areEquals;
+  };
+
+  const handleFormPassword = async () => {
+    if (!areValidsPasswords()) return;
+
+    try {
+      setIsLoading(true);
+      const payload = {
+        password: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword,
+      };
+      const response = await updateUserPassword(payload);
+      console.log(response);
+
+      Alert.alert("Contraseña modificada correctamente");
+    } catch (error) {
+      Alert.alert(
+        "No pudimos actualizar su contraseña",
+        "Verifique que su contraseña actual sea correcta"
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

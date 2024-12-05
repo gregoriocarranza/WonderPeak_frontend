@@ -154,3 +154,23 @@ export const updateUser = async (formData: FormData) => {
     throw error;
   }
 };
+
+export const updateUserPassword = async (data: {
+  password: string;
+  newPassword: string;
+}) => {
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(`${USER_URL}/me/password`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) throw new Error("Error al actualizar la contraseña");
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating password:", error);
+    throw error;
+  }
+};
