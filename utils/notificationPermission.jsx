@@ -26,17 +26,18 @@ export default async function registerForPushNotificationsAsync() {
       return;
     }
 
-    let token = (
+    let expoToken = (
       await Notifications.getExpoPushTokenAsync({
         projectId,
       })
     ).data;
 
-    if (!token) {
+    if (!expoToken) {
       Alert.alert("Error", `Error al obtener el token: ${error.message}`);
     }
+    console.info("Push notification token retrived succesfuly: ", expoToken);
 
-    return token;
+    return expoToken;
   } catch (error) {
     const projectId =
       process.env.EXPO_PUBLIC_PROJECT_ID ||

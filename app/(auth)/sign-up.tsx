@@ -29,7 +29,9 @@ export default function SignUp() {
     gender: "",
     password: "",
   });
-  const [confirmPassword, setconfirmPassword] = useState<ValidateState>({ confirmPassword: "" });
+  const [confirmPassword, setconfirmPassword] = useState<ValidateState>({
+    confirmPassword: "",
+  });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
 
@@ -41,8 +43,6 @@ export default function SignUp() {
   };
 
   const validatePasswords = (): boolean => {
-    console.log(form.password)
-    console.log(confirmPassword.confirmPassword)
     return form.password === confirmPassword.confirmPassword;
   };
 
@@ -187,4 +187,3 @@ export default function SignUp() {
 }
 
 const styles = StyleSheet.create({});
-

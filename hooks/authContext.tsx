@@ -11,6 +11,7 @@ import { View, Text } from "react-native";
 import i18n from "@/languages";
 import { Colors } from "@/constants/Colors";
 import registerForPushNotificationsAsync from "../utils/notificationPermission";
+import { postToken } from "@/services/notificationServices";
 type AuthContextType = {
   token: string | null;
   isAuthenticated: boolean;
@@ -60,6 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (newToken: string) => {
     setToken(newToken);
     await AsyncStorage.setItem("token", newToken);
+    await savePushToken();
   };
 
   const logout = async () => {
@@ -76,12 +78,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const savePushToken = async () => {
-    const data = await registerForPushNotificationsAsync();
-    if (data) {
-      setPushNotificationToken(data);
-      await AsyncStorage.setItem("pushNotificationToken", JSON.stringify(data));
+    if (!pushNotificationToken) {
+      const data = await registerForPushNotificationsAsync();
+      if (data) {
+        setPushNotificationToken(data);
+        await AsyncStorage.setItem(
+          "pushNotificationToken",
+          JSON.stringify(data)
+        );
+        await postToken(data);
+      }
     }
   };
+
   const value: AuthContextType = {
     token,
     isAuthenticated: !!token,

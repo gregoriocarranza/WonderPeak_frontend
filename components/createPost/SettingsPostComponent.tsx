@@ -119,15 +119,12 @@ export default function SettingsPostComponent({
         name: fileName,
       } as any);
       formData.append("multimediaFileType", fileType);
-
-      console.log("File URI:", { fileUri, fileType, fileName });
     }
 
     // Agregar metadata adicional
     formData.append("title", form.title);
     formData.append("text", form.text);
     formData.append("location", JSON.stringify(form.location));
-    console.log("formData", formData);
 
     try {
       setLoading(true);
@@ -135,12 +132,13 @@ export default function SettingsPostComponent({
       const response = await fetch(
         "https://wonderpeak.uade.susoft.com.ar/api/posts",
         {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
       if (!response.ok) {
         const errorResponse = await response.json();
         console.error("Error al subir el post:", errorResponse);
@@ -148,7 +146,7 @@ export default function SettingsPostComponent({
       }
 
       const responseData = await response.json();
-      console.log("Post creado con éxito:", responseData);
+      // console.log("Post creado con éxito:", responseData);
       finalAction();
     } catch (err: any) {
       console.error("Error:", err);
