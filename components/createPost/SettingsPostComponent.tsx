@@ -9,7 +9,6 @@ import {
   Dimensions,
   Alert,
 } from "react-native";
-import * as FileSystem from "expo-file-system"; // Importa FileSystem
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -20,6 +19,14 @@ import FormField from "../FormField";
 import CustomButton from "../CustomButton";
 import GlobalLoading from "../GlobalLoading";
 import { getMediaType } from "@/utils/getMediaType";
+import {
+  getCurrentPositionAsync,
+  LocationObject,
+  requestForegroundPermissionsAsync,
+  watchPositionAsync,
+  LocationAccuracy
+} from "expo-location";
+import MapView, { Marker } from 'react-native-maps';
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -52,6 +59,8 @@ export default function SettingsPostComponent({
   data,
   publish,
 }: Props) {
+
+  const [loction, setLoction] = useState<LocationObject | null>(null);
   const { token } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const [form, setForm] = useState<FormState>({
@@ -67,42 +76,40 @@ export default function SettingsPostComponent({
     multimediaFile: "", // Se asignará luego de la codificación
   });
 
-  //TODO Reever si es nesesario este encode con el formato que usamos ahora
 
-  // const encode = async (data: SelectedImage[]) => {
-  //   if (data && data.length > 0) {
-  //     try {
-  //       // Leer el archivo como base64
-  //       const base64 = await FileSystem.readAsStringAsync(data[0].uri, {
-  //         encoding: FileSystem.EncodingType.Base64,
-  //       });
+  const requestLocationPermissions = async (): Promise<void> => {
+    const { granted } = await requestForegroundPermissionsAsync();
+    if (granted) {
+      const currentPosition = await getCurrentPositionAsync();
+      console.log(currentPosition);
+      setLoction(currentPosition);
+    }
+  }
+  useEffect(() => {
+    watchPositionAsync(
+      {
+        accuracy: LocationAccuracy.Highest,
+        timeInterval: 1000,
+        distanceInterval: 1,
+      },
+      (response) => {
+        console.log("Nova localização!", response);
+        //setLoction(response);
+        setForm({
+          ...form,
+          location: {
+            ...form.location,
+            latitude: response.coords.latitude,
+            longitude:response.coords.longitude,
+          },
+        })
+      }
+    );
+  }, []);
 
-  //       // Inicializar el tipo de contenido predeterminado
-  //       let contentType = "image/jpeg"; // Valor predeterminado
-  //       if (data[0].uri.includes(".png")) {
-  //         contentType = "image/png";
-  //       } else if (
-  //         data[0].uri.includes(".jpg") ||
-  //         data[0].uri.includes(".jpeg")
-  //       ) {
-  //         contentType = "image/jpeg";
-  //       }
-
-  //       // Construir la Data URI
-  //       const dataUri = `data:${contentType};base64,${base64}`;
-
-  //       // Actualizar el formulario con la Data URI
-  //       setForm((prevForm) => ({ ...prevForm, multimediaFile: dataUri }));
-  //     } catch (error) {
-  //       console.error("Error al convertir la imagen a base64:", error);
-  //       Alert.alert("Error", "No se pudo procesar la imagen.");
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   encode(data); // Codifica la imagen al montar el componente
-  // }, [data]);
+  useEffect(() => {
+    requestLocationPermissions();
+  }, [form]);
 
   const uploadPost = async (): Promise<void> => {
     const formData = new FormData();
@@ -240,6 +247,27 @@ export default function SettingsPostComponent({
             otherStyles="mb-4"
           />
         </View>
+
+
+        <View style={styles.mapContainer}>
+
+          {
+            loction &&
+            <MapView style={styles.map} 
+            initialRegion={{
+              latitude: loction.coords.latitude,
+              longitude: loction.coords.longitude,
+              latitudeDelta: 0.0005,
+              longitudeDelta: 0.0005
+            }}>
+
+              <Marker
+                coordinate={{ latitude: loction.coords.latitude, longitude: loction.coords.longitude }}
+              />
+
+            </MapView>
+          }
+        </View>
       </View>
 
       <View style={styles.footer}>
@@ -288,4 +316,14 @@ const styles = StyleSheet.create({
   list: {
     margin: "auto",
   },
+  mapContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  map: {
+    flex: 1,
+    width: '100%'
+  }
 });
