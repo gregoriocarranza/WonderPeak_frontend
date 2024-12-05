@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Video } from "expo-av";
 import i18n from "@/languages";
@@ -18,15 +18,8 @@ import { useAuth } from "@/hooks/authContext";
 import FormField from "../FormField";
 import CustomButton from "../CustomButton";
 import GlobalLoading from "../GlobalLoading";
+import MapScreen from "./mapScreen";
 import { getMediaType } from "@/utils/getMediaType";
-import {
-  getCurrentPositionAsync,
-  LocationObject,
-  requestForegroundPermissionsAsync,
-  watchPositionAsync,
-  LocationAccuracy
-} from "expo-location";
-import MapView, { Marker } from 'react-native-maps';
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -35,8 +28,8 @@ type FormState = {
   text: string;
   location: {
     placeHolder: string;
-    latitude: any;
-    longitude: any;
+    latitude: number | null;
+    longitude: number | null;
     mapsUrl: string;
   };
   multimediaFiletype: string;
@@ -59,62 +52,26 @@ export default function SettingsPostComponent({
   data,
   publish,
 }: Props) {
-
-  const [loction, setLoction] = useState<LocationObject | null>(null);
   const { token } = useAuth();
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [showMap, setShowMap] = useState<boolean>(false);
   const [form, setForm] = useState<FormState>({
     title: "",
     text: "",
     location: {
       placeHolder: "",
-      latitude: 17.562,
-      longitude: -3.625,
+      latitude: null,
+      longitude: null,
       mapsUrl: "",
     },
     multimediaFiletype: "BASE64",
-    multimediaFile: "", // Se asignará luego de la codificación
+    multimediaFile: "",
   });
-
-
-  const requestLocationPermissions = async (): Promise<void> => {
-    const { granted } = await requestForegroundPermissionsAsync();
-    if (granted) {
-      const currentPosition = await getCurrentPositionAsync();
-      console.log(currentPosition);
-      setLoction(currentPosition);
-    }
-  }
-  useEffect(() => {
-    watchPositionAsync(
-      {
-        accuracy: LocationAccuracy.Highest,
-        timeInterval: 1000,
-        distanceInterval: 1,
-      },
-      (response) => {
-        console.log("Nova localização!", response);
-        //setLoction(response);
-        setForm({
-          ...form,
-          location: {
-            ...form.location,
-            latitude: response.coords.latitude,
-            longitude:response.coords.longitude,
-          },
-        })
-      }
-    );
-  }, []);
-
-  useEffect(() => {
-    requestLocationPermissions();
-  }, [form]);
 
   const uploadPost = async (): Promise<void> => {
     const formData = new FormData();
 
-    // Adjuntar el archivo multimedia
     if (data && data.length > 0) {
       const fileUri = data[0].uri;
       const fileType = getMediaType(fileUri);
@@ -128,7 +85,6 @@ export default function SettingsPostComponent({
       formData.append("multimediaFileType", fileType);
     }
 
-    // Agregar metadata adicional
     formData.append("title", form.title);
     formData.append("text", form.text);
     formData.append("location", JSON.stringify(form.location));
@@ -146,6 +102,7 @@ export default function SettingsPostComponent({
           body: formData,
         }
       );
+
       if (!response.ok) {
         const errorResponse = await response.json();
         console.error("Error al subir el post:", errorResponse);
@@ -153,7 +110,7 @@ export default function SettingsPostComponent({
       }
 
       const responseData = await response.json();
-      // console.log("Post creado con éxito:", responseData);
+      console.log("Post creado con éxito:", responseData);
       finalAction();
     } catch (err: any) {
       console.error("Error:", err);
@@ -168,21 +125,32 @@ export default function SettingsPostComponent({
     publish();
   };
 
+  const handleLocationSelect = (latitude: number, longitude: number) => {
+    setForm((prev) => ({
+      ...prev,
+      location: {
+        ...prev.location,
+        latitude,
+        longitude,
+        mapsUrl: `https://www.google.com/maps?q=${latitude},${longitude}`,
+      },
+    }));
+    setShowMap(false);
+  };
+
   return (
     <>
       {loading && <GlobalLoading />}
-      <View className="flex-row justify-between" style={styles.header}>
-        <View className="flex-row items-center justify-center">
-          <Pressable onPress={goBack} className="p-2">
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <Pressable onPress={goBack} style={styles.backButton}>
             <MaterialIcons
               name="arrow-back"
               size={24}
               color={Colors.secondary}
             />
           </Pressable>
-          <Text className="font-psemibold" style={styles.text}>
-            {i18n.t("newPost")}
-          </Text>
+          <Text style={styles.text}>{i18n.t("newPost")}</Text>
         </View>
       </View>
 
@@ -236,47 +204,48 @@ export default function SettingsPostComponent({
             value={form.location.placeHolder}
             placeholder={i18n.t("locationLegend")}
             handleChangeText={(e) =>
-              setForm({
-                ...form,
-                location: {
-                  ...form.location,
-                  placeHolder: e,
-                },
-              })
+              setForm((prev) => ({
+                ...prev,
+                location: { ...prev.location, placeHolder: e },
+              }))
             }
             otherStyles="mb-4"
           />
         </View>
 
-
-        <View style={styles.mapContainer}>
-
-          {
-            loction &&
-            <MapView style={styles.map} 
-            initialRegion={{
-              latitude: loction.coords.latitude,
-              longitude: loction.coords.longitude,
-              latitudeDelta: 0.0005,
-              longitudeDelta: 0.0005
-            }}>
-
-              <Marker
-                coordinate={{ latitude: loction.coords.latitude, longitude: loction.coords.longitude }}
-              />
-
-            </MapView>
-          }
-        </View>
       </View>
-
+    
       <View style={styles.footer}>
+          <View style={styles.centeredButton}>
+          <CustomButton
+            label={
+              form.location.latitude && form.location.longitude
+                ? `Lat: ${form.location.latitude.toFixed(3)}, Long: ${form.location.longitude.toFixed(3)}`
+                : "Seleccionar ubicación"
+            }
+            customSize={true}
+            theme="primary"
+            onPress={() => setShowMap(true)}
+          />
+
+        </View>
         <CustomButton
           label={i18n.t("publish")}
           theme="primary"
           onPress={uploadPost}
         />
       </View>
+
+      {showMap && (
+        <View style={StyleSheet.absoluteFill}>
+          <MapScreen
+            initialLatitude={form.location.latitude || 0}
+            initialLongitude={form.location.longitude || 0}
+            onConfirmLocation={handleLocationSelect}
+          />
+        </View>
+      )}
+
     </>
   );
 }
@@ -286,9 +255,19 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     height: 72,
   },
+  headerContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  backButton: {
+    padding: 10,
+  },
+  text: {
+    color: Colors.light.text,
+    fontSize: 16,
+  },
   customField: {
     backgroundColor: Colors.white,
-    justifyContent: "center",
     flex: 1,
   },
   footer: {
@@ -296,16 +275,10 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.white,
   },
   image: {
-    width: screenWidth * 0.8,
-    margin: "auto",
+    width: screenWidth ,
     height: "100%",
-  },
-  text: {
-    color: Colors.light.text,
-    fontSize: 16,
   },
   mediaContainer: {
     width: screenWidth,
@@ -314,16 +287,21 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   list: {
-    margin: "auto",
+    alignSelf: "center",
   },
-  mapContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
+  locationText: {
+    marginTop: 10,
+    color: Colors.secondary,
+    fontSize: 14,
+    fontWeight: "bold",
+    textAlign: "center",
   },
-  map: {
-    flex: 1,
-    width: '100%'
-  }
+  centeredButton: {
+    width: screenWidth*0.9,
+    justifyContent:"center",
+    height: "10%",
+    alignSelf: "center", // Centra el botón en el contenedor
+    marginBottom: 20,
+    marginTop:0,
+  },
 });
