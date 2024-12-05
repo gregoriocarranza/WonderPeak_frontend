@@ -9,7 +9,7 @@
       "env": {
         "EXPO_PUBLIC_NODE_ENV": "development",
         "EXPO_PUBLIC_API_URL": "https://wonderpeak.uade.susoft.com.ar",
-        "EXPO_PUBLIC_PUSH_NOTIFICATION_PROVIDER": "FCM"
+        "EXPO_PUBLIC_PUSH_NOTIFICATION_PROVIDER": "EXPO"
       }
     },
     "preview": {
@@ -19,7 +19,7 @@
       "env": {
         "EXPO_PUBLIC_NODE_ENV": "production",
         "EXPO_PUBLIC_API_URL": "https://wonderpeak.uade.susoft.com.ar",
-        "EXPO_PUBLIC_PUSH_NOTIFICATION_PROVIDER": "FCM"
+        "EXPO_PUBLIC_PUSH_NOTIFICATION_PROVIDER": "EXPO"
       }
     }
   },

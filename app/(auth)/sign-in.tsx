@@ -13,7 +13,7 @@ type FormState = {
 };
 
 export default function SignIn() {
-  const { login } = useAuth(); 
+  const { login } = useAuth();
   const [form, setForm] = useState<FormState>({ email: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -40,7 +40,6 @@ export default function SignIn() {
       }
 
       const data = await response.json();
-      console.log(data.data.accessToken)
 
       if (data.success && data.data.accessToken) {
         await login(data.data.accessToken); // Guarda el token en el contexto
@@ -59,7 +58,7 @@ export default function SignIn() {
   const submit = () => {
     if (!form.email || !form.password) {
       Alert.alert("Campos incompletos", "Por favor, complete todos los campos");
-      return
+      return;
     }
 
     signInUser();

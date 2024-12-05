@@ -45,9 +45,8 @@ export default function HeaderHome() {
       }
       //!! aca hay que trabajar un poco mas esto para que se pueda recuperar del Context si la info ya esta
       const data = await response.json();
-      console.log(data, "data user")
       let info: UserInfo = data.data;
-      userMe(data.data)
+      userMe(data.data);
 
       setUserInfo({
         userUuid: info.userUuid,

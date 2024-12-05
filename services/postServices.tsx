@@ -19,7 +19,6 @@ export const getUserPosts = async (userId: string) => {
 export const getFavoritesPosts = async () => {
   try {
     const headers = await getHeaders();
-    console.log(headers);
 
     const response = await fetch(`${BASE_URL}/posts/favorites`, {
       method: "GET",
