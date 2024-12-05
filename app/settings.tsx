@@ -13,7 +13,11 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import i18n from "@/languages";
 import { useAuth } from "@/hooks/authContext";
-import { deleteUser, updateUser } from "@/services/userServices";
+import {
+  deleteUser,
+  updateUser,
+  updateUserPassword,
+} from "@/services/userServices";
 import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
 import ConfirmationModal from "@/components/ConfirmationModal";
@@ -23,6 +27,7 @@ import HeaderSetttings from "@/components/HeaderSetttings";
 import { FormState, SendFormState } from "@/types/interfaces";
 import { useLanguage } from "@/hooks/languageContext";
 import { genderData } from "@/utils";
+import { getMediaType } from "@/utils/getMediaType";
 
 type PasswordFormState = {
   currentPassword: string;
@@ -108,9 +113,49 @@ export default function Settings() {
   };
 
   const handleForm = async () => {
+    if (formType === "password") {
+      handleFormPassword();
+      return;
+    }
+
     try {
       setIsLoading(true);
-      const response = await updateUser(generalForm);
+
+      const formData = new FormData();
+      formData.append("name", generalForm.name);
+      formData.append("lastname", generalForm.lastname);
+      formData.append("nickname", generalForm.nickname);
+      formData.append("bio", generalForm.bio);
+      formData.append("gender", generalForm.gender);
+
+      // Convertir las URLs de imágenes a archivos si existen
+      if (generalForm.profileImage) {
+        const fileUri = generalForm.profileImage;
+        const fileType = getMediaType(fileUri);
+        const fileName = fileUri.split("/").pop() || "upload";
+
+        formData.append("profileUserImage", {
+          uri: fileUri,
+          type: fileType,
+          name: fileName,
+        } as any);
+        formData.append("multimediaFileType", fileType);
+      }
+
+      if (generalForm.coverImage) {
+        const fileUri = generalForm.coverImage;
+        const fileType = getMediaType(fileUri);
+        const fileName = fileUri.split("/").pop() || "upload";
+
+        formData.append("profileCoverImage", {
+          uri: fileUri,
+          type: fileType,
+          name: fileName,
+        } as any);
+        formData.append("multimediaFileType", fileType);
+      }
+
+      const response = await updateUser(formData);
       userMe(response.data);
       Alert.alert(i18n.t("successfulModification"));
     } catch (error) {
@@ -148,6 +193,39 @@ export default function Settings() {
 
   const goToSingIn = () => {
     router.replace("/sign-in");
+  };
+
+  const areValidsPasswords = () => {
+    const areEquals =
+      passwordForm.newPassword === passwordForm.newPasswordConfirm;
+    if (!areEquals) {
+      Alert.alert("Las constraseñas no coinciden");
+    }
+
+    return areEquals;
+  };
+
+  const handleFormPassword = async () => {
+    if (!areValidsPasswords()) return;
+
+    try {
+      setIsLoading(true);
+      const payload = {
+        password: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword,
+      };
+      const response = await updateUserPassword(payload);
+      console.log(response);
+
+      Alert.alert("Contraseña modificada correctamente");
+    } catch (error) {
+      Alert.alert(
+        "No pudimos actualizar su contraseña",
+        "Verifique que su contraseña actual sea correcta"
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
