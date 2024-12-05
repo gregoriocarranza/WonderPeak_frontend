@@ -162,7 +162,7 @@ export default function PostItem({
                   color={Colors.secondary}
                 />
                 <Text className="items-center font-pregular text-lg">
-                  {comments.length}{" "}
+                  {commentsCount}{" "}
                   {i18n.t("comment", { count: comments.length || 0 })}
                 </Text>
               </Pressable>

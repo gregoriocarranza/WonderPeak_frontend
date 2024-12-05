@@ -71,7 +71,9 @@ export default function SettingsPostComponent({
 
   const uploadPost = async (): Promise<void> => {
     const formData = new FormData();
-
+    if (!isFormValid()) {
+      return;
+    }
     if (data && data.length > 0) {
       const fileUri = data[0].uri;
       const fileType = getMediaType(fileUri);
@@ -136,6 +138,30 @@ export default function SettingsPostComponent({
       },
     }));
     setShowMap(false);
+  };
+
+  const isFormValid = (): boolean => {
+    if (!form.title.trim()) {
+      Alert.alert("Error", "El título es obligatorio.");
+      return false;
+    }
+
+    if (!form.text.trim()) {
+      Alert.alert("Error", "El texto es obligatorio.");
+      return false;
+    }
+
+    if (
+      !form.location.placeHolder.trim() ||
+      form.location.latitude === null ||
+      form.location.longitude === null ||
+      !form.location.mapsUrl.trim()
+    ) {
+      Alert.alert("Error", "La ubicación es obligatoria.");
+      return false;
+    }
+
+    return true;
   };
 
   return (
@@ -212,22 +238,20 @@ export default function SettingsPostComponent({
             otherStyles="mb-4"
           />
         </View>
-
       </View>
-    
+
       <View style={styles.footer}>
-          <View style={styles.centeredButton}>
+        <View className="mb-4">
           <CustomButton
             label={
               form.location.latitude && form.location.longitude
-                ? `Lat: ${form.location.latitude.toFixed(3)}, Long: ${form.location.longitude.toFixed(3)}`
+                ? `Lat: ${form.location.latitude.toFixed(
+                    3
+                  )}, Long: ${form.location.longitude.toFixed(3)}`
                 : "Seleccionar ubicación"
             }
-            customSize={true}
-            theme="primary"
             onPress={() => setShowMap(true)}
           />
-
         </View>
         <CustomButton
           label={i18n.t("publish")}
@@ -245,7 +269,6 @@ export default function SettingsPostComponent({
           />
         </View>
       )}
-
     </>
   );
 }
@@ -277,7 +300,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: screenWidth ,
+    width: screenWidth,
     height: "100%",
   },
   mediaContainer: {
@@ -296,12 +319,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-  centeredButton: {
-    width: screenWidth*0.9,
-    justifyContent:"center",
-    height: "10%",
-    alignSelf: "center", // Centra el botón en el contenedor
-    marginBottom: 20,
-    marginTop:0,
-  },
+  // centeredButton: {
+  //   width: screenWidth * 0.9,
+  //   justifyContent: "center",
+  //   height: "20%",
+  //   alignSelf: "center", // Centra el botón en el contenedor
+  //   marginBottom: 20,
+  //   marginTop: 0,
+  // },
 });
