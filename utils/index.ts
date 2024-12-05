@@ -1,4 +1,5 @@
 import i18n from "@/languages";
+import { images } from "@/constants";
 
 export const isValidImage = (source: string): boolean => {
   const urlRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d+)?(\/[^\s]*)?$/;
@@ -27,6 +28,19 @@ export const formatDate = (isoString: string): string => {
   const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() returns 0-11
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
+};
+
+export const getGamificationImage = (initialLevel: string | undefined) => {
+  const { gamification1, gamification2, gamification3, gamification } = images;
+  const level = Number(initialLevel)
+  if (!level || level > 4 || level < 1) return;
+  const levelsImages = [
+    gamification1,
+    gamification2,
+    gamification3,
+    gamification,
+  ];
+  return levelsImages[level - 1];
 };
 
 export const genderData = [
