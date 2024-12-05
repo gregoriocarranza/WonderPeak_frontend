@@ -39,7 +39,7 @@ const RenderElement = ({ user }: { user: DataUser }) => {
       <Pressable onPress={goToProfile} style={styles.borderTop}>
         <View className="flex-row" style={styles.itemGlobalContainer}>
           <Image
-            source={{ uri: userData?.profileImage }}
+            source={{ uri: user?.profileImage }}
             style={styles.itemImage}
           />
           <View style={styles.userData}>

@@ -1,4 +1,12 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
 import React, { useState } from "react";
 import { images } from "@/constants";
 import { Colors } from "@/constants/Colors";
@@ -81,6 +89,14 @@ export default function PostItem({
     }
   };
 
+  const handleOpenURL = (url: string) => {
+    if (url) {
+      Linking.openURL(url).catch((err) =>
+        console.error("Failed to open URL:", err)
+      );
+    }
+  };
+
   return (
     <>
       <View style={styles.postContainer}>
@@ -100,11 +116,17 @@ export default function PostItem({
               <Text className="font-psemibold text-lg">
                 {user?.name} {user?.lastName}{" "}
               </Text>
-              <Text style={styles.location} className="font-pregular">
-                📍
-                {capitalizeWords(location?.placeHolder) ||
-                  i18n.t("locationNotAvailable")}
-              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  handleOpenURL(location?.mapsUrl);
+                }}
+              >
+                <Text style={styles.location} className="font-pregular">
+                  📍
+                  {capitalizeWords(location?.placeHolder) ||
+                    i18n.t("locationNotAvailable")}
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Link>
@@ -140,7 +162,7 @@ export default function PostItem({
                   color={Colors.secondary}
                 />
                 <Text className="items-center font-pregular text-lg">
-                  {comments.length}{" "}
+                  {commentsCount}{" "}
                   {i18n.t("comment", { count: comments.length || 0 })}
                 </Text>
               </Pressable>

@@ -49,3 +49,4 @@ expo-env.d.ts
 # Ignore lockfiles (optional, if you're only using package.json)
 package-lock.json
 yarn.lock
+wonderpeak-d2f83-firebase-adminsdk-5mwpn-9bfe434b82.json
