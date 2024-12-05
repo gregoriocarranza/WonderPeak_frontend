@@ -87,5 +87,7 @@
   "errorSendingComment": "Error sending comment",
   "spanish": "Spanish",
   "english": "English",
-  "language": "Language"
+  "language": "Language",
+  "successfulModification": "Successful modification",
+  "errorUpdatingUser": "Error updating user"
 }

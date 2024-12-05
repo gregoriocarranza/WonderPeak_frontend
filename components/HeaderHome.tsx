@@ -60,8 +60,8 @@ export default function HeaderHome() {
         gender: info.gender,
         gamificationLevel: info.gamificationLevel,
         active: info.active,
-        imFollower: info.imFollower, // O el valor correspondiente
-        isFavorite: info.isFavorite, // O el valor correspondiente
+        imFollower: false,
+        isFavorite: false,
       });
     } catch (error) {
       console.log(error);

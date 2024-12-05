@@ -16,7 +16,7 @@ type AuthContextType = {
   isAuthenticated: boolean;
   userInfo: string | null;
   pushNotificationToken: string | null;
-  userMe: (user: string) => void;
+  userMe: (user: UserInfo) => void;
   login: (token: string) => void;
   logout: () => void;
   savePushToken: () => void;
@@ -69,9 +69,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await AsyncStorage.removeItem("pushNotificationToken");
   };
 
-  const userMe = async (user: any) => {
-    setUserInfo(user);
-    await AsyncStorage.setItem("user", JSON.stringify(user));
+  const userMe = async (user: UserInfo) => {
+    const userString = JSON.stringify(user);
+    setUserInfo(userString);
+    await AsyncStorage.setItem("user", userString);
   };
 
   const savePushToken = async () => {

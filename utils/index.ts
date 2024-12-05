@@ -1,3 +1,5 @@
+import i18n from "@/languages";
+
 export const isValidImage = (source: string): boolean => {
   const urlRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d+)?(\/[^\s]*)?$/;
   const base64ImageRegex = /^data:image\/(png|jpeg|jpg|gif|svg\+xml);base64,[A-Za-z0-9+/=]+$/;
@@ -26,3 +28,9 @@ export const formatDate = (isoString: string): string => {
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 };
+
+export const genderData = [
+  { label: i18n.t("female"), value: "female" },
+  { label: i18n.t("male"), value: "male" },
+  { label: i18n.t("other"), value: "other" },
+];
