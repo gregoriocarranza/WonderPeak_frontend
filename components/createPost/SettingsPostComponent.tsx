@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,9 +9,8 @@ import {
   Dimensions,
   Alert,
 } from "react-native";
-import * as FileSystem from "expo-file-system"; // Importa FileSystem
 import { Colors } from "@/constants/Colors";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Video } from "expo-av";
 import i18n from "@/languages";
@@ -19,6 +18,7 @@ import { useAuth } from "@/hooks/authContext";
 import FormField from "../FormField";
 import CustomButton from "../CustomButton";
 import GlobalLoading from "../GlobalLoading";
+import MapScreen from "./mapScreen";
 import { getMediaType } from "@/utils/getMediaType";
 
 const { width: screenWidth } = Dimensions.get("window");
@@ -28,8 +28,8 @@ type FormState = {
   text: string;
   location: {
     placeHolder: string;
-    latitude: any;
-    longitude: any;
+    latitude: number | null;
+    longitude: number | null;
     mapsUrl: string;
   };
   multimediaFiletype: string;
@@ -53,61 +53,27 @@ export default function SettingsPostComponent({
   publish,
 }: Props) {
   const { token } = useAuth();
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [showMap, setShowMap] = useState<boolean>(false);
   const [form, setForm] = useState<FormState>({
     title: "",
     text: "",
     location: {
       placeHolder: "",
-      latitude: 17.562,
-      longitude: -3.625,
+      latitude: null,
+      longitude: null,
       mapsUrl: "",
     },
     multimediaFiletype: "BASE64",
-    multimediaFile: "", // Se asignará luego de la codificación
+    multimediaFile: "",
   });
-
-  //TODO Reever si es nesesario este encode con el formato que usamos ahora
-
-  // const encode = async (data: SelectedImage[]) => {
-  //   if (data && data.length > 0) {
-  //     try {
-  //       // Leer el archivo como base64
-  //       const base64 = await FileSystem.readAsStringAsync(data[0].uri, {
-  //         encoding: FileSystem.EncodingType.Base64,
-  //       });
-
-  //       // Inicializar el tipo de contenido predeterminado
-  //       let contentType = "image/jpeg"; // Valor predeterminado
-  //       if (data[0].uri.includes(".png")) {
-  //         contentType = "image/png";
-  //       } else if (
-  //         data[0].uri.includes(".jpg") ||
-  //         data[0].uri.includes(".jpeg")
-  //       ) {
-  //         contentType = "image/jpeg";
-  //       }
-
-  //       // Construir la Data URI
-  //       const dataUri = `data:${contentType};base64,${base64}`;
-
-  //       // Actualizar el formulario con la Data URI
-  //       setForm((prevForm) => ({ ...prevForm, multimediaFile: dataUri }));
-  //     } catch (error) {
-  //       console.error("Error al convertir la imagen a base64:", error);
-  //       Alert.alert("Error", "No se pudo procesar la imagen.");
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   encode(data); // Codifica la imagen al montar el componente
-  // }, [data]);
 
   const uploadPost = async (): Promise<void> => {
     const formData = new FormData();
-
-    // Adjuntar el archivo multimedia
+    if (!isFormValid()) {
+      return;
+    }
     if (data && data.length > 0) {
       const fileUri = data[0].uri;
       const fileType = getMediaType(fileUri);
@@ -121,7 +87,6 @@ export default function SettingsPostComponent({
       formData.append("multimediaFileType", fileType);
     }
 
-    // Agregar metadata adicional
     formData.append("title", form.title);
     formData.append("text", form.text);
     formData.append("location", JSON.stringify(form.location));
@@ -139,6 +104,7 @@ export default function SettingsPostComponent({
           body: formData,
         }
       );
+
       if (!response.ok) {
         const errorResponse = await response.json();
         console.error("Error al subir el post:", errorResponse);
@@ -146,7 +112,7 @@ export default function SettingsPostComponent({
       }
 
       const responseData = await response.json();
-      // console.log("Post creado con éxito:", responseData);
+      console.log("Post creado con éxito:", responseData);
       finalAction();
     } catch (err: any) {
       console.error("Error:", err);
@@ -161,21 +127,56 @@ export default function SettingsPostComponent({
     publish();
   };
 
+  const handleLocationSelect = (latitude: number, longitude: number) => {
+    setForm((prev) => ({
+      ...prev,
+      location: {
+        ...prev.location,
+        latitude,
+        longitude,
+        mapsUrl: `https://www.google.com/maps?q=${latitude},${longitude}`,
+      },
+    }));
+    setShowMap(false);
+  };
+
+  const isFormValid = (): boolean => {
+    if (!form.title.trim()) {
+      Alert.alert("Error", "El título es obligatorio.");
+      return false;
+    }
+
+    if (!form.text.trim()) {
+      Alert.alert("Error", "El texto es obligatorio.");
+      return false;
+    }
+
+    if (
+      !form.location.placeHolder.trim() ||
+      form.location.latitude === null ||
+      form.location.longitude === null ||
+      !form.location.mapsUrl.trim()
+    ) {
+      Alert.alert("Error", "La ubicación es obligatoria.");
+      return false;
+    }
+
+    return true;
+  };
+
   return (
     <>
       {loading && <GlobalLoading />}
-      <View className="flex-row justify-between" style={styles.header}>
-        <View className="flex-row items-center justify-center">
-          <Pressable onPress={goBack} className="p-2">
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <Pressable onPress={goBack} style={styles.backButton}>
             <MaterialIcons
               name="arrow-back"
               size={24}
               color={Colors.secondary}
             />
           </Pressable>
-          <Text className="font-psemibold" style={styles.text}>
-            {i18n.t("newPost")}
-          </Text>
+          <Text style={styles.text}>{i18n.t("newPost")}</Text>
         </View>
       </View>
 
@@ -229,13 +230,10 @@ export default function SettingsPostComponent({
             value={form.location.placeHolder}
             placeholder={i18n.t("locationLegend")}
             handleChangeText={(e) =>
-              setForm({
-                ...form,
-                location: {
-                  ...form.location,
-                  placeHolder: e,
-                },
-              })
+              setForm((prev) => ({
+                ...prev,
+                location: { ...prev.location, placeHolder: e },
+              }))
             }
             otherStyles="mb-4"
           />
@@ -243,12 +241,34 @@ export default function SettingsPostComponent({
       </View>
 
       <View style={styles.footer}>
+        <View className="mb-4">
+          <CustomButton
+            label={
+              form.location.latitude && form.location.longitude
+                ? `Lat: ${form.location.latitude.toFixed(
+                    3
+                  )}, Long: ${form.location.longitude.toFixed(3)}`
+                : "Seleccionar ubicación"
+            }
+            onPress={() => setShowMap(true)}
+          />
+        </View>
         <CustomButton
           label={i18n.t("publish")}
           theme="primary"
           onPress={uploadPost}
         />
       </View>
+
+      {showMap && (
+        <View style={StyleSheet.absoluteFill}>
+          <MapScreen
+            initialLatitude={form.location.latitude || 0}
+            initialLongitude={form.location.longitude || 0}
+            onConfirmLocation={handleLocationSelect}
+          />
+        </View>
+      )}
     </>
   );
 }
@@ -258,9 +278,19 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     height: 72,
   },
+  headerContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  backButton: {
+    padding: 10,
+  },
+  text: {
+    color: Colors.light.text,
+    fontSize: 16,
+  },
   customField: {
     backgroundColor: Colors.white,
-    justifyContent: "center",
     flex: 1,
   },
   footer: {
@@ -268,16 +298,10 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.white,
   },
   image: {
-    width: screenWidth * 0.8,
-    margin: "auto",
+    width: screenWidth,
     height: "100%",
-  },
-  text: {
-    color: Colors.light.text,
-    fontSize: 16,
   },
   mediaContainer: {
     width: screenWidth,
@@ -286,6 +310,21 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   list: {
-    margin: "auto",
+    alignSelf: "center",
   },
+  locationText: {
+    marginTop: 10,
+    color: Colors.secondary,
+    fontSize: 14,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  // centeredButton: {
+  //   width: screenWidth * 0.9,
+  //   justifyContent: "center",
+  //   height: "20%",
+  //   alignSelf: "center", // Centra el botón en el contenedor
+  //   marginBottom: 20,
+  //   marginTop: 0,
+  // },
 });
