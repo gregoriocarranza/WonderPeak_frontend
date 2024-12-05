@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -18,11 +18,54 @@ import { images } from "@/constants";
 import { Colors } from "@/constants/Colors";
 import i18n from "@/languages";
 import GlobalLoading from "@/components/GlobalLoading";
+import * as Notifications from "expo-notifications";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+
+type NotificationType = Notifications.Notification | null;
 
 export default function Home() {
   const { token } = useAuth();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const notificationListener = useRef<Notifications.Subscription | null>(null);
+  const responseListener = useRef<Notifications.Subscription | null>(null);
+  const [notification, setNotification] = useState<NotificationType>(null);
+
+  useEffect(() => {
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        if (notification) {
+          setNotification(notification);
+          console.info("Notification received in foreground:", notification);
+        }
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.info(
+          "User interacted with notification:",
+          response.notification.request.content
+        );
+      });
+
+    return () => {
+      if (notificationListener.current) {
+        Notifications.removeNotificationSubscription(
+          notificationListener.current
+        );
+      }
+      if (responseListener.current) {
+        Notifications.removeNotificationSubscription(responseListener.current);
+      }
+    };
+  }, []);
 
   const handleRefresh = (): void => {
     setRefreshing(true);
