@@ -20,6 +20,7 @@ import FormField from "../FormField";
 import CustomButton from "../CustomButton";
 import GlobalLoading from "../GlobalLoading";
 import { getMediaType } from "@/utils/getMediaType";
+import * as Location from 'expo-location';
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -67,42 +68,24 @@ export default function SettingsPostComponent({
     multimediaFile: "", // Se asignará luego de la codificación
   });
 
-  //TODO Reever si es nesesario este encode con el formato que usamos ahora
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // const encode = async (data: SelectedImage[]) => {
-  //   if (data && data.length > 0) {
-  //     try {
-  //       // Leer el archivo como base64
-  //       const base64 = await FileSystem.readAsStringAsync(data[0].uri, {
-  //         encoding: FileSystem.EncodingType.Base64,
-  //       });
+  useEffect(() => {
+    async function getCurrentLocation() {
 
-  //       // Inicializar el tipo de contenido predeterminado
-  //       let contentType = "image/jpeg"; // Valor predeterminado
-  //       if (data[0].uri.includes(".png")) {
-  //         contentType = "image/png";
-  //       } else if (
-  //         data[0].uri.includes(".jpg") ||
-  //         data[0].uri.includes(".jpeg")
-  //       ) {
-  //         contentType = "image/jpeg";
-  //       }
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
 
-  //       // Construir la Data URI
-  //       const dataUri = `data:${contentType};base64,${base64}`;
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    }
 
-  //       // Actualizar el formulario con la Data URI
-  //       setForm((prevForm) => ({ ...prevForm, multimediaFile: dataUri }));
-  //     } catch (error) {
-  //       console.error("Error al convertir la imagen a base64:", error);
-  //       Alert.alert("Error", "No se pudo procesar la imagen.");
-  //     }
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   encode(data); // Codifica la imagen al montar el componente
-  // }, [data]);
+    getCurrentLocation();
+  }, []);
 
   const uploadPost = async (): Promise<void> => {
     const formData = new FormData();
@@ -161,6 +144,17 @@ export default function SettingsPostComponent({
     publish();
   };
 
+
+
+  let text = 'Waiting...';
+  if (errorMsg) {
+    text = errorMsg;
+    console.log(text)
+  } else if (location) {
+    text = JSON.stringify(location);
+    console.log(text)
+  }
+
   return (
     <>
       {loading && <GlobalLoading />}
@@ -208,8 +202,11 @@ export default function SettingsPostComponent({
             )}
           />
         )}
-
+   
         <View style={styles.settingsForm}>
+        <View style={styles.container}>
+          <Text style={styles.paragraph}>{text}</Text>
+        </View>
           <FormField
             title={i18n.t("title")}
             value={form.title}
@@ -287,5 +284,15 @@ const styles = StyleSheet.create({
   },
   list: {
     margin: "auto",
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  paragraph: {
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
