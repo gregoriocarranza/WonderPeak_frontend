@@ -7,28 +7,26 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Colors } from "@/constants/Colors";
-import { Video } from "expo-av";
+import { ResizeMode, Video } from "expo-av";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   TapGestureHandler,
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
+import { isValidImage } from "@/utils";
+import { StatusBar } from "expo-status-bar";
+import { MediaItem } from "@/types/interfaces";
 
 const { width: screenWidth } = Dimensions.get("window");
-
-type MediaItem = {
-  id: string;
-  type: "image" | "video";
-  source: any;
-};
 
 type Props = {
   mediaData: MediaItem[];
 };
 
 export default function PostCarousel({ mediaData }: Props) {
+  const video = useRef(null);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
@@ -39,19 +37,25 @@ export default function PostCarousel({ mediaData }: Props) {
         onActivated={() => handleDoubleTap(index)}
       >
         <View style={styles.carouselItem}>
-          {item.type === "image" ? (
-            <Image
-              source={item.source}
-              resizeMode="cover"
-              style={styles.image}
-              className="w-full"
-            />
+          {item.type.includes("image") ? (
+            <>
+              {isValidImage(item.source) && (
+                <Image
+                  source={{ uri: item.source }}
+                  resizeMode="cover"
+                  style={styles.image}
+                  className="w-full"
+                />
+              )}
+            </>
           ) : (
             <Video
-              source={item.source}
+              ref={video}
+              source={{ uri: item.source }}
               style={styles.image}
               useNativeControls
               isLooping
+              resizeMode={ResizeMode.CONTAIN}
             />
           )}
         </View>
@@ -81,7 +85,7 @@ export default function PostCarousel({ mediaData }: Props) {
         data={mediaData}
         pagingEnabled
         showsHorizontalScrollIndicator
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
         horizontal
         renderItem={({ item, index }) => renderItem({ item, index })}
       />
@@ -100,12 +104,14 @@ export default function PostCarousel({ mediaData }: Props) {
             pagingEnabled
             initialScrollIndex={selectedIndex}
             showsHorizontalScrollIndicator
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item, index) => `${item.id}-${index}`}
             horizontal
             getItemLayout={getItemLayout}
             renderItem={renderItem}
           />
         </View>
+
+        <StatusBar backgroundColor="black" />
       </Modal>
     </>
   );

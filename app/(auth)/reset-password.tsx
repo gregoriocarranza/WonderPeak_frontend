@@ -1,10 +1,11 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Pressable, Alert } from "react-native";
 import React, { useState } from "react";
 import CustomButton from "@/components/CustomButton";
 import AuthModal from "@/components/AuthModal";
 import FormField from "@/components/FormField";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import i18n from "@/languages";
+import { isValidEmail } from "@/utils";
 
 type FormState = {
   email: string;
@@ -18,14 +19,47 @@ export default function ResetPassword() {
   const [submitted, setSubmitted] = useState<boolean>(false);
 
   const submit = () => {
+    if (!isValidEmail(form.email)) {
+      Alert.alert("Error", i18n.t("emailNotValid"));
+      return;
+    }
     setIsSubmitting(true);
-
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
-    }, 2000);
+    resetPassword();
   };
 
+  const resetPassword = async (): Promise<void> => {
+    try {
+      const response = await fetch(
+        "https://wonderpeak.uade.susoft.com.ar/api/auth/forgot_password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al resetear el usuario");
+      }
+      const data = await response.json();
+      console.log(data)
+
+      if (data.success) {
+        setSubmitted(true);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+      setSubmitted(true);
+    }
+  };
+
+  const goBack = () => {
+    router.replace("/sign-in");
+  };
   const goToHome = () => {
     router.replace("/");
   };
@@ -63,10 +97,19 @@ export default function ResetPassword() {
 
           <CustomButton
             isLoading={isSubmitting}
+            disabled={!isValidEmail(form.email)}
             label={i18n.t("accept")}
             theme="auth"
             onPress={submit}
           />
+
+          <View className="mt-4">
+            <Pressable onPress={goBack}>
+              <Text className="font-pregular text-xl underline">
+                {i18n.t("goBack")}
+              </Text>
+            </Pressable>
+          </View>
         </>
       )}
     </AuthModal>

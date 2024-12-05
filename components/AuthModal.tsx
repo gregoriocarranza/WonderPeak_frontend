@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   modal: {
     alignItems: "center",
     justifyContent: "center",
-    height: 645,
+    height: 550,
     bottom: 0,
     width: "100%",
     borderTopLeftRadius: 50,
@@ -71,11 +71,11 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   logo: {
-    marginTop: 100,
+    marginBottom: 500,
     zIndex: 9,
     marginLeft: "50%",
     position: "absolute",
     left: -100,
-    top: 0,
+    bottom: 0,
   },
 });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,21 +7,33 @@ import {
   Pressable,
   FlatList,
   Dimensions,
+  Alert,
 } from "react-native";
+import * as FileSystem from "expo-file-system"; // Importa FileSystem
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Video } from "expo-av";
 import i18n from "@/languages";
+import { useAuth } from "@/hooks/authContext";
 import FormField from "../FormField";
 import CustomButton from "../CustomButton";
+import GlobalLoading from "../GlobalLoading";
+import { getMediaType } from "@/utils/getMediaType";
 
 const { width: screenWidth } = Dimensions.get("window");
 
 type FormState = {
-  description: string;
-  location: string;
-  followers: string;
+  title: string;
+  text: string;
+  location: {
+    placeHolder: string;
+    latitude: any;
+    longitude: any;
+    mapsUrl: string;
+  };
+  multimediaFiletype: string;
+  multimediaFile: string;
 };
 
 type SelectedImage = {
@@ -40,11 +52,109 @@ export default function SettingsPostComponent({
   data,
   publish,
 }: Props) {
+  const { token } = useAuth();
+  const [loading, setLoading] = useState<boolean>(false);
   const [form, setForm] = useState<FormState>({
-    description: "",
-    location: "",
-    followers: "",
+    title: "",
+    text: "",
+    location: {
+      placeHolder: "",
+      latitude: 17.562,
+      longitude: -3.625,
+      mapsUrl: "",
+    },
+    multimediaFiletype: "BASE64",
+    multimediaFile: "", // Se asignará luego de la codificación
   });
+
+  //TODO Reever si es nesesario este encode con el formato que usamos ahora
+
+  // const encode = async (data: SelectedImage[]) => {
+  //   if (data && data.length > 0) {
+  //     try {
+  //       // Leer el archivo como base64
+  //       const base64 = await FileSystem.readAsStringAsync(data[0].uri, {
+  //         encoding: FileSystem.EncodingType.Base64,
+  //       });
+
+  //       // Inicializar el tipo de contenido predeterminado
+  //       let contentType = "image/jpeg"; // Valor predeterminado
+  //       if (data[0].uri.includes(".png")) {
+  //         contentType = "image/png";
+  //       } else if (
+  //         data[0].uri.includes(".jpg") ||
+  //         data[0].uri.includes(".jpeg")
+  //       ) {
+  //         contentType = "image/jpeg";
+  //       }
+
+  //       // Construir la Data URI
+  //       const dataUri = `data:${contentType};base64,${base64}`;
+
+  //       // Actualizar el formulario con la Data URI
+  //       setForm((prevForm) => ({ ...prevForm, multimediaFile: dataUri }));
+  //     } catch (error) {
+  //       console.error("Error al convertir la imagen a base64:", error);
+  //       Alert.alert("Error", "No se pudo procesar la imagen.");
+  //     }
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   encode(data); // Codifica la imagen al montar el componente
+  // }, [data]);
+
+  const uploadPost = async (): Promise<void> => {
+    const formData = new FormData();
+
+    // Adjuntar el archivo multimedia
+    if (data && data.length > 0) {
+      const fileUri = data[0].uri;
+      const fileType = getMediaType(fileUri);
+      const fileName = fileUri.split("/").pop() || "upload";
+
+      formData.append("multimediaFile", {
+        uri: fileUri,
+        type: fileType,
+        name: fileName,
+      } as any);
+      formData.append("multimediaFileType", fileType);
+    }
+
+    // Agregar metadata adicional
+    formData.append("title", form.title);
+    formData.append("text", form.text);
+    formData.append("location", JSON.stringify(form.location));
+
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        "https://wonderpeak.uade.susoft.com.ar/api/posts",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        console.error("Error al subir el post:", errorResponse);
+        throw new Error("Error al subir el post");
+      }
+
+      const responseData = await response.json();
+      // console.log("Post creado con éxito:", responseData);
+      finalAction();
+    } catch (err: any) {
+      console.error("Error:", err);
+      Alert.alert("Error", "Hubo un problema al subir el post.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const finalAction = (): void => {
     router.replace("/home");
@@ -53,6 +163,7 @@ export default function SettingsPostComponent({
 
   return (
     <>
+      {loading && <GlobalLoading />}
       <View className="flex-row justify-between" style={styles.header}>
         <View className="flex-row items-center justify-center">
           <Pressable onPress={goBack} className="p-2">
@@ -73,12 +184,12 @@ export default function SettingsPostComponent({
           <FlatList
             style={styles.list}
             data={data}
-            keyExtractor={(item) => item.uri}
+            keyExtractor={(item, index) => item?.uri + index}
             horizontal
             pagingEnabled
             renderItem={({ item }) => (
               <View style={styles.mediaContainer}>
-                {item.type === "image" && (
+                {(item.type === "image" || item.type === "photo") && (
                   <Image
                     source={{ uri: item.uri }}
                     resizeMode="cover"
@@ -100,24 +211,32 @@ export default function SettingsPostComponent({
 
         <View style={styles.settingsForm}>
           <FormField
+            title={i18n.t("title")}
+            value={form.title}
+            placeholder={i18n.t("chooseTitle")}
+            handleChangeText={(e) => setForm({ ...form, title: e })}
+            otherStyles="mb-4"
+          />
+          <FormField
             title={i18n.t("description")}
-            value={form.description}
+            value={form.text}
             placeholder={i18n.t("descriptionLegend")}
-            handleChangeText={(e) => setForm({ ...form, description: e })}
+            handleChangeText={(e) => setForm({ ...form, text: e })}
             otherStyles="mb-4"
           />
           <FormField
             title={i18n.t("addLocation")}
-            value={form.location}
+            value={form.location.placeHolder}
             placeholder={i18n.t("locationLegend")}
-            handleChangeText={(e) => setForm({ ...form, location: e })}
-            otherStyles="mb-4"
-          />
-          <FormField
-            title={i18n.t("addressee")}
-            value={form.followers}
-            placeholder={i18n.t("followers")}
-            handleChangeText={(e) => setForm({ ...form, followers: e })}
+            handleChangeText={(e) =>
+              setForm({
+                ...form,
+                location: {
+                  ...form.location,
+                  placeHolder: e,
+                },
+              })
+            }
             otherStyles="mb-4"
           />
         </View>
@@ -127,7 +246,7 @@ export default function SettingsPostComponent({
         <CustomButton
           label={i18n.t("publish")}
           theme="primary"
-          onPress={finalAction}
+          onPress={uploadPost}
         />
       </View>
     </>
@@ -136,11 +255,11 @@ export default function SettingsPostComponent({
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.white,
     height: 72,
   },
   customField: {
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.white,
     justifyContent: "center",
     flex: 1,
   },
@@ -149,7 +268,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.lightGray,
+    backgroundColor: Colors.white,
   },
   image: {
     width: screenWidth * 0.8,
